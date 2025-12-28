@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
   <title>Andy Forsberg — Composer + Producer</title>
   <meta name="description" content="Andy Forsberg — Composer + Producer. New site coming 2026." />
 
@@ -13,14 +12,12 @@
 
   <style>
     html,body{
-      margin:0;
-      height:100%;
+      margin:0; height:100%;
       background:#0b0b0b;
       color:rgba(255,255,255,.92);
       font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       -webkit-font-smoothing:antialiased;
     }
-
     .wrap{
       height:100%;
       display:flex;
@@ -29,10 +26,8 @@
       padding:28px;
       text-align:center;
     }
-
     .stack{
-      max-width:960px;
-      width:100%;
+      max-width:960px; width:100%;
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -46,51 +41,34 @@
       line-height:1.05;
     }
 
-    /* === Rapid Jewel Flip === */
+    /* === Name: ultra-fast “page flip” jewel cycle === */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
-      will-change: color, text-shadow, filter;
+      will-change:color, text-shadow, filter;
     }
-
     .nameGlow.is-animating{
-      animation: jewelFlip 20s steps(1,end) forwards;
+      /* steps() = snap flips (book pages). Higher = more flips. */
+      animation: jewelFlip 20s steps(160, end) forwards;
     }
 
+    /* Keep keyframes simple: we set broad “bands” and let steps() do the rapid flipping */
     @keyframes jewelFlip{
       0%   { color:#ffffff; text-shadow:none; filter:brightness(1); }
 
-      4%   { color:#7a5cff; text-shadow:0 0 40px rgba(122,92,255,1), 0 0 140px rgba(122,92,255,.75); }
-      8%   { color:#5c7cff; text-shadow:0 0 40px rgba(92,124,255,1), 0 0 140px rgba(92,124,255,.75); }
-      12%  { color:#22d3ee; text-shadow:0 0 40px rgba(34,211,238,1), 0 0 140px rgba(34,211,238,.75); }
-      16%  { color:#34d98a; text-shadow:0 0 40px rgba(52,217,138,1), 0 0 140px rgba(52,217,138,.75); }
-      20%  { color:#a3e635; text-shadow:0 0 40px rgba(163,230,53,1), 0 0 140px rgba(163,230,53,.70); }
-      24%  { color:#ffd166; text-shadow:0 0 40px rgba(255,209,102,1), 0 0 140px rgba(255,209,102,.70); }
-      28%  { color:#ff9f1c; text-shadow:0 0 40px rgba(255,159,28,1), 0 0 140px rgba(255,159,28,.70); }
-      32%  { color:#ff4d6d; text-shadow:0 0 40px rgba(255,77,109,1), 0 0 140px rgba(255,77,109,.75); }
-      36%  { color:#c13584; text-shadow:0 0 40px rgba(193,53,132,1), 0 0 140px rgba(193,53,132,.75); }
+      6%   { color:#7a5cff; text-shadow:0 0 46px rgba(122,92,255,1), 0 0 170px rgba(122,92,255,.80); filter:brightness(1.08); } /* amethyst */
+      14%  { color:#5c7cff; text-shadow:0 0 46px rgba(92,124,255,1),  0 0 170px rgba(92,124,255,.80);  } /* sapphire */
+      22%  { color:#22d3ee; text-shadow:0 0 46px rgba(34,211,238,1),  0 0 170px rgba(34,211,238,.78);  } /* cyan */
+      30%  { color:#34d98a; text-shadow:0 0 46px rgba(52,217,138,1),  0 0 170px rgba(52,217,138,.78);  } /* emerald */
+      38%  { color:#a3e635; text-shadow:0 0 46px rgba(163,230,53,1),  0 0 170px rgba(163,230,53,.72);  } /* peridot */
+      46%  { color:#ffd166; text-shadow:0 0 46px rgba(255,209,102,1), 0 0 170px rgba(255,209,102,.70); } /* amber */
+      54%  { color:#ff9f1c; text-shadow:0 0 46px rgba(255,159,28,1),  0 0 170px rgba(255,159,28,.72);  } /* topaz */
+      62%  { color:#ff4d6d; text-shadow:0 0 46px rgba(255,77,109,1),  0 0 170px rgba(255,77,109,.80);  } /* ruby */
+      70%  { color:#c13584; text-shadow:0 0 46px rgba(193,53,132,1),  0 0 170px rgba(193,53,132,.80);  } /* magenta */
+      78%  { color:#7a5cff; text-shadow:0 0 46px rgba(122,92,255,1), 0 0 170px rgba(122,92,255,.80); } /* loop feel */
 
-      /* second fast pass */
-      40%  { color:#7a5cff; }
-      44%  { color:#5c7cff; }
-      48%  { color:#22d3ee; }
-      52%  { color:#34d98a; }
-      56%  { color:#ffd166; }
-      60%  { color:#ff9f1c; }
-      64%  { color:#ff4d6d; }
-      68%  { color:#c13584; }
-
-      /* third ultra-fast flip */
-      72%  { color:#22d3ee; }
-      74%  { color:#7a5cff; }
-      76%  { color:#34d98a; }
-      78%  { color:#ff4d6d; }
-      80%  { color:#ffd166; }
-      82%  { color:#5c7cff; }
-
-      /* deceleration */
-      90%  { color:#ffffff; text-shadow:0 0 12px rgba(255,255,255,.35); }
-      100% { color:#ffffff; text-shadow:none; }
+      92%  { color:#ffffff; text-shadow:0 0 14px rgba(255,255,255,.35); filter:brightness(1.02); }
+      100% { color:#ffffff; text-shadow:none; filter:brightness(1); }
     }
 
     .sub{
@@ -100,7 +78,6 @@
       text-transform:uppercase;
       color:rgba(255,255,255,.55);
     }
-
     .coming{
       margin-top:10px;
       font-size:12px;
@@ -108,7 +85,6 @@
       text-transform:uppercase;
       color:rgba(255,255,255,.45);
     }
-
     .rule{
       margin:28px 0 22px 0;
       height:1px;
@@ -117,13 +93,13 @@
       background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
+    /* === Socials: jewel hover palette (back + stronger) === */
     .socials{
       display:flex;
       gap:12px;
       flex-wrap:wrap;
       justify-content:center;
     }
-
     .sbtn{
       font-size:11px;
       letter-spacing:.16em;
@@ -134,14 +110,43 @@
       background:rgba(255,255,255,.03);
       color:rgba(255,255,255,.70);
       text-decoration:none;
-      transition:all .25s ease;
+      transition:
+        background .18s ease,
+        border-color .18s ease,
+        color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+    }
+    .sbtn:hover{ transform:translateY(-1px); }
+
+    .sbtn.imdb:hover{
+      color:#efe6ff;
+      border-color:#7a5cff;
+      background:rgba(122,92,255,.18);
+      box-shadow:0 0 0 1px rgba(122,92,255,.40), 0 0 26px rgba(122,92,255,.55);
+    }
+    .sbtn.spotify:hover{
+      color:#d9ffe9;
+      border-color:#1db954;
+      background:rgba(29,185,84,.18);
+      box-shadow:0 0 0 1px rgba(29,185,84,.40), 0 0 26px rgba(29,185,84,.52);
+    }
+    .sbtn.apple:hover{
+      color:#e4eeff;
+      border-color:#5c7cff;
+      background:rgba(92,124,255,.18);
+      box-shadow:0 0 0 1px rgba(92,124,255,.40), 0 0 26px rgba(92,124,255,.55);
+    }
+    .sbtn.instagram:hover{
+      color:#ffe2f3;
+      border-color:#c13584;
+      background:rgba(193,53,132,.18);
+      box-shadow:0 0 0 1px rgba(193,53,132,.40), 0 0 26px rgba(193,53,132,.55);
     }
 
-    .sbtn:hover{
-      transform:translateY(-1px);
-      color:#fff;
-      border-color:rgba(255,255,255,.28);
-      background:rgba(255,255,255,.08);
+    @media (prefers-reduced-motion: reduce){
+      .nameGlow.is-animating{ animation:none !important; }
+      .sbtn{ transition:none !important; }
     }
   </style>
 </head>
@@ -156,23 +161,30 @@
       <div class="rule"></div>
 
       <div class="socials">
-        <a class="sbtn" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank">IMDb</a>
-        <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank">Spotify</a>
-        <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank">Apple Music</a>
-        <a class="sbtn" href="https://www.instagram.com/aforsbergmusic" target="_blank">Instagram</a>
+        <a class="sbtn imdb" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
+        <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
+        <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+        <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
       </div>
     </div>
   </div>
 
   <script>
     const name = document.getElementById("nameGlow");
+    let hoverArmed = true;
 
+    // Run ONCE per hover pass: entering triggers, leaving re-arms.
     name.addEventListener("mouseenter", () => {
-      if (!name.classList.contains("is-animating")) {
-        name.classList.add("is-animating");
-      }
+      if (!hoverArmed) return;
+      hoverArmed = false;
+      name.classList.add("is-animating");
     });
 
+    name.addEventListener("mouseleave", () => {
+      hoverArmed = true;
+    });
+
+    // Always clean up at end (but DO NOT auto-restart)
     name.addEventListener("animationend", () => {
       name.classList.remove("is-animating");
     });
