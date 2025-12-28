@@ -196,34 +196,94 @@
   }
 
   function drawWave(canvas, peaks, progress01) {
-    if (!canvas || !peaks || !peaks.length) return;
-    const ctx = canvas.getContext("2d");
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
+  if (!canvas || !peaks || !peaks.length) return;
 
-    const mid = h * 0.5;
-    const stride = BAR_W + BAR_GAP;
-    const cols = Math.max(1, Math.floor(w / stride));
-    const n = peaks.length;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
 
-    const base = "rgba(255,255,255,0.18)";
-    const done = "rgba(255,255,255,0.88)";
-    const progX = progress01 * w;
+  // Clear
+  ctx.clearRect(0, 0, w, h);
 
-    for (let col = 0; col < cols; col++) {
-      const x = col * stride;
-      const t = cols <= 1 ? 0 : col / (cols - 1);
-      const idx = t * (n - 1);
-      const i0 = Math.floor(idx);
-      const i1 = Math.min(n - 1, i0 + 1);
-      const frac = idx - i0;
-      const p = peaks[i0] * (1 - frac) + peaks[i1] * frac;
+  // Geometry (Reelcrafter-adjacent pills)
+  const mid = h * 0.5;
 
-      const amp = Math.max(5, p * (h * 0.46));
-      const y0 = mid - amp, y1 = mid + amp;
+  // Slightly wider + rounder than the previous strict bars
+  const stride = 7;          // distance between bar starts (in device px)
+  const barW = 4.8;          // bar width
+  const minAmp = 6;          // minimum visible height
+  const maxAmp = h * 0.46;   // max half-height
+  const radius = 999;        // pill ends
 
-      ctx.fillStyle = x <= progX ? done : base;
-      ctx.fillRect(x, y0, BAR_W, (y1 - y0));
+  const cols = Math.max(1, Math.floor(w / stride));
+  const n = peaks.length;
+
+  // Contrast: unplayed vs played (mono, premium)
+  const base = "rgba(255,255,255,0.16)";
+  const done = "rgba(255,255,255,0.90)";
+
+  // Clamp progress and compute played boundary
+  const p = clamp01(progress01 || 0);
+  const progX = p * w;
+
+  // Tiny smoothing (keeps it from looking “steppy”)
+  // Blend each bar with neighbors so it feels more like a continuous waveform.
+  const getPeak = (idx) => peaks[Math.max(0, Math.min(n - 1, idx))];
+
+  // Draw
+  for (let col = 0; col < cols; col++) {
+    const x = col * stride;
+
+    // Map column -> peak index (linear sampling)
+    const t = cols <= 1 ? 0 : col / (cols - 1);
+    const f = t * (n - 1);
+    const i0 = Math.floor(f);
+    const i1 = Math.min(n - 1, i0 + 1);
+    const frac = f - i0;
+
+    // Base interpolation
+    const p0 = getPeak(i0) * (1 - frac) + getPeak(i1) * frac;
+
+    // Neighbor smoothing (light, not mushy)
+    const pPrev = getPeak(i0 - 2) * (1 - frac) + getPeak(i1 - 2) * frac;
+    const pNext = getPeak(i0 + 2) * (1 - frac) + getPeak(i1 + 2) * frac;
+    const smooth = (pPrev * 0.22) + (p0 * 0.56) + (pNext * 0.22);
+
+    // Shape: a little more “musical” energy
+    // sqrt boosts small peaks so the waveform feels alive without being loud.
+    const shaped = Math.sqrt(Math.max(0, smooth));
+
+    const amp = Math.max(minAmp, shaped * maxAmp);
+    const y0 = mid - amp;
+    const y1 = mid + amp;
+    const hh = y1 - y0;
+
+    ctx.fillStyle = (x <= progX) ? done : base;
+
+    // Rounded rect (pill)
+    // Use roundRect if available; fallback to manual path.
+    const rx = x + (stride - barW) * 0.5; // center within stride
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(rx, y0, barW, hh, radius);
+      ctx.fill();
+    } else {
+      // Fallback: manual rounded rect
+      const r = Math.min(barW, hh) * 0.5;
+      ctx.beginPath();
+      ctx.moveTo(rx + r, y0);
+      ctx.lineTo(rx + barW - r, y0);
+      ctx.quadraticCurveTo(rx + barW, y0, rx + barW, y0 + r);
+      ctx.lineTo(rx + barW, y0 + hh - r);
+      ctx.quadraticCurveTo(rx + barW, y0 + hh, rx + barW - r, y0 + hh);
+      ctx.lineTo(rx + r, y0 + hh);
+      ctx.quadraticCurveTo(rx, y0 + hh, rx, y0 + hh - r);
+      ctx.lineTo(rx, y0 + r);
+      ctx.quadraticCurveTo(rx, y0, rx + r, y0);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+}
     }
   }
 
@@ -588,3 +648,4 @@
     showDock(false);
   });
 })();
+
