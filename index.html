@@ -17,10 +17,11 @@
       color:rgba(255,255,255,.92);
       font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
     }
 
     .wrap{
-      height:100%;
+      min-height:100%;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -37,7 +38,7 @@
     }
 
     h1{
-      font-size:clamp(44px,6vw,88px);
+      font-size:clamp(40px, 6vw, 88px);
       font-weight:500;
       letter-spacing:-.015em;
       margin:0;
@@ -50,6 +51,8 @@
       cursor:pointer;
       color:#ffffff; /* initial fresh page only */
       will-change:color;
+      user-select:none;
+
       --c1:#7a5cff; --c2:#5c7cff; --c3:#22d3ee; --c4:#34d98a; --c5:#a3e635;
       --c6:#ffd166; --c7:#ff9f1c; --c8:#ff4d6d; --c9:#c13584;
     }
@@ -58,7 +61,6 @@
       animation: jewelCuts 20s steps(1,end) infinite;
     }
 
-    /* No white at 0%/100% */
     @keyframes jewelCuts{
       0%   { color:var(--c1); }
       5%   { color:var(--c2); }
@@ -105,11 +107,11 @@
       margin:28px 0 22px 0;
       height:1px;
       width:420px;
-      max-width:90vw;
+      max-width:92vw;
       background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
-    /* === Socials (UNCHANGED) === */
+    /* === Socials (do not change) === */
     .socials{
       display:flex;
       gap:12px;
@@ -160,6 +162,21 @@
       box-shadow:0 0 0 1px rgba(193,53,132,.40), 0 0 26px rgba(193,53,132,.55);
     }
 
+    /* === Mobile optimization === */
+    @media (max-width: 520px){
+      .wrap{ padding:22px; }
+      h1{ font-size:clamp(36px, 10vw, 56px); }
+      .sub{ margin-top:12px; font-size:12px; letter-spacing:.16em; }
+      .coming{ font-size:11px; letter-spacing:.20em; }
+      .rule{ margin:22px 0 18px 0; }
+      .socials{ gap:10px; }
+      .sbtn{
+        font-size:10px;
+        padding:10px 12px;
+        letter-spacing:.14em;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce){
       .nameGlow.is-animating{ animation:none !important; }
       .sbtn{ transition:none !important; }
@@ -206,20 +223,28 @@
     function applyRandomPalette(){
       const colors = shuffle(palette);
       colors.forEach((c,i)=> name.style.setProperty(`--c${i+1}`, c));
-      // Force immediate departure from white on first hover:
+      // Immediately leave white on start:
       name.style.color = colors[0];
     }
 
-    name.addEventListener("mouseenter", () => {
+    function startAnimation(){
       if (started) return;
       started = true;
 
       applyRandomPalette();
 
       name.classList.remove("is-animating");
-      void name.offsetWidth;
+      void name.offsetWidth; // restart cleanly
       name.classList.add("is-animating");
+    }
+
+    // Start after 3 seconds on page load (unless hover starts first)
+    window.addEventListener("load", () => {
+      setTimeout(startAnimation, 3000);
     });
+
+    // Hover starts immediately
+    name.addEventListener("mouseenter", startAnimation);
   </script>
 </body>
 </html>
