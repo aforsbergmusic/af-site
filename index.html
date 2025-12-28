@@ -47,53 +47,48 @@
       line-height:1.05;
     }
 
-    /* Explicit hover target */
+    /* === Name animation target === */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
     }
 
-    /* Run ONCE per hover, 5 seconds total */
-    .nameGlow:hover{
-      animation: jewelGlow 5s ease-in-out 1;
+    .nameGlow.is-animating{
+      animation: jewelCycle 10s ease-in-out forwards;
     }
 
-    @keyframes jewelGlow{
+    @keyframes jewelCycle{
       0%{
-        text-shadow:
-          0 0 0 rgba(0,0,0,0);
+        color:#ffffff;
+        text-shadow:none;
       }
       20%{
+        color:#9a7cff; /* violet */
         text-shadow:
-          0 0 28px rgba(122,92,255,.85),
-          0 0 64px rgba(122,92,255,.55);
+          0 0 24px rgba(154,124,255,.85),
+          0 0 72px rgba(154,124,255,.55);
       }
       40%{
+        color:#34d98a; /* emerald */
         text-shadow:
-          0 0 28px rgba(29,185,84,.85),
-          0 0 64px rgba(29,185,84,.55);
+          0 0 24px rgba(52,217,138,.85),
+          0 0 72px rgba(52,217,138,.55);
       }
       60%{
+        color:#7fa2ff; /* sapphire */
         text-shadow:
-          0 0 28px rgba(92,124,255,.85),
-          0 0 64px rgba(92,124,255,.55);
+          0 0 24px rgba(127,162,255,.85),
+          0 0 72px rgba(127,162,255,.55);
       }
       80%{
+        color:#e35fa8; /* ruby */
         text-shadow:
-          0 0 28px rgba(193,53,132,.85),
-          0 0 64px rgba(193,53,132,.55);
+          0 0 24px rgba(227,95,168,.85),
+          0 0 72px rgba(227,95,168,.55);
       }
       100%{
-        text-shadow:
-          0 0 0 rgba(0,0,0,0);
-      }
-    }
-
-    /* Mobile hint (no hover devices) */
-    @media (hover:none){
-      .nameGlow{
-        text-shadow:
-          0 0 22px rgba(92,124,255,.35);
+        color:#ffffff;
+        text-shadow:none;
       }
     }
 
@@ -158,21 +153,18 @@
       background:rgba(122,92,255,.16);
       box-shadow:0 0 0 1px rgba(122,92,255,.35);
     }
-
     .sbtn.spotify:hover{
       color:#d6ffe9;
       border-color:#1db954;
       background:rgba(29,185,84,.16);
       box-shadow:0 0 0 1px rgba(29,185,84,.35);
     }
-
     .sbtn.apple:hover{
       color:#e6f0ff;
       border-color:#5c7cff;
       background:rgba(92,124,255,.16);
       box-shadow:0 0 0 1px rgba(92,124,255,.35);
     }
-
     .sbtn.instagram:hover{
       color:#ffe2ef;
       border-color:#c13584;
@@ -185,7 +177,7 @@
 <body>
   <div class="wrap">
     <div class="stack">
-      <h1><span class="nameGlow">Andy Forsberg</span></h1>
+      <h1><span class="nameGlow" id="nameGlow">Andy Forsberg</span></h1>
       <div class="sub">Composer + Producer</div>
       <div class="coming">New Site Coming 2026</div>
 
@@ -199,5 +191,18 @@
       </div>
     </div>
   </div>
+
+  <script>
+    const name = document.getElementById("nameGlow");
+
+    name.addEventListener("mouseenter", () => {
+      if (name.classList.contains("is-animating")) return;
+      name.classList.add("is-animating");
+    });
+
+    name.addEventListener("animationend", () => {
+      name.classList.remove("is-animating");
+    });
+  </script>
 </body>
 </html>
