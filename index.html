@@ -41,34 +41,55 @@
       line-height:1.05;
     }
 
-    /* === Name: ultra-fast “page flip” jewel cycle === */
+    /* === Name: hard-cut jewel flips (NO glow) === */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
-      will-change:color, text-shadow, filter;
+      will-change:color;
+      color:#ffffff;
     }
+
+    /* Hard cuts: steps(1,end) + discrete keyframes */
     .nameGlow.is-animating{
-      /* steps() = snap flips (book pages). Higher = more flips. */
-      animation: jewelFlip 20s steps(160, end) forwards;
+      animation: jewelCuts 20s steps(1,end) forwards;
     }
 
-    /* Keep keyframes simple: we set broad “bands” and let steps() do the rapid flipping */
-    @keyframes jewelFlip{
-      0%   { color:#ffffff; text-shadow:none; filter:brightness(1); }
+    @keyframes jewelCuts{
+      0%   { color:#ffffff; }
 
-      6%   { color:#7a5cff; text-shadow:0 0 46px rgba(122,92,255,1), 0 0 170px rgba(122,92,255,.80); filter:brightness(1.08); } /* amethyst */
-      14%  { color:#5c7cff; text-shadow:0 0 46px rgba(92,124,255,1),  0 0 170px rgba(92,124,255,.80);  } /* sapphire */
-      22%  { color:#22d3ee; text-shadow:0 0 46px rgba(34,211,238,1),  0 0 170px rgba(34,211,238,.78);  } /* cyan */
-      30%  { color:#34d98a; text-shadow:0 0 46px rgba(52,217,138,1),  0 0 170px rgba(52,217,138,.78);  } /* emerald */
-      38%  { color:#a3e635; text-shadow:0 0 46px rgba(163,230,53,1),  0 0 170px rgba(163,230,53,.72);  } /* peridot */
-      46%  { color:#ffd166; text-shadow:0 0 46px rgba(255,209,102,1), 0 0 170px rgba(255,209,102,.70); } /* amber */
-      54%  { color:#ff9f1c; text-shadow:0 0 46px rgba(255,159,28,1),  0 0 170px rgba(255,159,28,.72);  } /* topaz */
-      62%  { color:#ff4d6d; text-shadow:0 0 46px rgba(255,77,109,1),  0 0 170px rgba(255,77,109,.80);  } /* ruby */
-      70%  { color:#c13584; text-shadow:0 0 46px rgba(193,53,132,1),  0 0 170px rgba(193,53,132,.80);  } /* magenta */
-      78%  { color:#7a5cff; text-shadow:0 0 46px rgba(122,92,255,1), 0 0 170px rgba(122,92,255,.80); } /* loop feel */
+      4%   { color:#7a5cff; } /* amethyst */
+      8%   { color:#5c7cff; } /* sapphire */
+      12%  { color:#22d3ee; } /* cyan */
+      16%  { color:#34d98a; } /* emerald */
+      20%  { color:#a3e635; } /* peridot */
+      24%  { color:#ffd166; } /* amber */
+      28%  { color:#ff9f1c; } /* topaz */
+      32%  { color:#ff4d6d; } /* ruby */
+      36%  { color:#c13584; } /* magenta */
 
-      92%  { color:#ffffff; text-shadow:0 0 14px rgba(255,255,255,.35); filter:brightness(1.02); }
-      100% { color:#ffffff; text-shadow:none; filter:brightness(1); }
+      /* extra rapid “page flip” section */
+      40%  { color:#22d3ee; }
+      42%  { color:#7a5cff; }
+      44%  { color:#34d98a; }
+      46%  { color:#ff4d6d; }
+      48%  { color:#ffd166; }
+      50%  { color:#5c7cff; }
+      52%  { color:#ff9f1c; }
+      54%  { color:#c13584; }
+
+      /* faster still */
+      56%  { color:#22d3ee; }
+      57%  { color:#34d98a; }
+      58%  { color:#7a5cff; }
+      59%  { color:#ff4d6d; }
+      60%  { color:#5c7cff; }
+      61%  { color:#ffd166; }
+      62%  { color:#c13584; }
+      63%  { color:#ff9f1c; }
+
+      /* settle */
+      80%  { color:#ffffff; }
+      100% { color:#ffffff; }
     }
 
     .sub{
@@ -93,7 +114,7 @@
       background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
-    /* === Socials: jewel hover palette (back + stronger) === */
+    /* === Socials (DO NOT CHANGE) === */
     .socials{
       display:flex;
       gap:12px;
@@ -173,10 +194,14 @@
     const name = document.getElementById("nameGlow");
     let hoverArmed = true;
 
-    // Run ONCE per hover pass: entering triggers, leaving re-arms.
+    // Run once per hover pass (enter triggers; leave re-arms)
     name.addEventListener("mouseenter", () => {
       if (!hoverArmed) return;
       hoverArmed = false;
+
+      // restart animation cleanly
+      name.classList.remove("is-animating");
+      void name.offsetWidth;
       name.classList.add("is-animating");
     });
 
@@ -184,7 +209,7 @@
       hoverArmed = true;
     });
 
-    // Always clean up at end (but DO NOT auto-restart)
+    // cleanup after it finishes (no looping)
     name.addEventListener("animationend", () => {
       name.classList.remove("is-animating");
     });
