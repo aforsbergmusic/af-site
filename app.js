@@ -1,25 +1,15 @@
 /* =========================================================
-   AF SITE — app.js (Full, stable, Modern Sans)
-   - Header: scroll state + hamburger menu
-   - Reveal: subtle section entry
-   - Posters: grid + lightbox (image only)
-   - Player: waveform (Style A: rounded pills) + track list
-   - Dock: sticky mini player with waveform
+   AF SITE — app.js (Full, stable)
+   - Same as your working build
+   - Waveform: solid pill bars with clean spacing (no “lines” look)
    ========================================================= */
 
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-  /* =========================
-     EDIT THESE (assets)
-     ========================= */
+  const PROFILE_IMG_URL = ""; // optional headshot url
 
-  // Put your headshot URL here (direct image URL):
-  // Dropbox example must end with &raw=1
-  const PROFILE_IMG_URL = ""; // <-- paste between quotes
-
-  // Social links (you gave these)
   const SOCIALS = {
     imdb: "https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk",
     apple: "https://music.apple.com/us/artist/andy-forsberg/987738278",
@@ -27,43 +17,17 @@
     instagram: "https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr"
   };
 
-  // Posters (8 projects = 4x2 on desktop)
   const PROJECTS = [
-    {
-      title: "Hilinski's Hope",
-      img: "https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&raw=1"
-    },
-    {
-      title: "The Secret Lives of Animals",
-      img: "https://www.dropbox.com/scl/fi/9g8f8xyggs3dqlg1hmbao/The-Secret-Lives-of-Animals.webp?rlkey=s6yz5mrdz88uc9djbscr48urp&raw=1"
-    },
-    {
-      title: "Europe From Above",
-      img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/5ac55c58-6244-48de-9504-705a76b505c1/MV5BMWM1YzM4ZTYtOTNhYi00YTg2LWJlOTItMTNiMWFlMmI4MTE5XkEyXkFqcGc%40._V1_.jpg?content-type=image%2Fjpeg"
-    },
-    {
-      title: "Born Wild: The Next Generation",
-      img: "https://www.dropbox.com/scl/fi/04mok8tmb3dvvq6pofbrw/Born-Wild-The-Next-Generation.webp?rlkey=iq4b92tcumfktib1xm0t8eug1&raw=1"
-    },
-    {
-      title: "Dodo Heroes",
-      img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/6b91b60c-fc0d-494c-8252-6ddb0338bcfe/Dodo+Heroes.jpg?content-type=image%2Fjpeg"
-    },
-    {
-      title: "The Last Alaskans",
-      img: "https://www.dropbox.com/scl/fi/7u94wz7f4jbes9qr6iytz/The-Last-Alaskans.webp?rlkey=apub8dab1r8c79n3h2kdd46gu&raw=1"
-    },
-    {
-      title: "Thirst",
-      img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/98561fee-a1fe-4c77-a6a9-4ec0537a73a1/Thirst.webp?content-type=image%2Fwebp"
-    },
-    {
-      title: "Whistle",
-      img: "https://www.dropbox.com/scl/fi/6sp81uysuvokjyt2j3rac/Whistle.jpg?rlkey=58x5sqlr9u1ic77fb25nkfk3q&raw=1"
-    }
+    { title: "Hilinski's Hope", img: "https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&raw=1" },
+    { title: "The Secret Lives of Animals", img: "https://www.dropbox.com/scl/fi/9g8f8xyggs3dqlg1hmbao/The-Secret-Lives-of-Animals.webp?rlkey=s6yz5mrdz88uc9djbscr48urp&raw=1" },
+    { title: "Europe From Above", img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/5ac55c58-6244-48de-9504-705a76b505c1/MV5BMWM1YzM4ZTYtOTNhYi00YTg2LWJlOTItMTNiMWFlMmI4MTE5XkEyXkFqcGc%40._V1_.jpg?content-type=image%2Fjpeg" },
+    { title: "Born Wild: The Next Generation", img: "https://www.dropbox.com/scl/fi/04mok8tmb3dvvq6pofbrw/Born-Wild-The-Next-Generation.webp?rlkey=iq4b92tcumfktib1xm0t8eug1&raw=1" },
+    { title: "Dodo Heroes", img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/6b91b60c-fc0d-494c-8252-6ddb0338bcfe/Dodo+Heroes.jpg?content-type=image%2Fjpeg" },
+    { title: "The Last Alaskans", img: "https://www.dropbox.com/scl/fi/7u94wz7f4jbes9qr6iytz/The-Last-Alaskans.webp?rlkey=apub8dab1r8c79n3h2kdd46gu&raw=1" },
+    { title: "Thirst", img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/98561fee-a1fe-4c77-a6a9-4ec0537a73a1/Thirst.webp?content-type=image%2Fwebp" },
+    { title: "Whistle", img: "https://www.dropbox.com/scl/fi/6sp81uysuvokjyt2j3rac/Whistle.jpg?rlkey=58x5sqlr9u1ic77fb25nkfk3q&raw=1" }
   ];
 
-  // Featured Listen tracks (complete list)
   const FEATURED_TRACKS = [
     { title: "Charlie Horse", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/9b1a0c45-e055-4c88-b7b3-5f68e21c868e/Charlie%20Horse.mp3" },
     { title: "Beneath The City", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7a797f68-c4b0-48a2-bd22-2e4d0d42cb3f/Beneath%20The%20City.mp3" },
@@ -78,10 +42,6 @@
     { title: "It's Everywhere", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/4b46f910-babb-4bd0-a74d-16a99ca01c4e/It's%20Everywhere.mp3" },
     { title: "Bonded For Life", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/fbfcad1d-0ad1-45e5-b266-058e629d5468/Bonded%20For%20Life.mp3" }
   ];
-
-  /* =========================
-     Utilities
-     ========================= */
 
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
   const fmtTime = (s) => {
@@ -102,10 +62,7 @@
     }
   }
 
-  /* =========================
-     Waveform (peaks cache)
-     ========================= */
-
+  // Peaks cache
   const PEAKS_VERSION = "v1";
   const PEAKS_N = 220;
   const waveCache = new Map();
@@ -193,10 +150,7 @@
     return out;
   }
 
-  /* =====================================================
-     Waveform draw — Style A (Reelcrafter-adjacent)
-     Rounded pill bars + light smoothing + better energy
-     ===================================================== */
+  // Waveform draw: SOLID pills, minimal gap (no “liney” look)
   function drawWave(canvas, peaks, progress01) {
     if (!canvas || !peaks || !peaks.length) return;
 
@@ -206,17 +160,19 @@
 
     const mid = h * 0.5;
 
-    const stride = 7;      // spacing between bars
-    const barW = 4.8;      // pill width
-    const minAmp = 6;      // min visible height
+    // Key change: bar almost fills stride -> reads as “space”, not “lines”
+    const stride = 6.0;     // tighter spacing
+    const barW = 5.2;       // wider pill
+    const minAmp = 6;
     const maxAmp = h * 0.46;
-    const radius = 999;    // pill ends
+    const radius = 999;
 
     const cols = Math.max(1, Math.floor(w / stride));
     const n = peaks.length;
 
-    const base = "rgba(255,255,255,0.16)";
-    const done = "rgba(255,255,255,0.90)";
+    // Slightly lower unplayed so gaps don’t read as stripes
+    const base = "rgba(255,255,255,0.12)";
+    const done = "rgba(255,255,255,0.92)";
 
     const p = clamp01(progress01 || 0);
     const progX = p * w;
@@ -233,15 +189,15 @@
       const frac = f - i0;
 
       const p0 = getPeak(i0) * (1 - frac) + getPeak(i1) * frac;
+
+      // light smoothing
       const pPrev = getPeak(i0 - 2) * (1 - frac) + getPeak(i1 - 2) * frac;
       const pNext = getPeak(i0 + 2) * (1 - frac) + getPeak(i1 + 2) * frac;
+      const smooth = pPrev * 0.20 + p0 * 0.60 + pNext * 0.20;
 
-      const smooth = (pPrev * 0.22) + (p0 * 0.56) + (pNext * 0.22);
-
-      // Boost low peaks slightly (more musical without being loud)
       const shaped = Math.sqrt(Math.max(0, smooth));
-
       const amp = Math.max(minAmp, shaped * maxAmp);
+
       const y0 = mid - amp;
       const hh = amp * 2;
 
@@ -271,15 +227,9 @@
     }
   }
 
-  /* =========================
-     DOMContentLoaded (safe)
-     ========================= */
-
   document.addEventListener("DOMContentLoaded", () => {
-    /* ===== UI polish only ===== */
-
-    // Header subtle state on scroll
-    const hdr = document.querySelector(".hdr");
+    // Header scroll state
+    const hdr = $(".hdr");
     const onScroll = () => {
       if (!hdr) return;
       hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
@@ -288,8 +238,8 @@
     onScroll();
 
     // Hamburger menu
-    const menu = document.querySelector(".menu");
-    const menuBtn = document.querySelector(".menuBtn");
+    const menu = $(".menu");
+    const menuBtn = $(".menuBtn");
     const closeMenu = () => {
       if (!menu || !menuBtn) return;
       menu.setAttribute("aria-hidden", "true");
@@ -301,22 +251,40 @@
       menuBtn.setAttribute("aria-expanded", "true");
     };
 
-    if (menu && menuBtn) {
+    if (menuBtn && menu) {
       menuBtn.addEventListener("click", () => {
         const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
         isOpen ? closeMenu() : openMenu();
       });
+
       menu.addEventListener("click", (e) => {
         if (e.target === menu) closeMenu();
         if (e.target.closest(".menu__link")) closeMenu();
       });
+
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeMenu();
       });
     }
 
-    // Section reveal
-    const revealEls = Array.from(document.querySelectorAll("[data-reveal]"));
+    // Social links (optional IDs)
+    const sImdb = $("#social-imdb");
+    const sApple = $("#social-apple");
+    const sSpotify = $("#social-spotify");
+    const sIg = $("#social-instagram");
+    if (sImdb) sImdb.href = SOCIALS.imdb;
+    if (sApple) sApple.href = SOCIALS.apple;
+    if (sSpotify) sSpotify.href = SOCIALS.spotify;
+    if (sIg) sIg.href = SOCIALS.instagram;
+
+    // Bio image (optional class)
+    const bioImg = $(".bioImg");
+    if (bioImg && PROFILE_IMG_URL) {
+      bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
+    }
+
+    // Reveal
+    const revealEls = $$("[data-reveal]");
     if (revealEls.length) {
       const io = new IntersectionObserver((entries) => {
         for (const e of entries) {
@@ -329,23 +297,7 @@
       revealEls.forEach(el => io.observe(el));
     }
 
-    // Wire social links (IDs are optional; won’t crash if missing)
-    const sImdb = $("#social-imdb");
-    const sApple = $("#social-apple");
-    const sSpotify = $("#social-spotify");
-    const sIg = $("#social-instagram");
-    if (sImdb) sImdb.href = SOCIALS.imdb;
-    if (sApple) sApple.href = SOCIALS.apple;
-    if (sSpotify) sSpotify.href = SOCIALS.spotify;
-    if (sIg) sIg.href = SOCIALS.instagram;
-
-    // Bio image (class optional; won’t crash if missing)
-    const bioImg = $(".bioImg");
-    if (bioImg && PROFILE_IMG_URL) {
-      bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
-    }
-
-    /* ===== Posters render (expects .posters container) ===== */
+    // Posters
     const postersEl = $(".posters");
     if (postersEl && PROJECTS.length) {
       postersEl.innerHTML = PROJECTS.map((p, i) => {
@@ -360,7 +312,7 @@
       }).join("");
     }
 
-    /* ===== Lightbox (expects .lb markup) ===== */
+    // Lightbox
     const lb = $(".lb");
     const lbImg = $(".lb__img");
     const lbBg = $(".lb__bg");
@@ -393,17 +345,7 @@
       });
     }
 
-    /* =========================
-       PLAYER (Listen)
-       Expects HTML structure:
-       - .player
-         - .playBtn
-         - .npTitle
-         - .npTime
-         - .wave button with canvas
-         - .tracklist (rows injected)
-       ========================= */
-
+    // Player
     const player = $(".player");
     const playBtn = $(".playBtn");
     const npTitle = $(".npTitle");
@@ -412,7 +354,7 @@
     const waveCanvas = waveBtn ? $("canvas", waveBtn) : null;
     const tracklist = $(".tracklist");
 
-    // Dock (sticky)
+    // Dock
     const dock = $(".dock");
     const dockPlay = $(".dock__play");
     const dockTitle = $(".dock__title");
@@ -463,11 +405,7 @@
       peaksObj = null;
       const tr = currentTrack();
       if (!tr || !tr.src) return;
-      try {
-        peaksObj = await getPeaks(tr.src);
-      } catch {
-        peaksObj = null;
-      }
+      try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
     }
 
     function syncUI() {
@@ -486,17 +424,10 @@
       setPlayIcon(audio.paused);
 
       if (peaksObj?.peaks) {
-        if (waveCanvas) {
-          ensureCanvasSized();
-          drawWave(waveCanvas, peaksObj.peaks, pct);
-        }
-        if (dockCanvas) {
-          ensureCanvasSized();
-          drawWave(dockCanvas, peaksObj.peaks, pct);
-        }
+        if (waveCanvas) { ensureCanvasSized(); drawWave(waveCanvas, peaksObj.peaks, pct); }
+        if (dockCanvas) { ensureCanvasSized(); drawWave(dockCanvas, peaksObj.peaks, pct); }
       }
 
-      // highlight row
       $$(".row", tracklist || document).forEach((r) => {
         const i = Number(r.dataset.i);
         r.classList.toggle("is-active", i === tIdx);
@@ -526,19 +457,12 @@
       syncUI();
 
       if (autoplay) {
-        try {
-          await audio.play();
-        } catch {
-          // user gesture may be required
-        }
+        try { await audio.play(); } catch {}
       }
     }
 
     function togglePlay() {
-      if (!audio.src) {
-        setTrack(0, true);
-        return;
-      }
+      if (!audio.src) { setTrack(0, true); return; }
       if (audio.paused) audio.play().catch(() => {});
       else audio.pause();
     }
@@ -556,13 +480,12 @@
       syncUI();
     }
 
-    // Wire player only if elements exist
     if (player && FEATURED_TRACKS.length) {
       renderTracklist();
-      setTrack(0, false); // NOT autoplay
+      setTrack(0, false); // no autoplay
 
-      if (playBtn) playBtn.addEventListener("click", () => togglePlay());
-      if (dockPlay) dockPlay.addEventListener("click", () => togglePlay());
+      if (playBtn) playBtn.addEventListener("click", togglePlay);
+      if (dockPlay) dockPlay.addEventListener("click", togglePlay);
 
       if (tracklist) {
         tracklist.addEventListener("click", (e) => {
@@ -574,30 +497,24 @@
         });
       }
 
-      // Seek on main waveform
       if (waveBtn) {
         waveBtn.addEventListener("pointerdown", (e) => {
           isSeeking = true;
           waveBtn.setPointerCapture(e.pointerId);
           seekFromPointer(e, "main");
         });
-        waveBtn.addEventListener("pointermove", (e) => {
-          if (isSeeking) seekFromPointer(e, "main");
-        });
+        waveBtn.addEventListener("pointermove", (e) => { if (isSeeking) seekFromPointer(e, "main"); });
         waveBtn.addEventListener("pointerup", () => { isSeeking = false; });
         waveBtn.addEventListener("pointercancel", () => { isSeeking = false; });
       }
 
-      // Seek on dock waveform
       if (dockWaveBtn) {
         dockWaveBtn.addEventListener("pointerdown", (e) => {
           isSeeking = true;
           dockWaveBtn.setPointerCapture(e.pointerId);
           seekFromPointer(e, "dock");
         });
-        dockWaveBtn.addEventListener("pointermove", (e) => {
-          if (isSeeking) seekFromPointer(e, "dock");
-        });
+        dockWaveBtn.addEventListener("pointermove", (e) => { if (isSeeking) seekFromPointer(e, "dock"); });
         dockWaveBtn.addEventListener("pointerup", () => { isSeeking = false; });
         dockWaveBtn.addEventListener("pointercancel", () => { isSeeking = false; });
       }
@@ -609,19 +526,15 @@
       });
       audio.addEventListener("pause", () => {
         syncUI();
-        // keep dock visible once used
         showDock(true);
       });
-      audio.addEventListener("ended", () => {
-        setTrack(tIdx + 1, true);
-      });
-      audio.addEventListener("loadedmetadata", () => syncUI());
-      audio.addEventListener("timeupdate", () => syncUI());
+      audio.addEventListener("ended", () => { setTrack(tIdx + 1, true); });
+      audio.addEventListener("loadedmetadata", syncUI);
+      audio.addEventListener("timeupdate", syncUI);
     } else {
       showDock(false);
     }
 
-    // Dock hidden initially (until play)
     showDock(false);
   });
 })();
