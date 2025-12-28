@@ -44,47 +44,45 @@
       line-height:1.05;
     }
 
-    /* === Name: hard-cut jewel flips, randomized order, infinite loop after first hover === */
+    /* === Name: hard-cut jewel flips, randomized order, infinite loop, no white after start === */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
-      color:#ffffff;
+      color:#ffffff; /* initial fresh page only */
       will-change:color;
       --c1:#7a5cff; --c2:#5c7cff; --c3:#22d3ee; --c4:#34d98a; --c5:#a3e635;
       --c6:#ffd166; --c7:#ff9f1c; --c8:#ff4d6d; --c9:#c13584;
     }
 
-    /* IMPORTANT: infinite loop */
     .nameGlow.is-animating{
       animation: jewelCuts 20s steps(1,end) infinite;
     }
 
-    /* IMPORTANT: keep cadence consistent throughout (no 1% micro jumps) */
-    /* 20s / 20 steps = 1s per cut feel, consistent start-to-finish */
+    /* No white at 0%/100% */
     @keyframes jewelCuts{
-      0%   { color:#ffffff; }
-      5%   { color:var(--c1); }
-      10%  { color:var(--c2); }
-      15%  { color:var(--c3); }
-      20%  { color:var(--c4); }
-      25%  { color:var(--c5); }
-      30%  { color:var(--c6); }
-      35%  { color:var(--c7); }
-      40%  { color:var(--c8); }
-      45%  { color:var(--c9); }
+      0%   { color:var(--c1); }
+      5%   { color:var(--c2); }
+      10%  { color:var(--c3); }
+      15%  { color:var(--c4); }
+      20%  { color:var(--c5); }
+      25%  { color:var(--c6); }
+      30%  { color:var(--c7); }
+      35%  { color:var(--c8); }
+      40%  { color:var(--c9); }
 
-      50%  { color:var(--c3); }
-      55%  { color:var(--c6); }
-      60%  { color:var(--c1); }
-      65%  { color:var(--c8); }
-      70%  { color:var(--c4); }
-      75%  { color:var(--c7); }
-      80%  { color:var(--c2); }
-      85%  { color:var(--c9); }
-      90%  { color:var(--c5); }
+      45%  { color:var(--c3); }
+      50%  { color:var(--c6); }
+      55%  { color:var(--c1); }
+      60%  { color:var(--c8); }
+      65%  { color:var(--c4); }
+      70%  { color:var(--c7); }
+      75%  { color:var(--c2); }
+      80%  { color:var(--c9); }
+      85%  { color:var(--c5); }
 
-      95%  { color:#ffffff; }
-      100% { color:#ffffff; }
+      90%  { color:var(--c8); }
+      95%  { color:var(--c2); }
+      100% { color:var(--c6); }
     }
 
     .sub{
@@ -208,16 +206,18 @@
     function applyRandomPalette(){
       const colors = shuffle(palette);
       colors.forEach((c,i)=> name.style.setProperty(`--c${i+1}`, c));
+      // Force immediate departure from white on first hover:
+      name.style.color = colors[0];
     }
 
     name.addEventListener("mouseenter", () => {
-      if (started) return;          // one-time start
+      if (started) return;
       started = true;
 
       applyRandomPalette();
 
       name.classList.remove("is-animating");
-      void name.offsetWidth;        // restart cleanly
+      void name.offsetWidth;
       name.classList.add("is-animating");
     });
   </script>
