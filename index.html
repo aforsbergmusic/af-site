@@ -7,30 +7,30 @@
   <title>Andy Forsberg — Composer</title>
   <meta name="description" content="Andy Forsberg is a Los Angeles–based media composer and producer for film, television, and documentary." />
 
-  <!-- Fonts (Olafur-adjacent, medium serif headlines) -->
-  <!-- Fonts (Cinematic / Minimal-Industrial) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=1">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-
-  <!-- Header (your app.js expects .hdr, .menuBtn, .menu, .menu__link) -->
+  <!-- Header (app.js expects: .hdr, .hdr__inner, .menuBtn, .menu, .menu__link) -->
   <header class="hdr">
     <div class="hdr__inner">
-    <a class="brand" href="#top" aria-label="Home">
-  <span class="brand__name">Andy Forsberg</span>
-</a>
+      <a class="brand" href="#top" aria-label="Home">
+        <!-- If you truly removed the AF bubble, delete this span entirely -->
+        <span class="brand__mark">AF</span>
+        <span class="brand__name">Andy Forsberg</span>
+      </a>
 
       <div class="hdr__right">
-        <nav class="hdr__social">
-          <a id="social-imdb" class="sbtn" href="#" target="_blank" rel="noreferrer" aria-label="IMDb">IMDb</a>
-          <a id="social-spotify" class="sbtn" href="#" target="_blank" rel="noreferrer" aria-label="Spotify">Spotify</a>
-          <a id="social-apple" class="sbtn" href="#" target="_blank" rel="noreferrer" aria-label="Apple Music">Apple</a>
-          <a id="social-instagram" class="sbtn" href="#" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a>
+        <nav class="hdr__social" aria-label="Social links">
+          <a id="social-imdb" class="sbtn" href="#" target="_blank" rel="noreferrer">IMDb</a>
+          <a id="social-spotify" class="sbtn" href="#" target="_blank" rel="noreferrer">Spotify</a>
+          <a id="social-apple" class="sbtn" href="#" target="_blank" rel="noreferrer">Apple</a>
+          <a id="social-instagram" class="sbtn" href="#" target="_blank" rel="noreferrer">IG</a>
         </nav>
 
         <button class="menuBtn" type="button" aria-label="Menu" aria-expanded="false">
@@ -46,19 +46,17 @@
       <a class="menu__link" href="#listen">Listen</a>
       <a class="menu__link" href="#projects">Projects</a>
       <a class="menu__link" href="#bio">Andy + Contact</a>
-      <a class="menu__link" href="#bio">Andy + Contact</a>
     </div>
   </div>
 
   <main id="top" class="page">
-
     <!-- Hero -->
     <section class="hero" data-reveal>
       <h1 class="hero__title">Andy Forsberg</h1>
       <p class="hero__sub">Composer + Producer</p>
     </section>
 
-    <!-- Listen (player mount: app.js expects .player and its inner parts) -->
+    <!-- Listen -->
     <section id="listen" class="section" data-reveal>
       <div class="section__top">
         <h2 class="section__title">Listen</h2>
@@ -83,7 +81,7 @@
       </div>
     </section>
 
-    <!-- Projects (posters mount: app.js expects .posters) -->
+    <!-- Projects -->
     <section id="projects" class="section" data-reveal>
       <div class="section__top">
         <h2 class="section__title">Projects</h2>
@@ -91,7 +89,7 @@
       <div class="posters" aria-label="Project posters"></div>
     </section>
 
-    <!-- Bio + Representation -->
+    <!-- Andy + Contact (Bio + Rep only) -->
     <section id="bio" class="section" data-reveal>
       <div class="section__top">
         <h2 class="section__title">Andy + Contact</h2>
@@ -141,18 +139,15 @@
       </div>
     </section>
 
-  
-
     <footer class="footer">
       <div class="footer__inner">
-        <div class="footer__left">© <span id="y"></span> Andy Forsberg</div>
-        <div class="footer__right">Composer • Producer</div>
+        <div>© <span id="y"></span> Andy Forsberg</div>
+        <div>Composer • Producer</div>
       </div>
     </footer>
-
   </main>
 
-  <!-- Lightbox (app.js expects .lb, .lb__img, .lb__bg, .lb__close) -->
+  <!-- Lightbox (app.js expects: .lb, .lb__img, .lb__bg, .lb__close) -->
   <div class="lb" aria-hidden="true">
     <div class="lb__bg" aria-hidden="true"></div>
     <div class="lb__panel" role="dialog" aria-modal="true">
@@ -161,7 +156,7 @@
     </div>
   </div>
 
-  <!-- Player Dock (app.js expects .dock, .dock__play, .dock__title, .dock__time, .dock__wave canvas) -->
+  <!-- Dock (app.js expects: .dock, .dock__play, .dock__title, .dock__time, .dock__wave canvas) -->
   <div class="dock" aria-hidden="true">
     <div class="dock__inner">
       <button class="dock__play" type="button" aria-label="Play/Pause">▶</button>
@@ -177,12 +172,10 @@
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
-    // Optional: set your headshot here (keep quotes)
+    // Optional: set your headshot here
     // document.querySelector(".bioImg").style.backgroundImage = "url('PASTE_HEADSHOT_URL_HERE')";
   </script>
 
   <script src="app.js"></script>
 </body>
 </html>
-
-
