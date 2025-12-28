@@ -1,7 +1,8 @@
 /* =========================================================
-   AF SITE — app.js (Full, stable)
-   - Same as your working build
-   - Waveform: solid pill bars with clean spacing (no “lines” look)
+   AF SITE — app.js (Full, smoother player)
+   - Smoother seek (RAF + target, uses fastSeek when available)
+   - Less jumpy UI (diffed text updates, throttled waveform draw)
+   - Dock behaves like control surface (ReelCrafter-ish)
    ========================================================= */
 
 (() => {
@@ -62,7 +63,7 @@
     }
   }
 
-  // Peaks cache
+  /* ---------------- Peaks cache ---------------- */
   const PEAKS_VERSION = "v1";
   const PEAKS_N = 220;
   const waveCache = new Map();
@@ -150,7 +151,7 @@
     return out;
   }
 
-  // Waveform draw: SOLID pills, minimal gap (no “liney” look)
+  /* ---------------- Waveform draw (solid pill bars) ---------------- */
   function drawWave(canvas, peaks, progress01) {
     if (!canvas || !peaks || !peaks.length) return;
 
@@ -159,10 +160,8 @@
     ctx.clearRect(0, 0, w, h);
 
     const mid = h * 0.5;
-
-    // Key change: bar almost fills stride -> reads as “space”, not “lines”
-    const stride = 6.0;     // tighter spacing
-    const barW = 5.2;       // wider pill
+    const stride = 6.0;
+    const barW = 5.2;
     const minAmp = 6;
     const maxAmp = h * 0.46;
     const radius = 999;
@@ -170,7 +169,6 @@
     const cols = Math.max(1, Math.floor(w / stride));
     const n = peaks.length;
 
-    // Slightly lower unplayed so gaps don’t read as stripes
     const base = "rgba(255,255,255,0.12)";
     const done = "rgba(255,255,255,0.92)";
 
@@ -190,7 +188,6 @@
 
       const p0 = getPeak(i0) * (1 - frac) + getPeak(i1) * frac;
 
-      // light smoothing
       const pPrev = getPeak(i0 - 2) * (1 - frac) + getPeak(i1 - 2) * frac;
       const pNext = getPeak(i0 + 2) * (1 - frac) + getPeak(i1 + 2) * frac;
       const smooth = pPrev * 0.20 + p0 * 0.60 + pNext * 0.20;
@@ -202,7 +199,6 @@
       const hh = amp * 2;
 
       ctx.fillStyle = (x <= progX) ? done : base;
-
       const rx = x + (stride - barW) * 0.5;
 
       if (ctx.roundRect) {
@@ -228,16 +224,13 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Header scroll state
+    /* ---------------- Header scroll state ---------------- */
     const hdr = $(".hdr");
-    const onScroll = () => {
-      if (!hdr) return;
-      hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
-    };
+    const onScroll = () => hdr && hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
-    // Hamburger menu
+    /* ---------------- Hamburger menu ---------------- */
     const menu = $(".menu");
     const menuBtn = $(".menuBtn");
     const closeMenu = () => {
@@ -262,12 +255,10 @@
         if (e.target.closest(".menu__link")) closeMenu();
       });
 
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeMenu();
-      });
+      window.addEventListener("keydown", (e) => e.key === "Escape" && closeMenu());
     }
 
-    // Social links (optional IDs)
+    /* ---------------- Social links ---------------- */
     const sImdb = $("#social-imdb");
     const sApple = $("#social-apple");
     const sSpotify = $("#social-spotify");
@@ -277,13 +268,11 @@
     if (sSpotify) sSpotify.href = SOCIALS.spotify;
     if (sIg) sIg.href = SOCIALS.instagram;
 
-    // Bio image (optional class)
+    /* ---------------- Bio image ---------------- */
     const bioImg = $(".bioImg");
-    if (bioImg && PROFILE_IMG_URL) {
-      bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
-    }
+    if (bioImg && PROFILE_IMG_URL) bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
 
-    // Reveal
+    /* ---------------- Reveal ---------------- */
     const revealEls = $$("[data-reveal]");
     if (revealEls.length) {
       const io = new IntersectionObserver((entries) => {
@@ -297,7 +286,7 @@
       revealEls.forEach(el => io.observe(el));
     }
 
-    // Posters
+    /* ---------------- Posters ---------------- */
     const postersEl = $(".posters");
     if (postersEl && PROJECTS.length) {
       postersEl.innerHTML = PROJECTS.map((p, i) => {
@@ -312,7 +301,7 @@
       }).join("");
     }
 
-    // Lightbox
+    /* ---------------- Lightbox ---------------- */
     const lb = $(".lb");
     const lbImg = $(".lb__img");
     const lbBg = $(".lb__bg");
@@ -345,7 +334,9 @@
       });
     }
 
-    // Player
+    /* =========================================================
+       PLAYER (ReelCrafter-ish smoothness)
+       ========================================================= */
     const player = $(".player");
     const playBtn = $(".playBtn");
     const npTitle = $(".npTitle");
@@ -367,8 +358,29 @@
 
     let tIdx = 0;
     let peaksObj = null;
-    let raf = null;
-    let isSeeking = false;
+
+    // Seek smoothing
+    let draggingMain = false;
+    let draggingDock = false;
+    let seekTarget = null;          // seconds
+    let wasPlayingBeforeDrag = false;
+
+    // UI loop
+    let uiRaf = null;
+    let lastDrawTs = 0;
+    const DRAW_EVERY_MS = 33;       // ~30fps waveform draw
+    const SEEK_APPLY_EVERY_MS = 33; // ~30fps seek apply
+    let lastSeekApplyTs = 0;
+
+    // Diffed DOM writes
+    const lastText = new Map();
+    const setText = (el, v) => {
+      if (!el) return;
+      const prev = lastText.get(el);
+      if (prev === v) return;
+      lastText.set(el, v);
+      el.textContent = v;
+    };
 
     const ensureCanvasSized = () => {
       if (waveCanvas) sizeCanvasToCSS(waveCanvas);
@@ -406,41 +418,83 @@
       const tr = currentTrack();
       if (!tr || !tr.src) return;
       try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
+      // Prewarm next track peaks quietly (makes next-click feel instant)
+      const next = FEATURED_TRACKS[(tIdx + 1) % FEATURED_TRACKS.length];
+      if (next?.src) getPeaks(next.src).catch(() => {});
     }
 
-    function syncUI() {
+    function getDur() {
+      return (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (peaksObj?.duration || 0);
+    }
+
+    function getCurForUI() {
+      // While dragging, show the seek target (feels “snappy”)
+      if ((draggingMain || draggingDock) && typeof seekTarget === "number") return seekTarget;
+      return isFinite(audio.currentTime) ? audio.currentTime : 0;
+    }
+
+    function syncUI(nowTs) {
       const tr = currentTrack();
       if (!tr) return;
 
-      const dur = (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (peaksObj?.duration || 0);
-      const cur = isFinite(audio.currentTime) ? audio.currentTime : 0;
+      const dur = getDur();
+      const cur = getCurForUI();
       const pct = dur ? clamp01(cur / dur) : 0;
 
-      if (npTitle) npTitle.textContent = tr.title || "Untitled";
-      if (dockTitle) dockTitle.textContent = tr.title || "Untitled";
-      if (npTime) npTime.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
-      if (dockTime) dockTime.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
+      setText(npTitle, tr.title || "Untitled");
+      setText(dockTitle, tr.title || "Untitled");
+      setText(npTime, `${fmtTime(cur)} / ${fmtTime(dur)}`);
+      setText(dockTime, `${fmtTime(cur)} / ${fmtTime(dur)}`);
 
       setPlayIcon(audio.paused);
 
-      if (peaksObj?.peaks) {
+      // Active row highlight (cheap)
+      if (tracklist) {
+        $$(".row", tracklist).forEach((r) => {
+          const i = Number(r.dataset.i);
+          const on = i === tIdx;
+          if (on !== r.classList.contains("is-active")) r.classList.toggle("is-active", on);
+        });
+      }
+
+      // Throttled draw
+      if (peaksObj?.peaks && nowTs - lastDrawTs >= DRAW_EVERY_MS) {
+        lastDrawTs = nowTs;
         if (waveCanvas) { ensureCanvasSized(); drawWave(waveCanvas, peaksObj.peaks, pct); }
         if (dockCanvas) { ensureCanvasSized(); drawWave(dockCanvas, peaksObj.peaks, pct); }
       }
-
-      $$(".row", tracklist || document).forEach((r) => {
-        const i = Number(r.dataset.i);
-        r.classList.toggle("is-active", i === tIdx);
-      });
     }
 
-    function startRAF() {
-      if (raf) cancelAnimationFrame(raf);
-      const tick = () => {
-        syncUI();
-        if (!audio.paused) raf = requestAnimationFrame(tick);
+    function applySeekTarget(nowTs) {
+      if (typeof seekTarget !== "number") return;
+      if (nowTs - lastSeekApplyTs < SEEK_APPLY_EVERY_MS) return;
+      lastSeekApplyTs = nowTs;
+
+      const dur = getDur();
+      if (!dur) return;
+
+      const t = Math.max(0, Math.min(dur, seekTarget));
+      // fastSeek is smoother in some browsers
+      try {
+        if (typeof audio.fastSeek === "function") audio.fastSeek(t);
+        else audio.currentTime = t;
+      } catch {}
+    }
+
+    function startUILoop() {
+      if (uiRaf) cancelAnimationFrame(uiRaf);
+      const tick = (ts) => {
+        // If dragging, apply seek gently
+        if (draggingMain || draggingDock) applySeekTarget(ts);
+
+        syncUI(ts);
+
+        // Keep loop running while audio is playing OR while dragging OR dock visible
+        const keepAlive = (!audio.paused) || draggingMain || draggingDock || (dock && dock.getAttribute("aria-hidden") === "false");
+        if (keepAlive) uiRaf = requestAnimationFrame(tick);
+        else uiRaf = null;
       };
-      raf = requestAnimationFrame(tick);
+      uiRaf = requestAnimationFrame(tick);
     }
 
     async function setTrack(nextIdx, autoplay) {
@@ -450,11 +504,18 @@
       const tr = currentTrack();
       if (!tr || !tr.src) return;
 
+      // Reset drag state
+      draggingMain = false;
+      draggingDock = false;
+      seekTarget = null;
+
       audio.src = tr.src;
       audio.currentTime = 0;
 
       await loadWaveForCurrent();
-      syncUI();
+
+      showDock(false);       // dock appears on first play
+      startUILoop();         // render cleanly
 
       if (autoplay) {
         try { await audio.play(); } catch {}
@@ -465,9 +526,10 @@
       if (!audio.src) { setTrack(0, true); return; }
       if (audio.paused) audio.play().catch(() => {});
       else audio.pause();
+      startUILoop();
     }
 
-    function seekFromPointer(e, which) {
+    function seekTargetFromEvent(e, which) {
       const btn = which === "dock" ? dockWaveBtn : waveBtn;
       if (!btn || !peaksObj) return;
 
@@ -475,9 +537,51 @@
       const x = Math.min(Math.max(0, e.clientX - rect.left), rect.width);
       const pct = rect.width ? x / rect.width : 0;
 
-      const dur = (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (peaksObj.duration || 0);
-      if (dur) audio.currentTime = pct * dur;
-      syncUI();
+      const dur = getDur();
+      if (!dur) return;
+
+      seekTarget = pct * dur;
+    }
+
+    // Main + Dock pointer behavior (ReelCrafter-ish: scrub previews, then apply smoothly)
+    function onPointerDown(which, e) {
+      if (!peaksObj) return;
+      wasPlayingBeforeDrag = !audio.paused;
+
+      if (which === "main") draggingMain = true;
+      else draggingDock = true;
+
+      // Optional: pause while scrubbing for “control surface” feel
+      // (If you want it to keep playing while scrubbing, delete these 2 lines.)
+      if (!audio.paused) audio.pause();
+
+      seekTargetFromEvent(e, which);
+      startUILoop();
+    }
+
+    function onPointerMove(which, e) {
+      if ((which === "main" && !draggingMain) || (which === "dock" && !draggingDock)) return;
+      seekTargetFromEvent(e, which);
+      startUILoop();
+    }
+
+    function onPointerUp(which) {
+      if (which === "main") draggingMain = false;
+      else draggingDock = false;
+
+      // Commit one final seek immediately
+      if (typeof seekTarget === "number") {
+        const dur = getDur();
+        const t = Math.max(0, Math.min(dur || 0, seekTarget));
+        try {
+          if (typeof audio.fastSeek === "function") audio.fastSeek(t);
+          else audio.currentTime = t;
+        } catch {}
+      }
+
+      // Resume if it was playing before
+      if (wasPlayingBeforeDrag) audio.play().catch(() => {});
+      startUILoop();
     }
 
     if (player && FEATURED_TRACKS.length) {
@@ -499,42 +603,41 @@
 
       if (waveBtn) {
         waveBtn.addEventListener("pointerdown", (e) => {
-          isSeeking = true;
           waveBtn.setPointerCapture(e.pointerId);
-          seekFromPointer(e, "main");
+          onPointerDown("main", e);
         });
-        waveBtn.addEventListener("pointermove", (e) => { if (isSeeking) seekFromPointer(e, "main"); });
-        waveBtn.addEventListener("pointerup", () => { isSeeking = false; });
-        waveBtn.addEventListener("pointercancel", () => { isSeeking = false; });
+        waveBtn.addEventListener("pointermove", (e) => onPointerMove("main", e));
+        waveBtn.addEventListener("pointerup", () => onPointerUp("main"));
+        waveBtn.addEventListener("pointercancel", () => onPointerUp("main"));
       }
 
       if (dockWaveBtn) {
         dockWaveBtn.addEventListener("pointerdown", (e) => {
-          isSeeking = true;
           dockWaveBtn.setPointerCapture(e.pointerId);
-          seekFromPointer(e, "dock");
+          onPointerDown("dock", e);
         });
-        dockWaveBtn.addEventListener("pointermove", (e) => { if (isSeeking) seekFromPointer(e, "dock"); });
-        dockWaveBtn.addEventListener("pointerup", () => { isSeeking = false; });
-        dockWaveBtn.addEventListener("pointercancel", () => { isSeeking = false; });
+        dockWaveBtn.addEventListener("pointermove", (e) => onPointerMove("dock", e));
+        dockWaveBtn.addEventListener("pointerup", () => onPointerUp("dock"));
+        dockWaveBtn.addEventListener("pointercancel", () => onPointerUp("dock"));
       }
 
       audio.addEventListener("play", () => {
         showDock(true);
-        syncUI();
-        startRAF();
+        startUILoop();
       });
       audio.addEventListener("pause", () => {
-        syncUI();
+        // Keep dock visible once engaged (ReelCrafter style)
         showDock(true);
+        startUILoop();
       });
       audio.addEventListener("ended", () => { setTrack(tIdx + 1, true); });
-      audio.addEventListener("loadedmetadata", syncUI);
-      audio.addEventListener("timeupdate", syncUI);
+      audio.addEventListener("loadedmetadata", () => startUILoop());
+      audio.addEventListener("timeupdate", () => startUILoop());
     } else {
       showDock(false);
     }
 
+    // Start with dock hidden until first interaction
     showDock(false);
   });
 })();
