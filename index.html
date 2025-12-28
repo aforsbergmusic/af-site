@@ -40,11 +40,41 @@
       align-items:center;
     }
 
+    /* ===== Name with jewel glow ===== */
     h1{
       font-size:clamp(44px,6vw,88px);
       font-weight:500;
       letter-spacing:-.015em;
       margin:0;
+      cursor:default;
+      transition:text-shadow .4s ease;
+    }
+
+    h1:hover{
+      animation:jewelGlow 3.6s ease-in-out infinite;
+    }
+
+    @keyframes jewelGlow{
+      0%{
+        text-shadow:
+          0 0 0 rgba(0,0,0,0);
+      }
+      25%{
+        text-shadow:
+          0 0 18px rgba(122,92,255,.45); /* violet */
+      }
+      50%{
+        text-shadow:
+          0 0 18px rgba(29,185,84,.40); /* emerald */
+      }
+      75%{
+        text-shadow:
+          0 0 18px rgba(193,53,132,.40); /* ruby */
+      }
+      100%{
+        text-shadow:
+          0 0 0 rgba(0,0,0,0);
+      }
     }
 
     .sub{
@@ -101,7 +131,11 @@
         transform .25s ease;
     }
 
-    /* Jewel tone hovers (subtle, not loud) */
+    .sbtn:hover{
+      transform:translateY(-1px);
+    }
+
+    /* Jewel tone hovers */
     .sbtn.imdb:hover{
       color:#e6d7ff;
       border-color:#7a5cff;
@@ -128,10 +162,6 @@
       border-color:#c13584;
       background:rgba(193,53,132,.12);
       box-shadow:0 0 0 1px rgba(193,53,132,.25);
-    }
-
-    .sbtn:hover{
-      transform:translateY(-1px);
     }
   </style>
 </head>
