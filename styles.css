@@ -344,44 +344,90 @@ body::before{
 }
 
 /* ---------- Posters (4 across, 2 rows for 8 items) ---------- */
+/* ---------- Posters (4 across, editorial drift) ---------- */
 .posters{
   display:grid;
   grid-template-columns:repeat(4, minmax(0, 1fr));
   gap:18px;
+  align-items:start;
 }
+
+/* Each poster becomes its own “card” with tiny authored offsets */
 .poster{
   border-radius:20px;
   overflow:hidden;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.02);
   cursor:pointer;
-  transition:transform .18s ease, border-color .18s ease, background .18s ease;
+  transition:transform .22s ease, border-color .18s ease, background .18s ease, filter .18s ease;
+  will-change:transform;
 }
+
+/* hover stays crisp */
 .poster:hover{
-  transform:translateY(-2px);
+  transform:translateY(-3px);
   border-color:rgba(255,255,255,.18);
   background:rgba(255,255,255,.03);
 }
+
+/* Image */
 .poster__img{
   aspect-ratio:2/3;
   background-size:cover;
   background-position:center;
   transform:scale(1);
-  transition:transform .22s ease, filter .22s ease;
+  transition:transform .24s ease, filter .24s ease;
 }
 .poster:hover .poster__img{
-  transform:scale(1.025);
+  transform:scale(1.03);
   filter:brightness(1.04) contrast(1.02);
 }
+
+/* Title */
 .poster__name{
   padding:10px 12px;
   font-size:12px;
-  color:var(--muted);
+  color:rgba(255,255,255,.58);
   letter-spacing:.12em;
   text-transform:uppercase;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+}
+
+/* ---- Drift recipe (subtle, consistent, “designed”) ----
+   We offset by column + row using nth-child patterns.
+   Works cleanly for your 8 posters (4 top, 4 bottom). */
+.posters .poster:nth-child(4n+1){ transform:translateY(0px); }
+.posters .poster:nth-child(4n+2){ transform:translateY(10px); }
+.posters .poster:nth-child(4n+3){ transform:translateY(4px); }
+.posters .poster:nth-child(4n+4){ transform:translateY(14px); }
+
+/* Second row gets slightly different cadence so it doesn’t mirror */
+.posters .poster:nth-child(n+5):nth-child(4n+1){ transform:translateY(6px); }
+.posters .poster:nth-child(n+5):nth-child(4n+2){ transform:translateY(0px); }
+.posters .poster:nth-child(n+5):nth-child(4n+3){ transform:translateY(12px); }
+.posters .poster:nth-child(n+5):nth-child(4n+4){ transform:translateY(2px); }
+
+/* Keep hover from “fighting” the drift:
+   hover lifts relative to its drifted position. */
+.posters .poster:nth-child(4n+1):hover{ transform:translateY(-3px); }
+.posters .poster:nth-child(4n+2):hover{ transform:translateY(7px); }
+.posters .poster:nth-child(4n+3):hover{ transform:translateY(1px); }
+.posters .poster:nth-child(4n+4):hover{ transform:translateY(11px); }
+
+.posters .poster:nth-child(n+5):nth-child(4n+1):hover{ transform:translateY(3px); }
+.posters .poster:nth-child(n+5):nth-child(4n+2):hover{ transform:translateY(-3px); }
+.posters .poster:nth-child(n+5):nth-child(4n+3):hover{ transform:translateY(9px); }
+.posters .poster:nth-child(n+5):nth-child(4n+4):hover{ transform:translateY(-1px); }
+
+/* Mobile: drift becomes smaller so it doesn’t feel messy */
+@media (max-width: 900px){
+  .posters{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .posters .poster:nth-child(odd){ transform:translateY(0px); }
+  .posters .poster:nth-child(even){ transform:translateY(10px); }
+  .posters .poster:nth-child(odd):hover{ transform:translateY(-3px); }
+  .posters .poster:nth-child(even):hover{ transform:translateY(7px); }
 }
 
 /* ---------- Bio ---------- */
@@ -625,3 +671,4 @@ body::before{
   .dock__title{ max-width:22ch; }
   .menu__panel{ right:12px; }
 }
+
