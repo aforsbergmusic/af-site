@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <title>Andy Forsberg — Coming 2026</title>
   <meta name="description" content="Andy Forsberg — Composer + Producer. New site coming in 2026." />
 
-  <!-- Fonts (tasteful + similar to what you had) -->
+  <!-- Same font stack you were using -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -15,58 +16,30 @@
 </head>
 
 <body>
-  <main class="splash" aria-label="Coming soon">
+  <main class="coming">
 
-    <!-- background layers -->
-    <div class="bg" aria-hidden="true">
-      <div class="bg__drift"></div>
-      <div class="bg__grain"></div>
-      <div class="bg__vignette"></div>
-    </div>
-
-    <!-- header (simple, like the splash you liked) -->
     <header class="hdr">
-      <a class="hdr__home" href="/" aria-label="Home">Andy Forsberg</a>
-
-      <div class="hdr__right">
-        <div class="hdr__badge">Coming 2026</div>
+      <div class="hdr__inner">
+        <a class="brand" href="/" aria-label="Home">Andy Forsberg</a>
       </div>
     </header>
 
-    <!-- hero -->
     <section class="hero">
-      <div class="hero__inner">
-        <div class="kicker r" style="--d:0ms;">New site</div>
+      <h1 class="title">New site coming 2026</h1>
+      <p class="sub">Composer + Producer</p>
 
-        <h1 class="title r" style="--d:110ms;">
-          Andy Forsberg
-        </h1>
+      <div class="rule" aria-hidden="true"></div>
 
-        <p class="sub r" style="--d:220ms;">
-          Composer + Producer
-        </p>
-
-        <div class="rule r" style="--d:320ms;"></div>
-
-        <div class="actions r" style="--d:420ms;" aria-label="Social links">
-          <a class="sbtn" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
-          <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer">Spotify</a>
-          <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-          <a class="sbtn" href="https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a>
-        </div>
-
-        <div class="meta r" style="--d:520ms;">
-          <a class="meta__link" href="mailto:arbel@spectracreativeagency.com">arbel@spectracreativeagency.com</a>
-          <span class="meta__dot">•</span>
-          <span class="meta__text">323-546-8120</span>
-        </div>
-      </div>
+      <nav class="socials" aria-label="Social links">
+        <a class="sbtn" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
+        <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer">Spotify</a>
+        <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+        <a class="sbtn" href="https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a>
+      </nav>
     </section>
 
     <footer class="ftr">
-      <span>Los Angeles</span>
-      <span class="ftr__dot">•</span>
-      <span>© <span id="y"></span></span>
+      <span>© <span id="y"></span> Andy Forsberg</span>
     </footer>
 
   </main>
