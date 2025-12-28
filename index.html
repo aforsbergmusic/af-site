@@ -7,7 +7,7 @@
   <title>Andy Forsberg — Composer + Producer</title>
   <meta name="description" content="Andy Forsberg — Composer + Producer. New site coming 2026." />
 
-  <!-- Industrial editorial font (same family feel as site) -->
+  <!-- Industrial editorial font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -29,15 +29,19 @@
       align-items:center;
       justify-content:center;
       padding:28px;
+      text-align:center;
     }
 
     .stack{
       max-width:960px;
       width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
     }
 
     h1{
-      font-size:clamp(42px,6vw,86px);
+      font-size:clamp(44px,6vw,88px);
       font-weight:500;
       letter-spacing:-.015em;
       margin:0;
@@ -51,8 +55,16 @@
       color:rgba(255,255,255,.55);
     }
 
+    .coming{
+      margin-top:10px;
+      font-size:12px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.45);
+    }
+
     .rule{
-      margin:26px 0 20px 0;
+      margin:28px 0 22px 0;
       height:1px;
       width:420px;
       max-width:90vw;
@@ -67,6 +79,7 @@
       display:flex;
       gap:12px;
       flex-wrap:wrap;
+      justify-content:center;
     }
 
     .sbtn{
@@ -100,6 +113,7 @@
     <div class="stack">
       <h1>Andy Forsberg</h1>
       <div class="sub">Composer + Producer</div>
+      <div class="coming">New Site Coming 2026</div>
 
       <div class="rule"></div>
 
