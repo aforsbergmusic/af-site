@@ -44,61 +44,46 @@
       line-height:1.05;
     }
 
-    /* === Name: hard-cut jewel flips, randomized order === */
+    /* === Name: hard-cut jewel flips, randomized order, infinite loop after first hover === */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
       color:#ffffff;
       will-change:color;
-      --c1:#7a5cff;
-      --c2:#5c7cff;
-      --c3:#22d3ee;
-      --c4:#34d98a;
-      --c5:#a3e635;
-      --c6:#ffd166;
-      --c7:#ff9f1c;
-      --c8:#ff4d6d;
-      --c9:#c13584;
+      --c1:#7a5cff; --c2:#5c7cff; --c3:#22d3ee; --c4:#34d98a; --c5:#a3e635;
+      --c6:#ffd166; --c7:#ff9f1c; --c8:#ff4d6d; --c9:#c13584;
     }
 
+    /* IMPORTANT: infinite loop */
     .nameGlow.is-animating{
-      animation: jewelCuts 20s steps(1,end) forwards;
+      animation: jewelCuts 20s steps(1,end) infinite;
     }
 
+    /* IMPORTANT: keep cadence consistent throughout (no 1% micro jumps) */
+    /* 20s / 20 steps = 1s per cut feel, consistent start-to-finish */
     @keyframes jewelCuts{
       0%   { color:#ffffff; }
+      5%   { color:var(--c1); }
+      10%  { color:var(--c2); }
+      15%  { color:var(--c3); }
+      20%  { color:var(--c4); }
+      25%  { color:var(--c5); }
+      30%  { color:var(--c6); }
+      35%  { color:var(--c7); }
+      40%  { color:var(--c8); }
+      45%  { color:var(--c9); }
 
-      4%   { color:var(--c1); }
-      8%   { color:var(--c2); }
-      12%  { color:var(--c3); }
-      16%  { color:var(--c4); }
-      20%  { color:var(--c5); }
-      24%  { color:var(--c6); }
-      28%  { color:var(--c7); }
-      32%  { color:var(--c8); }
-      36%  { color:var(--c9); }
+      50%  { color:var(--c3); }
+      55%  { color:var(--c6); }
+      60%  { color:var(--c1); }
+      65%  { color:var(--c8); }
+      70%  { color:var(--c4); }
+      75%  { color:var(--c7); }
+      80%  { color:var(--c2); }
+      85%  { color:var(--c9); }
+      90%  { color:var(--c5); }
 
-      /* fast section (same timing as before) */
-      40%  { color:var(--c3); }
-      42%  { color:var(--c6); }
-      44%  { color:var(--c1); }
-      46%  { color:var(--c8); }
-      48%  { color:var(--c4); }
-      50%  { color:var(--c7); }
-      52%  { color:var(--c2); }
-      54%  { color:var(--c9); }
-
-      /* micro flips */
-      56%  { color:var(--c5); }
-      57%  { color:var(--c1); }
-      58%  { color:var(--c8); }
-      59%  { color:var(--c3); }
-      60%  { color:var(--c7); }
-      61%  { color:var(--c2); }
-      62%  { color:var(--c6); }
-      63%  { color:var(--c4); }
-
-      80%  { color:#ffffff; }
+      95%  { color:#ffffff; }
       100% { color:#ffffff; }
     }
 
@@ -123,11 +108,7 @@
       height:1px;
       width:420px;
       max-width:90vw;
-      background:linear-gradient(
-        90deg,
-        rgba(255,255,255,.22),
-        rgba(255,255,255,0)
-      );
+      background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
     /* === Socials (UNCHANGED) === */
@@ -180,6 +161,11 @@
       background:rgba(193,53,132,.18);
       box-shadow:0 0 0 1px rgba(193,53,132,.40), 0 0 26px rgba(193,53,132,.55);
     }
+
+    @media (prefers-reduced-motion: reduce){
+      .nameGlow.is-animating{ animation:none !important; }
+      .sbtn{ transition:none !important; }
+    }
   </style>
 </head>
 
@@ -203,7 +189,7 @@
 
   <script>
     const name = document.getElementById("nameGlow");
-    let hoverArmed = true;
+    let started = false;
 
     const palette = [
       "#7a5cff", "#5c7cff", "#22d3ee", "#34d98a",
@@ -219,26 +205,20 @@
       return a;
     }
 
-    name.addEventListener("mouseenter", () => {
-      if (!hoverArmed) return;
-      hoverArmed = false;
-
+    function applyRandomPalette(){
       const colors = shuffle(palette);
-      colors.forEach((c,i)=>{
-        name.style.setProperty(`--c${i+1}`, c);
-      });
+      colors.forEach((c,i)=> name.style.setProperty(`--c${i+1}`, c));
+    }
+
+    name.addEventListener("mouseenter", () => {
+      if (started) return;          // one-time start
+      started = true;
+
+      applyRandomPalette();
 
       name.classList.remove("is-animating");
-      void name.offsetWidth;
+      void name.offsetWidth;        // restart cleanly
       name.classList.add("is-animating");
-    });
-
-    name.addEventListener("mouseleave", () => {
-      hoverArmed = true;
-    });
-
-    name.addEventListener("animationend", () => {
-      name.classList.remove("is-animating");
     });
   </script>
 </body>
