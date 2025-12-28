@@ -7,9 +7,10 @@
   <title>Andy Forsberg — Composer + Producer</title>
   <meta name="description" content="Andy Forsberg — Composer + Producer. New site coming 2026." />
 
+  <!-- SAME cinematic font as before -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&display=swap" rel="stylesheet">
 
   <style>
     html,body{
@@ -17,7 +18,7 @@
       height:100%;
       background:#0b0b0b;
       color:rgba(255,255,255,.92);
-      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      font-family:"Fraunces", ui-serif, Georgia, serif;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
     }
@@ -27,94 +28,31 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      text-align:left;
       padding:28px;
-      text-align:center;
     }
 
     .stack{
-      max-width:960px;
-      width:100%;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
+      max-width:900px;
     }
 
     h1{
-      font-size:clamp(44px,6vw,88px);
+      font-size:clamp(46px,6vw,92px);
       font-weight:500;
-      letter-spacing:-.015em;
+      letter-spacing:-.02em;
       margin:0;
-      line-height:1.05;
-    }
-
-    /* Explicit hover target */
-    .nameGlow{
-      display:inline-block;
-      cursor:pointer;
-    }
-
-    /* Run ONCE per hover, 5 seconds total */
-    .nameGlow:hover{
-      animation: jewelGlow 5s ease-in-out 1;
-    }
-
-    @keyframes jewelGlow{
-      0%{
-        text-shadow:
-          0 0 0 rgba(0,0,0,0);
-      }
-      20%{
-        text-shadow:
-          0 0 28px rgba(122,92,255,.85),
-          0 0 64px rgba(122,92,255,.55);
-      }
-      40%{
-        text-shadow:
-          0 0 28px rgba(29,185,84,.85),
-          0 0 64px rgba(29,185,84,.55);
-      }
-      60%{
-        text-shadow:
-          0 0 28px rgba(92,124,255,.85),
-          0 0 64px rgba(92,124,255,.55);
-      }
-      80%{
-        text-shadow:
-          0 0 28px rgba(193,53,132,.85),
-          0 0 64px rgba(193,53,132,.55);
-      }
-      100%{
-        text-shadow:
-          0 0 0 rgba(0,0,0,0);
-      }
-    }
-
-    /* Mobile hint (no hover devices) */
-    @media (hover:none){
-      .nameGlow{
-        text-shadow:
-          0 0 22px rgba(92,124,255,.35);
-      }
     }
 
     .sub{
-      margin-top:14px;
-      font-size:13px;
+      margin-top:16px;
+      font-size:14px;
       letter-spacing:.18em;
       text-transform:uppercase;
-      color:rgba(255,255,255,.55);
-    }
-
-    .coming{
-      margin-top:10px;
-      font-size:12px;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.45);
+      color:rgba(255,255,255,.6);
     }
 
     .rule{
-      margin:28px 0 22px 0;
+      margin:26px 0 18px 0;
       height:1px;
       width:420px;
       max-width:90vw;
@@ -127,57 +65,21 @@
 
     .socials{
       display:flex;
-      gap:12px;
+      gap:14px;
       flex-wrap:wrap;
-      justify-content:center;
     }
 
-    .sbtn{
+    .socials a{
       font-size:11px;
-      letter-spacing:.16em;
+      letter-spacing:.22em;
       text-transform:uppercase;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.03);
-      color:rgba(255,255,255,.70);
+      color:rgba(255,255,255,.55);
       text-decoration:none;
-      transition:
-        background .25s ease,
-        border-color .25s ease,
-        color .25s ease,
-        box-shadow .25s ease,
-        transform .25s ease;
+      transition:color .2s ease;
     }
 
-    .sbtn:hover{ transform:translateY(-1px); }
-
-    .sbtn.imdb:hover{
-      color:#e6d7ff;
-      border-color:#7a5cff;
-      background:rgba(122,92,255,.16);
-      box-shadow:0 0 0 1px rgba(122,92,255,.35);
-    }
-
-    .sbtn.spotify:hover{
-      color:#d6ffe9;
-      border-color:#1db954;
-      background:rgba(29,185,84,.16);
-      box-shadow:0 0 0 1px rgba(29,185,84,.35);
-    }
-
-    .sbtn.apple:hover{
-      color:#e6f0ff;
-      border-color:#5c7cff;
-      background:rgba(92,124,255,.16);
-      box-shadow:0 0 0 1px rgba(92,124,255,.35);
-    }
-
-    .sbtn.instagram:hover{
-      color:#ffe2ef;
-      border-color:#c13584;
-      background:rgba(193,53,132,.16);
-      box-shadow:0 0 0 1px rgba(193,53,132,.35);
+    .socials a:hover{
+      color:rgba(255,255,255,.92);
     }
   </style>
 </head>
@@ -185,17 +87,16 @@
 <body>
   <div class="wrap">
     <div class="stack">
-      <h1><span class="nameGlow">Andy Forsberg</span></h1>
+      <h1>Andy Forsberg</h1>
       <div class="sub">Composer + Producer</div>
-      <div class="coming">New Site Coming 2026</div>
 
       <div class="rule"></div>
 
       <div class="socials">
-        <a class="sbtn imdb" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
-        <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
-        <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-        <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
+        <a href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
+        <a href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer">Spotify</a>
+        <a href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+        <a href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
       </div>
     </div>
   </div>
