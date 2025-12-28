@@ -47,41 +47,53 @@
       line-height:1.05;
     }
 
-    /* The hover target is now explicit */
+    /* Explicit hover target */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
-      transition:filter .25s ease;
-      will-change:text-shadow, filter;
     }
 
+    /* Run ONCE per hover, 5 seconds total */
     .nameGlow:hover{
-      animation:jewelGlow 3.6s ease-in-out infinite;
-      filter:brightness(1.03);
+      animation: jewelGlow 5s ease-in-out 1;
     }
 
     @keyframes jewelGlow{
       0%{
-        text-shadow: 0 0 0 rgba(0,0,0,0);
+        text-shadow:
+          0 0 0 rgba(0,0,0,0);
       }
-      25%{
-        text-shadow: 0 0 22px rgba(122,92,255,.55); /* violet */
+      20%{
+        text-shadow:
+          0 0 28px rgba(122,92,255,.85),
+          0 0 64px rgba(122,92,255,.55);
       }
-      50%{
-        text-shadow: 0 0 22px rgba(29,185,84,.50);  /* emerald */
+      40%{
+        text-shadow:
+          0 0 28px rgba(29,185,84,.85),
+          0 0 64px rgba(29,185,84,.55);
       }
-      75%{
-        text-shadow: 0 0 22px rgba(193,53,132,.50); /* ruby */
+      60%{
+        text-shadow:
+          0 0 28px rgba(92,124,255,.85),
+          0 0 64px rgba(92,124,255,.55);
+      }
+      80%{
+        text-shadow:
+          0 0 28px rgba(193,53,132,.85),
+          0 0 64px rgba(193,53,132,.55);
       }
       100%{
-        text-shadow: 0 0 0 rgba(0,0,0,0);
+        text-shadow:
+          0 0 0 rgba(0,0,0,0);
       }
     }
 
-    /* Optional: give mobile a “tap hint” */
+    /* Mobile hint (no hover devices) */
     @media (hover:none){
       .nameGlow{
-        text-shadow: 0 0 16px rgba(92,124,255,.18);
+        text-shadow:
+          0 0 22px rgba(92,124,255,.35);
       }
     }
 
@@ -106,7 +118,11 @@
       height:1px;
       width:420px;
       max-width:90vw;
-      background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+      background:linear-gradient(
+        90deg,
+        rgba(255,255,255,.22),
+        rgba(255,255,255,0)
+      );
     }
 
     .socials{
@@ -126,7 +142,12 @@
       background:rgba(255,255,255,.03);
       color:rgba(255,255,255,.70);
       text-decoration:none;
-      transition:background .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease, transform .25s ease;
+      transition:
+        background .25s ease,
+        border-color .25s ease,
+        color .25s ease,
+        box-shadow .25s ease,
+        transform .25s ease;
     }
 
     .sbtn:hover{ transform:translateY(-1px); }
@@ -134,29 +155,29 @@
     .sbtn.imdb:hover{
       color:#e6d7ff;
       border-color:#7a5cff;
-      background:rgba(122,92,255,.12);
-      box-shadow:0 0 0 1px rgba(122,92,255,.25);
+      background:rgba(122,92,255,.16);
+      box-shadow:0 0 0 1px rgba(122,92,255,.35);
     }
 
     .sbtn.spotify:hover{
       color:#d6ffe9;
       border-color:#1db954;
-      background:rgba(29,185,84,.12);
-      box-shadow:0 0 0 1px rgba(29,185,84,.25);
+      background:rgba(29,185,84,.16);
+      box-shadow:0 0 0 1px rgba(29,185,84,.35);
     }
 
     .sbtn.apple:hover{
       color:#e6f0ff;
       border-color:#5c7cff;
-      background:rgba(92,124,255,.12);
-      box-shadow:0 0 0 1px rgba(92,124,255,.25);
+      background:rgba(92,124,255,.16);
+      box-shadow:0 0 0 1px rgba(92,124,255,.35);
     }
 
     .sbtn.instagram:hover{
       color:#ffe2ef;
       border-color:#c13584;
-      background:rgba(193,53,132,.12);
-      box-shadow:0 0 0 1px rgba(193,53,132,.25);
+      background:rgba(193,53,132,.16);
+      box-shadow:0 0 0 1px rgba(193,53,132,.35);
     }
   </style>
 </head>
