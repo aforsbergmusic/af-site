@@ -55,58 +55,34 @@
     }
 
     .nameGlow.is-animating{
-      animation: jewelSignature 20s cubic-bezier(.4,0,.2,1) forwards;
+      animation: jewelRapid 20s linear forwards;
     }
 
-    @keyframes jewelSignature{
+    /* Faster cycling (more stops) + deeper jewel tones */
+    @keyframes jewelRapid{
       0%{
-        color:#ffffff;
-        text-shadow:none;
-        letter-spacing:-.015em;
-        filter:brightness(1);
+        color:#ffffff; text-shadow:none; letter-spacing:-.015em; filter:brightness(1);
       }
 
-      15%{
-        color:#9a7cff; /* violet */
-        text-shadow:
-          0 0 28px rgba(154,124,255,.85),
-          0 0 90px rgba(154,124,255,.55);
-        letter-spacing:-.005em;
-        filter:brightness(1.05);
-      }
-
-      35%{
-        color:#34d98a; /* emerald */
-        text-shadow:
-          0 0 28px rgba(52,217,138,.85),
-          0 0 90px rgba(52,217,138,.55);
-        letter-spacing:0em;
-        filter:brightness(1.06);
-      }
-
-      55%{
-        color:#7fa2ff; /* sapphire */
-        text-shadow:
-          0 0 28px rgba(127,162,255,.9),
-          0 0 90px rgba(127,162,255,.6);
-        letter-spacing:-.003em;
-        filter:brightness(1.05);
-      }
-
-      75%{
-        color:#e35fa8; /* ruby */
-        text-shadow:
-          0 0 28px rgba(227,95,168,.9),
-          0 0 90px rgba(227,95,168,.6);
-        letter-spacing:-.008em;
-        filter:brightness(1.07);
-      }
+      6%{  color:#7a5cff; text-shadow:0 0 26px rgba(122,92,255,.90), 0 0 92px rgba(122,92,255,.55); letter-spacing:-.006em; filter:brightness(1.07); } /* amethyst */
+      12%{ color:#5c7cff; text-shadow:0 0 26px rgba(92,124,255,.92), 0 0 92px rgba(92,124,255,.55); letter-spacing:-.002em; filter:brightness(1.06); } /* sapphire */
+      18%{ color:#22d3ee; text-shadow:0 0 26px rgba(34,211,238,.88), 0 0 92px rgba(34,211,238,.50); letter-spacing:0em;      filter:brightness(1.06); } /* cyan gem */
+      24%{ color:#34d98a; text-shadow:0 0 26px rgba(52,217,138,.90), 0 0 92px rgba(52,217,138,.52); letter-spacing:-.003em; filter:brightness(1.07); } /* emerald */
+      30%{ color:#a3e635; text-shadow:0 0 26px rgba(163,230,53,.78),  0 0 92px rgba(163,230,53,.42); letter-spacing:-.006em; filter:brightness(1.05); } /* peridot */
+      36%{ color:#ffd166; text-shadow:0 0 26px rgba(255,209,102,.78), 0 0 92px rgba(255,209,102,.40); letter-spacing:-.010em; filter:brightness(1.04); } /* amber */
+      42%{ color:#ff9f1c; text-shadow:0 0 26px rgba(255,159,28,.82),  0 0 92px rgba(255,159,28,.44); letter-spacing:-.006em; filter:brightness(1.05); } /* topaz */
+      48%{ color:#ff4d6d; text-shadow:0 0 26px rgba(255,77,109,.88),  0 0 92px rgba(255,77,109,.52); letter-spacing:-.002em; filter:brightness(1.07); } /* ruby */
+      54%{ color:#c13584; text-shadow:0 0 26px rgba(193,53,132,.88),  0 0 92px rgba(193,53,132,.52); letter-spacing:0em;      filter:brightness(1.07); } /* magenta */
+      60%{ color:#7a5cff; text-shadow:0 0 26px rgba(122,92,255,.90), 0 0 92px rgba(122,92,255,.55); letter-spacing:-.006em; filter:brightness(1.07); }
+      66%{ color:#5c7cff; text-shadow:0 0 26px rgba(92,124,255,.92), 0 0 92px rgba(92,124,255,.55); letter-spacing:-.002em; filter:brightness(1.06); }
+      72%{ color:#22d3ee; text-shadow:0 0 26px rgba(34,211,238,.88), 0 0 92px rgba(34,211,238,.50); letter-spacing:0em;      filter:brightness(1.06); }
+      78%{ color:#34d98a; text-shadow:0 0 26px rgba(52,217,138,.90), 0 0 92px rgba(52,217,138,.52); letter-spacing:-.003em; filter:brightness(1.07); }
+      84%{ color:#ff9f1c; text-shadow:0 0 26px rgba(255,159,28,.82),  0 0 92px rgba(255,159,28,.44); letter-spacing:-.006em; filter:brightness(1.05); }
+      90%{ color:#ff4d6d; text-shadow:0 0 26px rgba(255,77,109,.88),  0 0 92px rgba(255,77,109,.52); letter-spacing:-.002em; filter:brightness(1.07); }
+      96%{ color:#c13584; text-shadow:0 0 26px rgba(193,53,132,.88),  0 0 92px rgba(193,53,132,.52); letter-spacing:0em;      filter:brightness(1.07); }
 
       100%{
-        color:#ffffff;
-        text-shadow:none;
-        letter-spacing:-.015em;
-        filter:brightness(1);
+        color:#ffffff; text-shadow:none; letter-spacing:-.015em; filter:brightness(1);
       }
     }
 
@@ -162,32 +138,30 @@
         box-shadow .25s ease,
         transform .25s ease;
     }
-
     .sbtn:hover{ transform:translateY(-1px); }
 
+    /* Social jewel hovers */
     .sbtn.imdb:hover{
-      color:#e6d7ff;
-      border-color:#7a5cff;
-      background:rgba(122,92,255,.16);
+      color:#e6d7ff; border-color:#7a5cff; background:rgba(122,92,255,.16);
       box-shadow:0 0 0 1px rgba(122,92,255,.35);
     }
     .sbtn.spotify:hover{
-      color:#d6ffe9;
-      border-color:#1db954;
-      background:rgba(29,185,84,.16);
+      color:#d6ffe9; border-color:#1db954; background:rgba(29,185,84,.16);
       box-shadow:0 0 0 1px rgba(29,185,84,.35);
     }
     .sbtn.apple:hover{
-      color:#e6f0ff;
-      border-color:#5c7cff;
-      background:rgba(92,124,255,.16);
+      color:#e6f0ff; border-color:#5c7cff; background:rgba(92,124,255,.16);
       box-shadow:0 0 0 1px rgba(92,124,255,.35);
     }
     .sbtn.instagram:hover{
-      color:#ffe2ef;
-      border-color:#c13584;
-      background:rgba(193,53,132,.16);
+      color:#ffe2ef; border-color:#c13584; background:rgba(193,53,132,.16);
       box-shadow:0 0 0 1px rgba(193,53,132,.35);
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .nameGlow.is-animating{ animation:none !important; }
+      .sbtn{ transition:none !important; }
     }
   </style>
 </head>
