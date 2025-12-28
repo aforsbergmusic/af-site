@@ -114,7 +114,7 @@
       background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
-    /* === Socials (locked) === */
+    /* === Socials === */
     .socials{
       display:flex;
       gap:12px;
@@ -165,6 +165,25 @@
       border-color:#c13584;
       background:rgba(193,53,132,.18);
       box-shadow:0 0 0 1px rgba(193,53,132,.40), 0 0 26px rgba(193,53,132,.55);
+    }
+
+    /* === Mobile portrait: stack socials vertically === */
+    @media (max-width:520px) and (orientation:portrait){
+      .socials{
+        flex-direction:column;
+        align-items:center;
+      }
+      .sbtn{
+        width:220px;
+        text-align:center;
+      }
+    }
+
+    /* === Mobile landscape + desktop: horizontal === */
+    @media (max-width:900px) and (orientation:landscape){
+      .socials{
+        flex-direction:row;
+      }
     }
 
     @media (max-width:520px){
