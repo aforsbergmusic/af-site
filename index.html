@@ -1,180 +1,91 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Andy Forsberg — Composer & Producer</title>
-  <meta name="description" content="Andy Forsberg — media composer & producer based in Los Angeles." />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Andy Forsberg — Composer</title>
+  <meta name="description" content="Andy Forsberg is a Los Angeles–based composer for film, television, and documentary." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- Minimal sticky header (custom, not Squarespace) -->
-  <header class="hdr" role="banner">
-    <div class="hdr__left">
-      <a class="brand" href="#top" aria-label="Back to top">
-        <span class="brand__mark">AF</span>
-      </a>
-      <span class="brand__name">Andy Forsberg</span>
-    </div>
 
-    <nav class="hdr__right" aria-label="Primary">
-      <div class="social">
-        <a class="iconBtn" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer" aria-label="IMDb">
-          <span class="imdbBadge">IMDb</span>
-        </a>
-        <a class="iconBtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer" aria-label="Spotify">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2Zm4.58 14.43a.9.9 0 0 1-1.24.29c-2.7-1.65-6.1-2.02-10.1-1.1a.9.9 0 1 1-.4-1.76c4.44-1.02 8.27-.59 11.35 1.31a.9.9 0 0 1 .39 1.26Zm.96-2.56a1.05 1.05 0 0 1-1.44.35c-3.1-1.9-7.83-2.45-11.5-1.34a1.05 1.05 0 0 1-.6-2.01c4.2-1.27 9.42-.65 13.0 1.55.5.31.66.97.34 1.45Zm.08-2.77c-3.71-2.2-9.84-2.4-13.38-1.33a1.2 1.2 0 0 1-.7-2.29c4.06-1.23 10.82-1 15.1 1.56a1.2 1.2 0 0 1-1.02 2.06Z"/></svg>
-        </a>
-        <a class="iconBtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer" aria-label="Apple Music">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2.6c0-.5-.5-.8-.9-.7l-8.8 1.9c-.4.1-.7.5-.7.9v11.4c-.6-.4-1.4-.6-2.2-.6-2 0-3.6 1.2-3.6 2.8S1.9 22 3.9 22s3.6-1.2 3.6-2.8V7.2l7.2-1.6V15c-.6-.4-1.4-.6-2.2-.6-2 0-3.6 1.2-3.6 2.8S10.5 20 12.5 20s3.6-1.2 3.6-2.8V2.6Z"/></svg>
-        </a>
-        <a class="iconBtn" href="https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9A3.5 3.5 0 0 0 20 16.5v-9A3.5 3.5 0 0 0 16.5 4h-9ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.75-2.2a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3Z"/></svg>
-        </a>
-      </div>
-
-      <button class="menuBtn" id="menuBtn" type="button" aria-label="Menu" aria-expanded="false">
-        <span></span><span></span>
-      </button>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo">AF</div>
+    <nav class="socials">
+      <a href="https://www.imdb.com/name/nm4586039/" target="_blank">IMDb</a>
+      <a href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank">Spotify</a>
+      <a href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank">Apple Music</a>
+      <a href="https://www.instagram.com/aforsbergmusic" target="_blank">Instagram</a>
     </nav>
   </header>
 
-  <!-- Slide-down menu -->
-  <div class="menu" id="menu" aria-hidden="true">
-    <div class="menu__panel">
-      <a href="#projects" class="menu__link">Projects</a>
-      <a href="#listen" class="menu__link">Listen</a>
-      <a href="#info" class="menu__link">Info + Contact</a>
-    </div>
-  </div>
+  <!-- Main -->
+  <main class="page">
 
-  <main id="top" class="page">
-    <!-- HERO -->
-    <section class="hero" data-reveal>
-      <div class="hero__inner">
-        <h1 class="hero__title">Composer & Producer</h1>
-        <p class="hero__sub">Los Angeles. Neoclassical, electronic, and sweeping orchestral palettes.</p>
-        <div class="hero__cta">
-          <a class="pill" href="#projects">Projects</a>
-          <a class="pill pill--ghost" href="#listen">Listen</a>
-          <a class="pill pill--ghost" href="#info">Info + Contact</a>
-        </div>
-      </div>
-      <div class="hero__fade"></div>
+    <section class="hero">
+      <h1>Andy Forsberg</h1>
+      <p class="intro">
+        Composer for film, television, and documentary.
+      </p>
     </section>
 
-    <!-- PROJECTS -->
-    <section id="projects" class="section" data-reveal>
-      <div class="section__head">
-        <h2 class="section__title">Projects</h2>
-        <p class="section__note">Tap a poster to view larger.</p>
-      </div>
-
-      <div class="posters" id="posters"></div>
-    </section>
-
-    <!-- LISTEN -->
-    <section id="listen" class="section" data-reveal>
-      <div class="section__head">
-        <h2 class="section__title">Listen</h2>
-        <p class="section__note">Waveform seek, persistent playback, sticky dock while you scroll.</p>
-      </div>
-
-      <div class="player" id="player">
-        <div class="player__top">
-          <div class="player__meta">
-            <div class="npLabel">Now playing</div>
-            <div class="npTitle" id="npTitle">Select a track</div>
-            <div class="npTime" id="npTime">0:00 / 0:00</div>
-          </div>
-
-          <button class="playBtn" id="playBtn" type="button" aria-label="Play/Pause">
-            <span id="playIcon">▶</span>
-          </button>
-        </div>
-
-        <button class="wave" id="wave" type="button" aria-label="Waveform seek">
-          <canvas id="waveCanvas"></canvas>
-        </button>
-
-        <div class="tracklist" id="tracklist"></div>
+    <!-- Player placeholder (we’ll refine later) -->
+    <section class="player-section">
+      <div id="player">
+        <!-- JS player renders here -->
       </div>
     </section>
 
-    <!-- INFO + CONTACT -->
-    <section id="info" class="section" data-reveal>
-      <div class="section__head">
-        <h2 class="section__title">Info + Contact</h2>
+    <!-- Projects -->
+    <section class="projects">
+      <h2>Selected Work</h2>
+      <div class="project-grid">
+        <!-- poster tiles live here -->
       </div>
+    </section>
 
-      <div class="infoGrid">
-        <div class="bioCard">
-          <div class="bioCard__top">
-            <div class="bioImg" id="bioImg" aria-hidden="true"></div>
-            <div>
-              <div class="bioName">Andy Forsberg</div>
-              <div class="bioRole">Media Composer • Producer</div>
-            </div>
-          </div>
-
-          <div class="bioText">
-            Andy Forsberg is a media composer and producer based in Los Angeles.<br><br>
-            After studying at the Berklee College of Music, Andy’s journey began working for acclaimed composer/arranger William Ross (Harry Potter and The Chamber of Secrets, Barbara Streisand). Shortly after, he co-founded video game music and sound design house Hexany Audio, where he served as its lead composer until 2016.<br><br>
-            Andy has since carved out his own path through his unique patchwork of styles, combining Neoclassical, electronic, and sweeping orchestral palettes. He has composed and contributed music for several of Nat Geo/Disney, BBC/Apple, and Discovery Channel’s high profile projects, including Born Wild: The Next Generation narrated by Robin Roberts, The Secret Lives of Animals, The Last Alaskans, Europe from Above, and Magic of Disney’s Animal Kingdom. Among his documentary work, Andy has made a quick name for himself in many genres, scoring several of Lifetime Network’s lauded list of TV movie thrillers, Thirst for Hulu’s bite sized Halloween directed by Stefan Dezil, and the award-winning film Whistle created by director Jen Araki, starring Dylan Playfair (Letterkenny, The Mighty Ducks: Game Changers).<br><br>
-            An avid conductor, Andy has led the Hollywood Chamber Orchestra at the Ricardo Montalbán Theatre for the world premiere of his concert work “Beyond Us”, recorded and conducted his own music at multiple historic scoring stages, and was one of Broadcast Music Inc.’s (BMI) selected fellows for their 2018 intensive conducting workshop, led by acclaimed conductor/composer Lucas Richman.<br><br>
-            Through his work in documentaries, thrillers, and dramas, Andy has found an intense passion for real-life storytelling, and finding light in the darker elements of human nature.
-          </div>
-        </div>
-
-        <div class="repCard">
-          <div class="repTitle">Representation</div>
-          <div class="repLine"><span>Arbel Bedak</span></div>
-          <div class="repLine"><span>Spectra Creative Agency</span></div>
-          <a class="repLink" href="mailto:arbel@spectracreativeagency.com">arbel@spectracreativeagency.com</a>
-          <a class="repLink" href="tel:+13235468120">(323) 546-8120</a>
-
-          <div class="repDivider"></div>
-
-          <div class="repTitle">Links</div>
-          <div class="repLinks">
-            <a href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
-            <a href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer">Spotify</a>
-            <a href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-            <a href="https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a>
-          </div>
+    <!-- Bio -->
+    <section class="bio">
+      <div class="bio-inner">
+        <img id="profile-photo" src="" alt="Andy Forsberg portrait" />
+        <div class="bio-text">
+          <h2>Bio</h2>
+          <p>
+            Andy Forsberg is a media composer and producer based in Los Angeles. After studying at
+            Berklee College of Music, he began his career working with composer and arranger William
+            Ross before co-founding the video game music and sound design company Hexany Audio.
+          </p>
+          <p>
+            His work spans documentaries, scripted television, and film, including projects for
+            National Geographic, Disney, BBC, Apple, Discovery Channel, and Lifetime.
+          </p>
         </div>
       </div>
     </section>
 
-    <footer class="ftr">
-      <div class="ftr__left">© <span id="y"></span> Andy Forsberg</div>
-      <div class="ftr__right">Los Angeles</div>
-    </footer>
+    <!-- Representation -->
+    <section class="contact">
+      <h2>Info + Contact</h2>
+      <p><strong>Representation</strong><br>
+        Arbel Bedak<br>
+        Spectra Creative Agency<br>
+        <a href="mailto:arbel@spectracreativeagency.com">arbel@spectracreativeagency.com</a><br>
+        (323) 546-8120
+      </p>
+    </section>
+
   </main>
-
-  <!-- Lightbox -->
-  <div class="lb" id="lb" aria-hidden="true">
-    <button class="lb__bg" id="lbBg" type="button" aria-label="Close"></button>
-    <div class="lb__panel" role="dialog" aria-modal="true">
-      <img class="lb__img" id="lbImg" alt="" />
-      <button class="lb__close" id="lbClose" type="button" aria-label="Close">✕</button>
-    </div>
-  </div>
-
-  <!-- Sticky mini dock (appears only when playing) -->
-  <div class="dock" id="dock" aria-hidden="true">
-    <button class="dock__play" id="dockPlay" type="button" aria-label="Play/Pause">▶</button>
-    <div class="dock__meta">
-      <div class="dock__title" id="dockTitle">—</div>
-      <div class="dock__time" id="dockTime">0:00 / 0:00</div>
-    </div>
-    <button class="dock__wave" id="dockWave" type="button" aria-label="Waveform seek">
-      <canvas id="dockCanvas"></canvas>
-    </button>
-  </div>
 
   <script src="app.js"></script>
 </body>
 </html>
-
