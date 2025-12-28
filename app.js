@@ -1,6 +1,7 @@
 /* =========================================================
    AF SITE — app.js (Full, stable)
-   + Random jewel tone hover (socials + posters) via CSS var --jt
+   - Waveform: solid pill bars with clean spacing
+   - Posters: NO title under image; title shows on hover overlay (CSS)
    ========================================================= */
 
 (() => {
@@ -149,7 +150,7 @@
     return out;
   }
 
-  // Waveform draw: SOLID pills, minimal gap
+  // Waveform draw: SOLID pills, minimal gap (no “liney” look)
   function drawWave(canvas, peaks, progress01) {
     if (!canvas || !peaks || !peaks.length) return;
 
@@ -158,6 +159,7 @@
     ctx.clearRect(0, 0, w, h);
 
     const mid = h * 0.5;
+
     const stride = 6.0;
     const barW = 5.2;
     const minAmp = 6;
@@ -222,42 +224,6 @@
     }
   }
 
-  // ---------------------------
-  // Jewel-tone randomizer
-  // ---------------------------
-  const JEWELS = [
-    "#35d0ff", // cyan
-    "#7c5cff", // amethyst
-    "#ff4fd8", // magenta
-    "#ffb020", // amber
-    "#22f2a6", // mint
-    "#ff5a5f", // coral
-    "#2ee6a6", // emerald
-    "#6a5cff", // deep violet
-    "#00c2ff", // electric blue
-    "#ff3fbf"  // hot pink
-  ];
-
-  function randJewel() {
-    return JEWELS[Math.floor(Math.random() * JEWELS.length)];
-  }
-
-  function applyRandomJewelOnHover(els) {
-    els.forEach((el) => {
-      // Set an initial per-element color so first hover looks intentional
-      el.style.setProperty("--jt", randJewel());
-
-      el.addEventListener("pointerenter", () => {
-        el.style.setProperty("--jt", randJewel());
-      }, { passive: true });
-
-      // Keyboard accessibility: tab focus also randomizes
-      el.addEventListener("focus", () => {
-        el.style.setProperty("--jt", randJewel());
-      });
-    });
-  }
-
   document.addEventListener("DOMContentLoaded", () => {
     // Header scroll state
     const hdr = $(".hdr");
@@ -308,15 +274,11 @@
     if (sSpotify) sSpotify.href = SOCIALS.spotify;
     if (sIg) sIg.href = SOCIALS.instagram;
 
-    // Random jewel hover for socials (splash-style)
-    applyRandomJewelOnHover($$(".sbtn"));
-
     // Bio image
     const bioImg = $(".bioImg");
     if (bioImg && PROFILE_IMG_URL) {
       bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
     }
-    if (bioImg) applyRandomJewelOnHover([bioImg]);
 
     // Reveal
     const revealEls = $$("[data-reveal]");
@@ -332,23 +294,19 @@
       revealEls.forEach(el => io.observe(el));
     }
 
-    // Posters
+    // Posters (NO title below; title is data-title for CSS overlay)
     const postersEl = $(".posters");
     if (postersEl && PROJECTS.length) {
       postersEl.innerHTML = PROJECTS.map((p, i) => {
         const safeTitle = (p.title || "Project").replace(/"/g, "&quot;");
         const img = p.img || "";
         return `
-          <div class="poster" data-idx="${i}" role="button" aria-label="Open ${safeTitle}" tabindex="0">
+          <div class="poster" data-idx="${i}" data-title="${safeTitle}" role="button" tabindex="0" aria-label="Open ${safeTitle}">
             <div class="poster__img" style="background-image:url('${img}')"></div>
-            <div class="poster__name">${safeTitle}</div>
           </div>
         `;
       }).join("");
     }
-
-    // Random jewel hover for posters (outline)
-    applyRandomJewelOnHover($$(".poster"));
 
     // Lightbox
     const lb = $(".lb");
@@ -442,7 +400,7 @@
       tracklist.innerHTML = FEATURED_TRACKS.map((t, i) => {
         const active = i === tIdx ? " is-active" : "";
         return `
-          <div class="row${active}" data-i="${i}" role="button" aria-label="Play ${t.title || "Track"}" tabindex="0">
+          <div class="row${active}" data-i="${i}" role="button" aria-label="Play ${t.title || "Track"}">
             <div class="row__t">${t.title || "Untitled"}</div>
             <div class="row__d"></div>
           </div>
@@ -540,16 +498,6 @@
         tracklist.addEventListener("click", (e) => {
           const row = e.target.closest(".row");
           if (!row) return;
-          const i = Number(row.dataset.i);
-          if (i === tIdx) togglePlay();
-          else setTrack(i, true);
-        });
-
-        tracklist.addEventListener("keydown", (e) => {
-          if (e.key !== "Enter" && e.key !== " ") return;
-          const row = e.target.closest(".row");
-          if (!row) return;
-          e.preventDefault();
           const i = Number(row.dataset.i);
           if (i === tIdx) togglePlay();
           else setTrack(i, true);
