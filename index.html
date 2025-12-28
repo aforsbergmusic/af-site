@@ -4,52 +4,63 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Andy Forsberg — Coming 2026</title>
+  <meta name="description" content="New site coming in 2026." />
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <style>
-    html,body{
-      margin:0;
-      height:100%;
-      background:#0b0b0b;
-      color:rgba(255,255,255,.9);
-      font-family:"Space Grotesk", system-ui, sans-serif;
-    }
-
-    .wrap{
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:24px;
-    }
-
-    h1{
-      font-size:clamp(36px,5vw,72px);
-      font-weight:500;
-      letter-spacing:-.02em;
-      margin:0 0 14px 0;
-    }
-
-    p{
-      font-size:14px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.6);
-      margin:0;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <div class="wrap">
-    <div>
-      <h1>Andy Forsberg</h1>
-      <p>Composer + Producer — New Site Coming 2026</p>
-    </div>
-  </div>
+  <main class="coming" aria-label="Coming soon">
+    <div class="coming__bg" aria-hidden="true"></div>
+    <div class="coming__grain" aria-hidden="true"></div>
+
+    <header class="coming__hdr">
+      <a class="coming__name" href="/" aria-label="Home">Andy Forsberg</a>
+      <div class="coming__links" aria-label="Links">
+        <a class="pill" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
+        <a class="pill" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer">Spotify</a>
+        <a class="pill" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+        <a class="pill" href="https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a>
+      </div>
+    </header>
+
+    <section class="coming__center">
+      <div class="kicker reveal">New site</div>
+
+      <h1 class="title">
+        <span class="title__line reveal" style="--d:0ms">Coming</span>
+        <span class="title__line reveal" style="--d:120ms">2026</span>
+      </h1>
+
+      <p class="sub reveal" style="--d:260ms">
+        Composer + Producer
+      </p>
+
+      <div class="cta reveal" style="--d:360ms">
+        <a class="cta__link" href="mailto:arbel@spectracreativeagency.com">arbel@spectracreativeagency.com</a>
+        <span class="dot">•</span>
+        <span class="cta__text">323-546-8120</span>
+      </div>
+
+      <div class="hint reveal" style="--d:480ms">
+        Full credits & listen reel launching soon.
+      </div>
+    </section>
+
+    <footer class="coming__ftr">
+      <span>Los Angeles</span>
+      <span class="sep">—</span>
+      <span>© <span id="y"></span></span>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
