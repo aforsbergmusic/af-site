@@ -3,7 +3,7 @@
 
   // Add your photo URL here (the one you used earlier).
   // Example: const PROFILE_IMG_URL = "https://.../andy.webp";
-  const PROFILE_IMG_URL = https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/ea254815-d550-4fe0-b4d2-f47612e555aa/Studio+Hygge+2023-22.jpeg?content-type=image%2Fjpeg; // <-- paste your image URL here
+  const PROFILE_IMG_URL = "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/ea254815-d550-4fe0-b4d2-f47612e555aa/Studio+Hygge+2023-22.jpeg?content-type=image%2Fjpeg;" // <-- paste your image URL here
 
   const PROJECTS = [
     { title:"Hilinski's Hope", img:"https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&raw=1" },
@@ -389,4 +389,5 @@
   // Resize redraw
   window.addEventListener("resize", () => sync(true), { passive:true });
 })();
+
 
