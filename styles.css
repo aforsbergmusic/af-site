@@ -576,3 +576,158 @@ a:hover{ opacity:.92; }
   .hero__sub{ font-size:15.5px; }
   .dock__title{ max-width:24ch; }
 }
+
+/* =========================================================
+   Jewel-tone Outline System (ADD-ON)
+   - Adds premium, color-shifting outlines + subtle glow
+   - Designed to work with dark UI and your existing borders
+   - Apply to: posters, bio image, player, lightbox panel, dock
+   ========================================================= */
+
+/* Jewel palette */
+:root{
+  --jt1:#35d0ff; /* electric cyan */
+  --jt2:#7c5cff; /* amethyst */
+  --jt3:#ff4fd8; /* magenta */
+  --jt4:#ffb020; /* amber */
+  --jt5:#22f2a6; /* mint */
+  --jt6:#ff5a5f; /* coral */
+}
+
+/* Shared outline sizing */
+:root{
+  --jtStroke: 1px;
+  --jtGlow: 16px;
+  --jtAlpha: .95;
+}
+
+/* Make these elements capable of hosting a pseudo-outline */
+.player,
+.poster,
+.bioImg,
+.infoCard,
+.lb__panel,
+.dock__inner{
+  position:relative;
+}
+
+/* Default: keep your normal border, but add a “hidden” jewel outline layer */
+.player::after,
+.poster::after,
+.bioImg::after,
+.infoCard::after,
+.lb__panel::after,
+.dock__inner::after{
+  content:"";
+  position:absolute;
+  inset:-1px;              /* sits just outside existing border */
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:0;
+  border:var(--jtStroke) solid transparent;
+  background:
+    linear-gradient(135deg,
+      rgba(53,208,255,var(--jtAlpha)),
+      rgba(124,92,255,var(--jtAlpha)),
+      rgba(255,79,216,var(--jtAlpha)),
+      rgba(255,176,32,var(--jtAlpha)),
+      rgba(34,242,166,var(--jtAlpha))
+    ) border-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+          mask-composite:exclude;
+  filter:blur(0px);
+  transition:opacity .18s ease, filter .18s ease;
+}
+
+/* Hover / focus: reveal outline + glow */
+.player:hover::after,
+.poster:hover::after,
+.bioImg:hover::after,
+.infoCard:hover::after,
+.dock__inner:hover::after,
+.lb[aria-hidden="false"] .lb__panel::after{
+  opacity:.92;
+  filter:drop-shadow(0 0 var(--jtGlow) rgba(124,92,255,.24))
+         drop-shadow(0 0 calc(var(--jtGlow) * .65) rgba(53,208,255,.20));
+}
+
+/* Posters: slightly stronger (this is the “signature”) */
+.poster:hover::after{
+  opacity:1;
+  filter:drop-shadow(0 0 18px rgba(255,79,216,.22))
+         drop-shadow(0 0 14px rgba(34,242,166,.18));
+}
+
+/* Bio image: slightly calmer */
+.bioImg:hover::after{
+  opacity:.88;
+  filter:drop-shadow(0 0 16px rgba(53,208,255,.20))
+         drop-shadow(0 0 12px rgba(255,176,32,.14));
+}
+
+/* Lightbox panel: visible when open (not just hover) */
+.lb[aria-hidden="false"] .lb__panel::after{
+  opacity:.95;
+  filter:drop-shadow(0 0 22px rgba(124,92,255,.22))
+         drop-shadow(0 0 16px rgba(53,208,255,.18));
+}
+
+/* Dock: keep classy—small glow */
+.dock__inner:hover::after{
+  opacity:.78;
+  filter:drop-shadow(0 0 14px rgba(34,242,166,.16));
+}
+
+/* Optional: jewel outline on social buttons ONLY on hover (does not change layout) */
+.sbtn{
+  position:relative;
+}
+.sbtn::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:999px;
+  pointer-events:none;
+  opacity:0;
+  border:1px solid transparent;
+  background:
+    linear-gradient(90deg,
+      rgba(53,208,255,.95),
+      rgba(124,92,255,.95),
+      rgba(255,79,216,.95),
+      rgba(255,176,32,.95),
+      rgba(34,242,166,.95)
+    ) border-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+          mask-composite:exclude;
+  transition:opacity .16s ease, filter .16s ease;
+}
+.sbtn:hover::after{
+  opacity:.92;
+  filter:drop-shadow(0 0 12px rgba(124,92,255,.22));
+}
+
+/* Reduce motion: keep outlines but no glow “pop” */
+@media (prefers-reduced-motion: reduce){
+  .player::after,
+  .poster::after,
+  .bioImg::after,
+  .infoCard::after,
+  .lb__panel::after,
+  .dock__inner::after,
+  .sbtn::after{
+    transition:none;
+    filter:none !important;
+  }
+}
+
+/* Mobile: slightly less glow so it doesn’t feel loud */
+@media (max-width: 520px){
+  :root{ --jtGlow: 12px; }
+}
