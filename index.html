@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Andy Forsberg — Composer + Producer</title>
-  <meta name="description" content="Andy Forsberg — Composer + Producer. New site coming 2026." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,20 +44,19 @@
       line-height:1.05;
     }
 
-    /* === Name: hard-cut jewel flips, randomized order, infinite loop, no white after start === */
+    /* === Name animation === */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
-      color:#ffffff; /* initial fresh page only */
-      will-change:color;
       user-select:none;
+      will-change:color;
 
-      --c1:#7a5cff; --c2:#5c7cff; --c3:#22d3ee; --c4:#34d98a; --c5:#a3e635;
-      --c6:#ffd166; --c7:#ff9f1c; --c8:#ff4d6d; --c9:#c13584;
+      --c1:#7a5cff; --c2:#5c7cff; --c3:#22d3ee; --c4:#34d98a;
+      --c5:#a3e635; --c6:#ffd166; --c7:#ff9f1c; --c8:#ff4d6d; --c9:#c13584;
     }
 
     .nameGlow.is-animating{
-      animation: jewelCuts 20s steps(1,end) infinite;
+      animation:jewelCuts 20s steps(1,end) infinite;
     }
 
     @keyframes jewelCuts{
@@ -71,7 +69,6 @@
       30%  { color:var(--c7); }
       35%  { color:var(--c8); }
       40%  { color:var(--c9); }
-
       45%  { color:var(--c3); }
       50%  { color:var(--c6); }
       55%  { color:var(--c1); }
@@ -81,7 +78,6 @@
       75%  { color:var(--c2); }
       80%  { color:var(--c9); }
       85%  { color:var(--c5); }
-
       90%  { color:var(--c8); }
       95%  { color:var(--c2); }
       100% { color:var(--c6); }
@@ -104,20 +100,21 @@
     }
 
     .rule{
-      margin:28px 0 22px 0;
+      margin:28px 0 22px;
       height:1px;
       width:420px;
       max-width:92vw;
       background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
-    /* === Socials (do not change) === */
+    /* === Socials (unchanged) === */
     .socials{
       display:flex;
       gap:12px;
       flex-wrap:wrap;
       justify-content:center;
     }
+
     .sbtn{
       font-size:11px;
       letter-spacing:.16em;
@@ -135,6 +132,7 @@
         box-shadow .18s ease,
         transform .18s ease;
     }
+
     .sbtn:hover{ transform:translateY(-1px); }
 
     .sbtn.imdb:hover{
@@ -162,24 +160,11 @@
       box-shadow:0 0 0 1px rgba(193,53,132,.40), 0 0 26px rgba(193,53,132,.55);
     }
 
-    /* === Mobile optimization === */
-    @media (max-width: 520px){
-      .wrap{ padding:22px; }
+    @media (max-width:520px){
       h1{ font-size:clamp(36px, 10vw, 56px); }
-      .sub{ margin-top:12px; font-size:12px; letter-spacing:.16em; }
-      .coming{ font-size:11px; letter-spacing:.20em; }
-      .rule{ margin:22px 0 18px 0; }
-      .socials{ gap:10px; }
-      .sbtn{
-        font-size:10px;
-        padding:10px 12px;
-        letter-spacing:.14em;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      .nameGlow.is-animating{ animation:none !important; }
-      .sbtn{ transition:none !important; }
+      .sub{ font-size:12px; }
+      .coming{ font-size:11px; }
+      .sbtn{ font-size:10px; padding:10px 12px; }
     }
   </style>
 </head>
@@ -187,64 +172,49 @@
 <body>
   <div class="wrap">
     <div class="stack">
-      <h1><span class="nameGlow" id="nameGlow">Andy Forsberg</span></h1>
+      <h1><span class="nameGlow is-animating" id="nameGlow">Andy Forsberg</span></h1>
       <div class="sub">Composer + Producer</div>
       <div class="coming">New Site Coming 2026</div>
 
       <div class="rule"></div>
 
       <div class="socials">
-        <a class="sbtn imdb" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
-        <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
-        <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-        <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
+        <a class="sbtn imdb" href="https://www.imdb.com/name/nm4586039/" target="_blank">IMDb</a>
+        <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank">Spotify</a>
+        <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank">Apple Music</a>
+        <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank">Instagram</a>
       </div>
     </div>
   </div>
 
   <script>
     const name = document.getElementById("nameGlow");
-    let started = false;
+    let running = true;
 
     const palette = [
-      "#7a5cff", "#5c7cff", "#22d3ee", "#34d98a",
-      "#a3e635", "#ffd166", "#ff9f1c", "#ff4d6d", "#c13584"
+      "#7a5cff","#5c7cff","#22d3ee","#34d98a",
+      "#a3e635","#ffd166","#ff9f1c","#ff4d6d","#c13584"
     ];
 
-    function shuffle(arr){
-      const a = [...arr];
+    function shuffle(a){
       for(let i=a.length-1;i>0;i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [a[i],a[j]] = [a[j],a[i]];
+        const j=Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
       }
       return a;
     }
 
-    function applyRandomPalette(){
-      const colors = shuffle(palette);
-      colors.forEach((c,i)=> name.style.setProperty(`--c${i+1}`, c));
-      // Immediately leave white on start:
-      name.style.color = colors[0];
-    }
-
-    function startAnimation(){
-      if (started) return;
-      started = true;
-
-      applyRandomPalette();
-
-      name.classList.remove("is-animating");
-      void name.offsetWidth; // restart cleanly
-      name.classList.add("is-animating");
-    }
-
-    // Start after 3 seconds on page load (unless hover starts first)
-    window.addEventListener("load", () => {
-      setTimeout(startAnimation, 3000);
+    // randomize palette once at load
+    shuffle(palette).forEach((c,i)=>{
+      name.style.setProperty(`--c${i+1}`, c);
     });
 
-    // Hover starts immediately
-    name.addEventListener("mouseenter", startAnimation);
+    // stop animation on click
+    name.addEventListener("click", ()=>{
+      if(!running) return;
+      running=false;
+      name.classList.remove("is-animating");
+    });
   </script>
 </body>
 </html>
