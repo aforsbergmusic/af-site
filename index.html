@@ -2,137 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Andy Forsberg — Composer</title>
-  <meta name="description" content="Andy Forsberg is a Los Angeles–based media composer and producer for film, television, and documentary." />
+  <title>Andy Forsberg — Composer + Producer</title>
+  <meta name="description" content="Andy Forsberg is a Los Angeles–based composer and producer for film, television, and documentary." />
 
-  <!-- Fonts (Olafur-adjacent, medium serif headlines) -->
-  <!-- Fonts (Cinematic / Minimal-Industrial) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Fonts (industrial / cinematic) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
 
-  <!-- Header (your app.js expects .hdr, .menuBtn, .menu, .menu__link) -->
+  <!-- Header -->
   <header class="hdr">
     <div class="hdr__inner">
-    <a class="brand" href="#top" aria-label="Home">
-  <span class="brand__name">Andy Forsberg</span>
-</a>
+      <a class="brand" href="#top" aria-label="Home">
+        <span class="brand__name">Andy Forsberg</span>
+      </a>
 
-      <div class="hdr__right">
-        <nav class="hdr__social">
-          <a id="social-imdb" class="sbtn" href="#" target="_blank" rel="noreferrer" aria-label="IMDb">IMDb</a>
-          <a id="social-spotify" class="sbtn" href="#" target="_blank" rel="noreferrer" aria-label="Spotify">Spotify</a>
-          <a id="social-apple" class="sbtn" href="#" target="_blank" rel="noreferrer" aria-label="Apple Music">Apple</a>
-          <a id="social-instagram" class="sbtn" href="#" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a>
-        </nav>
-
-        <button class="menuBtn" type="button" aria-label="Menu" aria-expanded="false">
-          <span class="menuBtn__lines" aria-hidden="true"></span>
-        </button>
-      </div>
+      <nav class="hdr__social">
+        <a id="social-imdb" class="sbtn" href="https://www.imdb.com/name/nm4586039/" target="_blank">IMDb</a>
+        <a id="social-spotify" class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank">Spotify</a>
+        <a id="social-apple" class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank">Apple</a>
+        <a id="social-instagram" class="sbtn" href="https://www.instagram.com/aforsbergmusic" target="_blank">IG</a>
+      </nav>
     </div>
   </header>
-
-  <!-- Menu overlay -->
-  <div class="menu" aria-hidden="true">
-    <div class="menu__panel">
-      <a class="menu__link" href="#listen">Listen</a>
-      <a class="menu__link" href="#projects">Projects</a>
-      <a class="menu__link" href="#bio">Andy + Contact</a>
-      <a class="menu__link" href="#bio">Andy + Contact</a>
-    </div>
-  </div>
 
   <main id="top" class="page">
 
     <!-- Hero -->
-    <section class="hero" data-reveal>
+    <section class="hero">
       <h1 class="hero__title">Andy Forsberg</h1>
       <p class="hero__sub">Composer + Producer</p>
     </section>
 
-    <!-- Listen (player mount: app.js expects .player and its inner parts) -->
-    <section id="listen" class="section" data-reveal>
-      <div class="section__top">
-        <h2 class="section__title">Listen</h2>
-      </div>
+    <!-- Listen -->
+    <section id="listen" class="section">
+      <h2 class="section__title">Listen</h2>
 
       <div class="player">
         <div class="np">
-          <div class="np__left">
-            <button class="playBtn" type="button" aria-label="Play/Pause">▶</button>
-            <div class="np__meta">
-              <div class="npTitle">—</div>
-              <div class="npTime">0:00 / 0:00</div>
-            </div>
+          <button class="playBtn">▶</button>
+          <div class="np__meta">
+            <div class="npTitle">—</div>
+            <div class="npTime">0:00 / 0:00</div>
           </div>
         </div>
 
-        <button class="wave" type="button" aria-label="Waveform seek">
+        <button class="wave">
           <canvas></canvas>
         </button>
 
-        <div class="tracklist" aria-label="Track list"></div>
+        <div class="tracklist"></div>
       </div>
     </section>
 
-    <!-- Projects (posters mount: app.js expects .posters) -->
-    <section id="projects" class="section" data-reveal>
-      <div class="section__top">
-        <h2 class="section__title">Projects</h2>
-      </div>
-      <div class="posters" aria-label="Project posters"></div>
+    <!-- Projects -->
+    <section id="projects" class="section">
+      <h2 class="section__title">Projects</h2>
+      <div class="posters"></div>
     </section>
 
-    <!-- Bio + Representation -->
-    <section id="bio" class="section" data-reveal>
-      <div class="section__top">
-        <h2 class="section__title">Andy + Contact</h2>
-      </div>
+    <!-- Andy + Contact -->
+    <section id="bio" class="section">
+      <h2 class="section__title">Andy + Contact</h2>
 
       <div class="bio">
-        <div class="bioImg" aria-label="Portrait"></div>
+        <div class="bioImg"></div>
 
         <div class="bioText">
           <p>
-            Andy Forsberg is a media composer and producer based in Los Angeles.
-            After studying at the Berklee College of Music, Andy’s journey began working for
-            acclaimed composer/arranger William Ross (Harry Potter and The Chamber of Secrets, Barbara Streisand).
-            Shortly after, he co-founded video game music and sound design house Hexany Audio, where he served
-            as its lead composer until 2016.
-          </p>
-          <p>
-            Andy has since carved out his own path through his unique patchwork of styles, combining Neoclassical,
-            electronic, and sweeping orchestral palettes. He has composed and contributed music for several of
-            Nat Geo/Disney, BBC/Apple, and Discovery Channel’s high profile projects, including Born Wild: The Next Generation
-            narrated by Robin Roberts, The Secret Lives of Animals, The Last Alaskans, Europe from Above, and Magic of Disney’s Animal Kingdom.
-          </p>
-          <p>
-            Among his documentary work, Andy has made a quick name for himself in many genres, scoring several of Lifetime Network’s
-            lauded list of TV movie thrillers, Thirst for Hulu’s bite sized Halloween directed by Stefan Dezil, and the award-winning film Whistle
-            created by director Jen Araki, starring Dylan Playfair (Letterkenny, The Mighty Ducks: Game Changers).
-          </p>
-          <p>
-            An avid conductor, Andy has led the Hollywood Chamber Orchestra at the Ricardo Montalbán Theatre for the world premiere of his concert work
-            “Beyond Us”, recorded and conducted his own music at multiple historic scoring stages, and was one of Broadcast Music Inc.’s (BMI) selected fellows
-            for their 2018 intensive conducting workshop, led by acclaimed conductor/composer Lucas Richman.
-          </p>
-          <p>
-            Through his work in documentaries, thrillers, and dramas, Andy has found an intense passion for real-life storytelling,
-            and finding light in the darker elements of human nature.
+            Andy Forsberg is a media composer and producer based in Los Angeles, working across film,
+            television, and documentary. His work blends neoclassical, electronic, and orchestral
+            textures.
           </p>
 
           <div class="rep">
             <div class="rep__kicker">Representation</div>
             <div class="rep__body">
-              Arbel Bedak, Spectra Creative Agency<br />
+              Arbel Bedak — Spectra Creative Agency<br />
               <a href="mailto:arbel@spectracreativeagency.com">arbel@spectracreativeagency.com</a><br />
               323-546-8120
             </div>
@@ -141,48 +94,41 @@
       </div>
     </section>
 
-  
-
     <footer class="footer">
       <div class="footer__inner">
-        <div class="footer__left">© <span id="y"></span> Andy Forsberg</div>
-        <div class="footer__right">Composer • Producer</div>
+        <div>© <span id="year"></span> Andy Forsberg</div>
       </div>
     </footer>
 
   </main>
 
-  <!-- Lightbox (app.js expects .lb, .lb__img, .lb__bg, .lb__close) -->
+  <!-- Lightbox -->
   <div class="lb" aria-hidden="true">
-    <div class="lb__bg" aria-hidden="true"></div>
-    <div class="lb__panel" role="dialog" aria-modal="true">
-      <button class="lb__close" type="button" aria-label="Close">✕</button>
-      <img class="lb__img" alt="Poster" />
+    <div class="lb__bg"></div>
+    <div class="lb__panel">
+      <button class="lb__close">✕</button>
+      <img class="lb__img" alt="">
     </div>
   </div>
 
-  <!-- Player Dock (app.js expects .dock, .dock__play, .dock__title, .dock__time, .dock__wave canvas) -->
+  <!-- Player Dock -->
   <div class="dock" aria-hidden="true">
     <div class="dock__inner">
-      <button class="dock__play" type="button" aria-label="Play/Pause">▶</button>
+      <button class="dock__play">▶</button>
       <div class="dock__meta">
         <div class="dock__title">—</div>
         <div class="dock__time">0:00 / 0:00</div>
       </div>
-      <button class="dock__wave" type="button" aria-label="Seek">
+      <button class="dock__wave">
         <canvas></canvas>
       </button>
     </div>
   </div>
 
   <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
-    // Optional: set your headshot here (keep quotes)
-    // document.querySelector(".bioImg").style.backgroundImage = "url('PASTE_HEADSHOT_URL_HERE')";
+    document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 
   <script src="app.js"></script>
 </body>
 </html>
-
-
