@@ -1,6 +1,8 @@
 /* =========================================================
    AF — Cinematic Minimal (B)
    Full styles.css replacement
+   + Random single jewel tone hover outlines (via JS variable --jt)
+   + Social hover like splash (solid jewel fill + crisp contrast)
    ========================================================= */
 
 :root{
@@ -31,6 +33,9 @@
 
   /* Measure */
   --measure:72ch;
+
+  /* Jewel tone (set per-element by JS; fallback if JS disabled) */
+  --jt:#7c5cff;
 }
 
 *{ box-sizing:border-box; }
@@ -103,9 +108,10 @@ a:hover{ opacity:.92; }
 
 .hdr__right{ display:flex; align-items:center; gap:14px; }
 
-/* Socials (quiet by default, crisp hover) */
+/* Socials (quiet by default; splash-style solid jewel on hover) */
 .hdr__social{ display:flex; align-items:center; gap:10px; }
 .sbtn{
+  position:relative;
   font-size:11px;
   letter-spacing:.18em;
   text-transform:uppercase;
@@ -115,16 +121,21 @@ a:hover{ opacity:.92; }
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.02);
   transition:
-    color .16s ease,
-    border-color .16s ease,
-    background .16s ease,
-    transform .16s ease;
+    color .14s ease,
+    border-color .14s ease,
+    background .14s ease,
+    transform .14s ease,
+    box-shadow .14s ease;
 }
 .sbtn:hover{
-  color:rgba(255,255,255,.90);
-  border-color:rgba(255,255,255,.18);
-  background:rgba(255,255,255,.05);
+  color:rgba(0,0,0,.86);
+  border-color:color-mix(in srgb, var(--jt) 70%, rgba(255,255,255,.25));
+  background:var(--jt);
   transform:translateY(-1px);
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.45),
+    0 0 0 1px rgba(255,255,255,.08) inset,
+    0 0 18px color-mix(in srgb, var(--jt) 45%, transparent);
 }
 
 /* Hamburger (more cinematic: tight, minimal) */
@@ -224,6 +235,7 @@ a:hover{ opacity:.92; }
 
 /* ================= Player ================= */
 .player{
+  position:relative;
   margin-top:18px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
@@ -355,8 +367,16 @@ a:hover{ opacity:.92; }
   filter:brightness(1.03);
 }
 
-/* Old below-title row: we will not render it, but hide just in case */
-.poster__name{ display:none !important; }
+.poster__name{
+  padding:10px 12px;
+  font-size:11px;
+  color:rgba(255,255,255,.54);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 
 /* ================= Bio ================= */
 .bio{
@@ -367,6 +387,7 @@ a:hover{ opacity:.92; }
 }
 
 .bioImg{
+  position:relative;
   width:100%;
   aspect-ratio:3/4;
   border-radius:18px;
@@ -410,6 +431,7 @@ a:hover{ opacity:.92; }
 
 /* ================= Info card ================= */
 .infoCard{
+  position:relative;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.03);
@@ -504,6 +526,7 @@ a:hover{ opacity:.92; }
 .dock[aria-hidden="true"]{ display:none; }
 
 .dock__inner{
+  position:relative;
   pointer-events:auto;
   width:min(980px, calc(100% - 24px));
   border-radius:999px;
@@ -571,43 +594,74 @@ a:hover{ opacity:.92; }
 }
 
 /* =========================================================
-   Posters: hover title overlay (filled jewel, like socials)
-   Notes:
-   - app.js sets data-title="Project Name" on each .poster
-   - We’re not changing socials here.
+   Jewel-tone OUTLINE (single color, random per hover via JS)
+   - No rainbow gradients
+   - Posters: outline + subtle glow on hover
+   - Cards (player/bio/info/dock/lightbox): calmer version
    ========================================================= */
 
-.poster::before{
-  content: attr(data-title);
-  position:absolute;
-  left:12px; right:12px; bottom:12px;
-  padding:10px 12px;
-  border-radius:999px;
-
-  font-size:11px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-
-  color:rgba(0,0,0,.86);
-  background:var(--jt, rgba(255,255,255,.85));
-  border:1px solid rgba(255,255,255,.18);
-
-  box-shadow:
-    0 10px 28px rgba(0,0,0,.45),
-    0 0 0 1px rgba(255,255,255,.08) inset;
-
-  opacity:0;
-  transform:translateY(6px);
-  transition:opacity .14s ease, transform .14s ease;
-
-  pointer-events:none;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+:root{
+  --jtStroke: 1px;
+  --jtInset: 1px;
+  --jtGlow: 18px;
 }
 
-.poster:hover::before,
-.poster:focus-visible::before{
+/* Outline layer (uses mask so it’s a true outline, not a fill) */
+.player::after,
+.poster::after,
+.bioImg::after,
+.infoCard::after,
+.dock__inner::after,
+.lb__panel::after{
+  content:"";
+  position:absolute;
+  inset:calc(-1 * var(--jtInset));
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:0;
+  border:var(--jtStroke) solid transparent;
+  background: var(--jt) border-box;
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+          mask-composite:exclude;
+
+  filter:drop-shadow(0 0 var(--jtGlow) color-mix(in srgb, var(--jt) 35%, transparent));
+  transition:opacity .16s ease;
+}
+
+/* Posters: stronger */
+.poster:hover::after{
   opacity:1;
-  transform:translateY(0);
+  filter:
+    drop-shadow(0 0 22px color-mix(in srgb, var(--jt) 42%, transparent))
+    drop-shadow(0 0 14px color-mix(in srgb, var(--jt) 28%, transparent));
+}
+
+/* Calmer for big blocks */
+.player:hover::after,
+.bioImg:hover::after,
+.infoCard:hover::after,
+.dock__inner:hover::after{
+  opacity:.78;
+}
+
+/* Lightbox: visible when open */
+.lb[aria-hidden="false"] .lb__panel::after{
+  opacity:.92;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .player::after,
+  .poster::after,
+  .bioImg::after,
+  .infoCard::after,
+  .dock__inner::after,
+  .lb__panel::after{
+    transition:none;
+    filter:none !important;
+  }
 }
