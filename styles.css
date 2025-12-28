@@ -1,87 +1,275 @@
 /* =========================================================
-   Jewel Tone Outline System
-   Calm by default, expressive on hover
+   Andy Forsberg — Live Site Styles
+   Cinematic / Minimal / Industrial
    ========================================================= */
 
-/* Jewel palette (shared language with splash page) */
 :root {
-  --jewel-emerald: #1fa67a;
-  --jewel-sapphire: #2f6fed;
-  --jewel-amethyst: #8b5cf6;
-  --jewel-ruby: #e11d48;
-  --jewel-amber: #f59e0b;
+  --bg: #0b0b0b;
+  --bg-soft: #111;
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.6);
+  --line: rgba(255,255,255,0.12);
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+
+  --pad: clamp(18px, 3vw, 40px);
 }
 
-/* Base outline treatment (quiet) */
-.poster,
-.player,
-.wave,
-.bioImg,
-.infoCard,
-.lb__panel {
-  position: relative;
+* {
+  box-sizing: border-box;
 }
 
-/* Default outline (subtle, neutral) */
-.poster,
-.player,
-.wave,
-.bioImg,
-.infoCard {
-  outline: 1px solid rgba(255,255,255,0.08);
-  outline-offset: -1px;
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Jewel hover states — intentionally not animated */
-.poster:hover {
-  outline-color: var(--jewel-emerald);
+/* ================= Layout ================= */
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: calc(var(--pad) + 40px) var(--pad) 120px;
 }
 
-.player:hover,
-.wave:hover {
-  outline-color: var(--jewel-sapphire);
+.section {
+  margin-top: 90px;
 }
 
-.bioImg:hover {
-  outline-color: var(--jewel-amethyst);
+.section__title {
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 0 0 24px 0;
 }
 
-.infoCard:hover {
-  outline-color: var(--jewel-amber);
+/* ================= Header ================= */
+
+.hdr {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(11,11,11,0.7);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
 }
 
-/* Lightbox gets a richer presence */
-.lb__panel {
-  outline: 1px solid var(--jewel-ruby);
-  outline-offset: -1px;
+.hdr__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px var(--pad);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Posters feel premium on hover */
-.poster {
-  transition: outline-color 0.18s ease, transform 0.18s ease;
-}
-.poster:hover {
-  transform: translateY(-2px);
+.brand {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
 }
 
-/* Player + waveform feel intentional, not flashy */
-.player,
+.hdr__social {
+  display: flex;
+  gap: 10px;
+}
+
+.sbtn {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.sbtn:hover {
+  color: var(--text);
+  border-color: rgba(255,255,255,0.25);
+}
+
+/* ================= Hero ================= */
+
+.hero {
+  margin-top: 40px;
+}
+
+.hero__title {
+  font-size: clamp(42px, 6vw, 82px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px 0;
+}
+
+.hero__sub {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+/* ================= Player ================= */
+
+.player {
+  margin-top: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.playBtn {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.npTitle {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.npTime {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
 .wave {
-  transition: outline-color 0.18s ease;
+  width: 100%;
+  height: 74px;
+  margin-top: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,0.3);
+  overflow: hidden;
 }
 
-/* Bio image stays elegant */
+.wave canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ================= Tracklist ================= */
+
+.tracklist {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+}
+
+.row:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.row.is-active {
+  border-color: rgba(255,255,255,0.25);
+}
+
+/* ================= Posters ================= */
+
+.posters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.poster {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.02);
+  cursor: pointer;
+}
+
+.poster__img {
+  aspect-ratio: 2 / 3;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease;
+}
+
+.poster:hover .poster__img {
+  transform: scale(1.04);
+}
+
+.poster__name {
+  padding: 10px 12px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ================= Bio ================= */
+
+.bio {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 36px;
+}
+
 .bioImg {
-  transition: outline-color 0.18s ease;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.04);
 }
 
-/* Mobile: keep outlines but reduce visual weight */
-@media (max-width: 600px) {
-  .poster:hover,
-  .player:hover,
-  .wave:hover,
-  .bioImg:hover,
-  .infoCard:hover {
-    outline-width: 0.75px;
+.bioText p {
+  max-width: 72ch;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 16px;
+}
+
+/* ================= Footer ================= */
+
+.footer {
+  margin-top: 120px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ================= Mobile ================= */
+
+@media (max-width: 900px) {
+  .posters {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bio {
+    grid-template-columns: 1fr;
+  }
+
+  .hdr__social {
+    display: none;
   }
 }
