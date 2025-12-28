@@ -1,9 +1,9 @@
 /* =========================================================
-   AF SITE — app.js (Full, stable, modern sans polish)
+   AF SITE — app.js (Full, stable, Modern Sans)
    - Header: scroll state + hamburger menu
    - Reveal: subtle section entry
    - Posters: grid + lightbox (image only)
-   - Player: waveform (not progress bar) + track list
+   - Player: waveform (Style A: rounded pills) + track list
    - Dock: sticky mini player with waveform
    ========================================================= */
 
@@ -27,7 +27,7 @@
     instagram: "https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr"
   };
 
-  // Posters (use the ones you used before — I included your earlier set)
+  // Posters (8 projects = 4x2 on desktop)
   const PROJECTS = [
     {
       title: "Hilinski's Hope",
@@ -63,7 +63,7 @@
     }
   ];
 
-  // Featured Listen tracks (your earlier list, complete)
+  // Featured Listen tracks (complete list)
   const FEATURED_TRACKS = [
     { title: "Charlie Horse", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/9b1a0c45-e055-4c88-b7b3-5f68e21c868e/Charlie%20Horse.mp3" },
     { title: "Beneath The City", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7a797f68-c4b0-48a2-bd22-2e4d0d42cb3f/Beneath%20The%20City.mp3" },
@@ -108,8 +108,6 @@
 
   const PEAKS_VERSION = "v1";
   const PEAKS_N = 220;
-  const BAR_W = 4;
-  const BAR_GAP = 2;
   const waveCache = new Map();
   let AUDIO_CTX = null;
 
@@ -195,95 +193,81 @@
     return out;
   }
 
+  /* =====================================================
+     Waveform draw — Style A (Reelcrafter-adjacent)
+     Rounded pill bars + light smoothing + better energy
+     ===================================================== */
   function drawWave(canvas, peaks, progress01) {
-  if (!canvas || !peaks || !peaks.length) return;
+    if (!canvas || !peaks || !peaks.length) return;
 
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width, h = canvas.height;
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
 
-  // Clear
-  ctx.clearRect(0, 0, w, h);
+    const mid = h * 0.5;
 
-  // Geometry (Reelcrafter-adjacent pills)
-  const mid = h * 0.5;
+    const stride = 7;      // spacing between bars
+    const barW = 4.8;      // pill width
+    const minAmp = 6;      // min visible height
+    const maxAmp = h * 0.46;
+    const radius = 999;    // pill ends
 
-  // Slightly wider + rounder than the previous strict bars
-  const stride = 7;          // distance between bar starts (in device px)
-  const barW = 4.8;          // bar width
-  const minAmp = 6;          // minimum visible height
-  const maxAmp = h * 0.46;   // max half-height
-  const radius = 999;        // pill ends
+    const cols = Math.max(1, Math.floor(w / stride));
+    const n = peaks.length;
 
-  const cols = Math.max(1, Math.floor(w / stride));
-  const n = peaks.length;
+    const base = "rgba(255,255,255,0.16)";
+    const done = "rgba(255,255,255,0.90)";
 
-  // Contrast: unplayed vs played (mono, premium)
-  const base = "rgba(255,255,255,0.16)";
-  const done = "rgba(255,255,255,0.90)";
+    const p = clamp01(progress01 || 0);
+    const progX = p * w;
 
-  // Clamp progress and compute played boundary
-  const p = clamp01(progress01 || 0);
-  const progX = p * w;
+    const getPeak = (idx) => peaks[Math.max(0, Math.min(n - 1, idx))];
 
-  // Tiny smoothing (keeps it from looking “steppy”)
-  // Blend each bar with neighbors so it feels more like a continuous waveform.
-  const getPeak = (idx) => peaks[Math.max(0, Math.min(n - 1, idx))];
+    for (let col = 0; col < cols; col++) {
+      const x = col * stride;
 
-  // Draw
-  for (let col = 0; col < cols; col++) {
-    const x = col * stride;
+      const t = cols <= 1 ? 0 : col / (cols - 1);
+      const f = t * (n - 1);
+      const i0 = Math.floor(f);
+      const i1 = Math.min(n - 1, i0 + 1);
+      const frac = f - i0;
 
-    // Map column -> peak index (linear sampling)
-    const t = cols <= 1 ? 0 : col / (cols - 1);
-    const f = t * (n - 1);
-    const i0 = Math.floor(f);
-    const i1 = Math.min(n - 1, i0 + 1);
-    const frac = f - i0;
+      const p0 = getPeak(i0) * (1 - frac) + getPeak(i1) * frac;
+      const pPrev = getPeak(i0 - 2) * (1 - frac) + getPeak(i1 - 2) * frac;
+      const pNext = getPeak(i0 + 2) * (1 - frac) + getPeak(i1 + 2) * frac;
 
-    // Base interpolation
-    const p0 = getPeak(i0) * (1 - frac) + getPeak(i1) * frac;
+      const smooth = (pPrev * 0.22) + (p0 * 0.56) + (pNext * 0.22);
 
-    // Neighbor smoothing (light, not mushy)
-    const pPrev = getPeak(i0 - 2) * (1 - frac) + getPeak(i1 - 2) * frac;
-    const pNext = getPeak(i0 + 2) * (1 - frac) + getPeak(i1 + 2) * frac;
-    const smooth = (pPrev * 0.22) + (p0 * 0.56) + (pNext * 0.22);
+      // Boost low peaks slightly (more musical without being loud)
+      const shaped = Math.sqrt(Math.max(0, smooth));
 
-    // Shape: a little more “musical” energy
-    // sqrt boosts small peaks so the waveform feels alive without being loud.
-    const shaped = Math.sqrt(Math.max(0, smooth));
+      const amp = Math.max(minAmp, shaped * maxAmp);
+      const y0 = mid - amp;
+      const hh = amp * 2;
 
-    const amp = Math.max(minAmp, shaped * maxAmp);
-    const y0 = mid - amp;
-    const y1 = mid + amp;
-    const hh = y1 - y0;
+      ctx.fillStyle = (x <= progX) ? done : base;
 
-    ctx.fillStyle = (x <= progX) ? done : base;
+      const rx = x + (stride - barW) * 0.5;
 
-    // Rounded rect (pill)
-    // Use roundRect if available; fallback to manual path.
-    const rx = x + (stride - barW) * 0.5; // center within stride
-    if (ctx.roundRect) {
-      ctx.beginPath();
-      ctx.roundRect(rx, y0, barW, hh, radius);
-      ctx.fill();
-    } else {
-      // Fallback: manual rounded rect
-      const r = Math.min(barW, hh) * 0.5;
-      ctx.beginPath();
-      ctx.moveTo(rx + r, y0);
-      ctx.lineTo(rx + barW - r, y0);
-      ctx.quadraticCurveTo(rx + barW, y0, rx + barW, y0 + r);
-      ctx.lineTo(rx + barW, y0 + hh - r);
-      ctx.quadraticCurveTo(rx + barW, y0 + hh, rx + barW - r, y0 + hh);
-      ctx.lineTo(rx + r, y0 + hh);
-      ctx.quadraticCurveTo(rx, y0 + hh, rx, y0 + hh - r);
-      ctx.lineTo(rx, y0 + r);
-      ctx.quadraticCurveTo(rx, y0, rx + r, y0);
-      ctx.closePath();
-      ctx.fill();
-    }
-  }
-}
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(rx, y0, barW, hh, radius);
+        ctx.fill();
+      } else {
+        const r = Math.min(barW, hh) * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(rx + r, y0);
+        ctx.lineTo(rx + barW - r, y0);
+        ctx.quadraticCurveTo(rx + barW, y0, rx + barW, y0 + r);
+        ctx.lineTo(rx + barW, y0 + hh - r);
+        ctx.quadraticCurveTo(rx + barW, y0 + hh, rx + barW - r, y0 + hh);
+        ctx.lineTo(rx + r, y0 + hh);
+        ctx.quadraticCurveTo(rx, y0 + hh, rx, y0 + hh - r);
+        ctx.lineTo(rx, y0 + r);
+        ctx.quadraticCurveTo(rx, y0, rx + r, y0);
+        ctx.closePath();
+        ctx.fill();
+      }
     }
   }
 
@@ -292,8 +276,10 @@
      ========================= */
 
   document.addEventListener("DOMContentLoaded", () => {
-    /* ===== Header scroll state ===== */
-    const hdr = $(".hdr");
+    /* ===== UI polish only ===== */
+
+    // Header subtle state on scroll
+    const hdr = document.querySelector(".hdr");
     const onScroll = () => {
       if (!hdr) return;
       hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
@@ -301,9 +287,9 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
-    /* ===== Hamburger menu ===== */
-    const menu = $(".menu");
-    const menuBtn = $(".menuBtn");
+    // Hamburger menu
+    const menu = document.querySelector(".menu");
+    const menuBtn = document.querySelector(".menuBtn");
     const closeMenu = () => {
       if (!menu || !menuBtn) return;
       menu.setAttribute("aria-hidden", "true");
@@ -315,41 +301,22 @@
       menuBtn.setAttribute("aria-expanded", "true");
     };
 
-    if (menuBtn && menu) {
+    if (menu && menuBtn) {
       menuBtn.addEventListener("click", () => {
         const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
         isOpen ? closeMenu() : openMenu();
       });
-
       menu.addEventListener("click", (e) => {
-        // click outside panel closes
         if (e.target === menu) closeMenu();
         if (e.target.closest(".menu__link")) closeMenu();
       });
-
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeMenu();
       });
     }
 
-    /* ===== Wire social links (optional, if your HTML uses these IDs) ===== */
-    const sImdb = $("#social-imdb");
-    const sApple = $("#social-apple");
-    const sSpotify = $("#social-spotify");
-    const sIg = $("#social-instagram");
-    if (sImdb) sImdb.href = SOCIALS.imdb;
-    if (sApple) sApple.href = SOCIALS.apple;
-    if (sSpotify) sSpotify.href = SOCIALS.spotify;
-    if (sIg) sIg.href = SOCIALS.instagram;
-
-    /* ===== Bio photo (optional, if your HTML uses .bioImg) ===== */
-    const bioImg = $(".bioImg");
-    if (bioImg && PROFILE_IMG_URL) {
-      bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
-    }
-
-    /* ===== Section reveal ===== */
-    const revealEls = $$("[data-reveal]");
+    // Section reveal
+    const revealEls = Array.from(document.querySelectorAll("[data-reveal]"));
     if (revealEls.length) {
       const io = new IntersectionObserver((entries) => {
         for (const e of entries) {
@@ -362,7 +329,23 @@
       revealEls.forEach(el => io.observe(el));
     }
 
-    /* ===== Posters render (expects a container: .posters) ===== */
+    // Wire social links (IDs are optional; won’t crash if missing)
+    const sImdb = $("#social-imdb");
+    const sApple = $("#social-apple");
+    const sSpotify = $("#social-spotify");
+    const sIg = $("#social-instagram");
+    if (sImdb) sImdb.href = SOCIALS.imdb;
+    if (sApple) sApple.href = SOCIALS.apple;
+    if (sSpotify) sSpotify.href = SOCIALS.spotify;
+    if (sIg) sIg.href = SOCIALS.instagram;
+
+    // Bio image (class optional; won’t crash if missing)
+    const bioImg = $(".bioImg");
+    if (bioImg && PROFILE_IMG_URL) {
+      bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
+    }
+
+    /* ===== Posters render (expects .posters container) ===== */
     const postersEl = $(".posters");
     if (postersEl && PROJECTS.length) {
       postersEl.innerHTML = PROJECTS.map((p, i) => {
@@ -377,7 +360,7 @@
       }).join("");
     }
 
-    /* ===== Lightbox (expects: .lb elements) ===== */
+    /* ===== Lightbox (expects .lb markup) ===== */
     const lb = $(".lb");
     const lbImg = $(".lb__img");
     const lbBg = $(".lb__bg");
@@ -417,7 +400,7 @@
          - .playBtn
          - .npTitle
          - .npTime
-         - .wave canvas inside .wave
+         - .wave button with canvas
          - .tracklist (rows injected)
        ========================= */
 
@@ -546,7 +529,7 @@
         try {
           await audio.play();
         } catch {
-          // user gesture may be required; don't crash
+          // user gesture may be required
         }
       }
     }
@@ -556,11 +539,8 @@
         setTrack(0, true);
         return;
       }
-      if (audio.paused) {
-        audio.play().catch(() => {});
-      } else {
-        audio.pause();
-      }
+      if (audio.paused) audio.play().catch(() => {});
+      else audio.pause();
     }
 
     function seekFromPointer(e, which) {
@@ -576,7 +556,7 @@
       syncUI();
     }
 
-    // Wire player only if elements exist (won't black-screen if your HTML differs)
+    // Wire player only if elements exist
     if (player && FEATURED_TRACKS.length) {
       renderTracklist();
       setTrack(0, false); // NOT autoplay
@@ -589,15 +569,12 @@
           const row = e.target.closest(".row");
           if (!row) return;
           const i = Number(row.dataset.i);
-          if (i === tIdx) {
-            togglePlay();
-          } else {
-            setTrack(i, true);
-          }
+          if (i === tIdx) togglePlay();
+          else setTrack(i, true);
         });
       }
 
-      // Seek on waveform
+      // Seek on main waveform
       if (waveBtn) {
         waveBtn.addEventListener("pointerdown", (e) => {
           isSeeking = true;
@@ -611,6 +588,7 @@
         waveBtn.addEventListener("pointercancel", () => { isSeeking = false; });
       }
 
+      // Seek on dock waveform
       if (dockWaveBtn) {
         dockWaveBtn.addEventListener("pointerdown", (e) => {
           isSeeking = true;
@@ -631,7 +609,7 @@
       });
       audio.addEventListener("pause", () => {
         syncUI();
-        // keep dock visible so it feels “sticky”
+        // keep dock visible once used
         showDock(true);
       });
       audio.addEventListener("ended", () => {
@@ -640,11 +618,10 @@
       audio.addEventListener("loadedmetadata", () => syncUI());
       audio.addEventListener("timeupdate", () => syncUI());
     } else {
-      // If your HTML doesn’t have the player yet, don’t throw
       showDock(false);
     }
 
-    // If nothing is playing, keep dock hidden initially
+    // Dock hidden initially (until play)
     showDock(false);
   });
 })();
