@@ -1,36 +1,34 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
   <title>Andy Forsberg — Composer</title>
-  <meta name="description" content="Andy Forsberg is a Los Angeles–based media composer and producer for film, television, and documentary." />
+  <meta name="description" content="Andy Forsberg is a Los Angeles–based media composer and producer for film, television, and documentary.">
 
-  <!-- Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Fonts (Olafur-adjacent, medium serif headlines) -->
+  <!-- Fonts (Cinematic / Minimal-Industrial) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&amp;display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <!-- Header (app.js expects: .hdr, .hdr__inner, .menuBtn, .menu, .menu__link) -->
+
+  <!-- Header (your app.js expects .hdr, .menuBtn, .menu, .menu__link) -->
   <header class="hdr">
     <div class="hdr__inner">
-      <a class="brand" href="#top" aria-label="Home">
-        <!-- If you truly removed the AF bubble, delete this span entirely -->
-        <span class="brand__mark">AF</span>
-        <span class="brand__name">Andy Forsberg</span>
-      </a>
+    <a class="brand" href="#top" aria-label="Home">
+  <span class="brand__name">Andy Forsberg</span>
+</a>
 
       <div class="hdr__right">
-        <nav class="hdr__social" aria-label="Social links">
-          <a id="social-imdb" class="sbtn" href="#" target="_blank" rel="noreferrer">IMDb</a>
-          <a id="social-spotify" class="sbtn" href="#" target="_blank" rel="noreferrer">Spotify</a>
-          <a id="social-apple" class="sbtn" href="#" target="_blank" rel="noreferrer">Apple</a>
-          <a id="social-instagram" class="sbtn" href="#" target="_blank" rel="noreferrer">IG</a>
+        <nav class="hdr__social">
+          <a id="social-imdb" class="sbtn" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer" aria-label="IMDb">IMDb</a>
+          <a id="social-spotify" class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer" aria-label="Spotify">Spotify</a>
+          <a id="social-apple" class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer" aria-label="Apple Music">Apple</a>
+          <a id="social-instagram" class="sbtn" href="https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&amp;utm_source=qr" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a>
         </nav>
 
         <button class="menuBtn" type="button" aria-label="Menu" aria-expanded="false">
@@ -46,18 +44,20 @@
       <a class="menu__link" href="#listen">Listen</a>
       <a class="menu__link" href="#projects">Projects</a>
       <a class="menu__link" href="#bio">Andy + Contact</a>
+      <a class="menu__link" href="#bio">Andy + Contact</a>
     </div>
   </div>
 
   <main id="top" class="page">
+
     <!-- Hero -->
-    <section class="hero" data-reveal>
+    <section class="hero is-in" data-reveal="">
       <h1 class="hero__title">Andy Forsberg</h1>
       <p class="hero__sub">Composer + Producer</p>
     </section>
 
-    <!-- Listen -->
-    <section id="listen" class="section" data-reveal>
+    <!-- Listen (player mount: app.js expects .player and its inner parts) -->
+    <section id="listen" class="section is-in" data-reveal="">
       <div class="section__top">
         <h2 class="section__title">Listen</h2>
       </div>
@@ -67,30 +67,130 @@
           <div class="np__left">
             <button class="playBtn" type="button" aria-label="Play/Pause">▶</button>
             <div class="np__meta">
-              <div class="npTitle">—</div>
-              <div class="npTime">0:00 / 0:00</div>
+              <div class="npTitle">Charlie Horse</div>
+              <div class="npTime">0:00 / 2:06</div>
             </div>
           </div>
         </div>
 
         <button class="wave" type="button" aria-label="Waveform seek">
-          <canvas></canvas>
+          <canvas width="1240" height="140"></canvas>
         </button>
 
-        <div class="tracklist" aria-label="Track list"></div>
+        <div class="tracklist" aria-label="Track list">
+          <div class="row is-active" data-i="0" role="button" aria-label="Play Charlie Horse">
+            <div class="row__t">Charlie Horse</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="1" role="button" aria-label="Play Beneath The City">
+            <div class="row__t">Beneath The City</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="2" role="button" aria-label="Play Stars To Guide Us">
+            <div class="row__t">Stars To Guide Us</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="3" role="button" aria-label="Play Drive To Isleworth">
+            <div class="row__t">Drive To Isleworth</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="4" role="button" aria-label="Play The Summit">
+            <div class="row__t">The Summit</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="5" role="button" aria-label="Play Travelers">
+            <div class="row__t">Travelers</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="6" role="button" aria-label="Play Finding The Pride">
+            <div class="row__t">Finding The Pride</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="7" role="button" aria-label="Play The Cathedral">
+            <div class="row__t">The Cathedral</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="8" role="button" aria-label="Play Magic">
+            <div class="row__t">Magic</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="9" role="button" aria-label="Play Emma's Drive">
+            <div class="row__t">Emma's Drive</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="10" role="button" aria-label="Play It's Everywhere">
+            <div class="row__t">It's Everywhere</div>
+            <div class="row__d"></div>
+          </div>
+        
+          <div class="row" data-i="11" role="button" aria-label="Play Bonded For Life">
+            <div class="row__t">Bonded For Life</div>
+            <div class="row__d"></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Projects -->
-    <section id="projects" class="section" data-reveal>
+    <!-- Projects (posters mount: app.js expects .posters) -->
+    <section id="projects" class="section" data-reveal="">
       <div class="section__top">
         <h2 class="section__title">Projects</h2>
       </div>
-      <div class="posters" aria-label="Project posters"></div>
+      <div class="posters" aria-label="Project posters">
+          <div class="poster" data-idx="0" role="button" aria-label="Open Hilinski's Hope">
+            <div class="poster__img" style="background-image:url('https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&amp;raw=1')"></div>
+            <div class="poster__name">Hilinski's Hope</div>
+          </div>
+        
+          <div class="poster" data-idx="1" role="button" aria-label="Open The Secret Lives of Animals">
+            <div class="poster__img" style="background-image:url('https://www.dropbox.com/scl/fi/9g8f8xyggs3dqlg1hmbao/The-Secret-Lives-of-Animals.webp?rlkey=s6yz5mrdz88uc9djbscr48urp&amp;raw=1')"></div>
+            <div class="poster__name">The Secret Lives of Animals</div>
+          </div>
+        
+          <div class="poster" data-idx="2" role="button" aria-label="Open Europe From Above">
+            <div class="poster__img" style="background-image:url('https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/5ac55c58-6244-48de-9504-705a76b505c1/MV5BMWM1YzM4ZTYtOTNhYi00YTg2LWJlOTItMTNiMWFlMmI4MTE5XkEyXkFqcGc%40._V1_.jpg?content-type=image%2Fjpeg')"></div>
+            <div class="poster__name">Europe From Above</div>
+          </div>
+        
+          <div class="poster" data-idx="3" role="button" aria-label="Open Born Wild: The Next Generation">
+            <div class="poster__img" style="background-image:url('https://www.dropbox.com/scl/fi/04mok8tmb3dvvq6pofbrw/Born-Wild-The-Next-Generation.webp?rlkey=iq4b92tcumfktib1xm0t8eug1&amp;raw=1')"></div>
+            <div class="poster__name">Born Wild: The Next Generation</div>
+          </div>
+        
+          <div class="poster" data-idx="4" role="button" aria-label="Open Dodo Heroes">
+            <div class="poster__img" style="background-image:url('https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/6b91b60c-fc0d-494c-8252-6ddb0338bcfe/Dodo+Heroes.jpg?content-type=image%2Fjpeg')"></div>
+            <div class="poster__name">Dodo Heroes</div>
+          </div>
+        
+          <div class="poster" data-idx="5" role="button" aria-label="Open The Last Alaskans">
+            <div class="poster__img" style="background-image:url('https://www.dropbox.com/scl/fi/7u94wz7f4jbes9qr6iytz/The-Last-Alaskans.webp?rlkey=apub8dab1r8c79n3h2kdd46gu&amp;raw=1')"></div>
+            <div class="poster__name">The Last Alaskans</div>
+          </div>
+        
+          <div class="poster" data-idx="6" role="button" aria-label="Open Thirst">
+            <div class="poster__img" style="background-image:url('https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/98561fee-a1fe-4c77-a6a9-4ec0537a73a1/Thirst.webp?content-type=image%2Fwebp')"></div>
+            <div class="poster__name">Thirst</div>
+          </div>
+        
+          <div class="poster" data-idx="7" role="button" aria-label="Open Whistle">
+            <div class="poster__img" style="background-image:url('https://www.dropbox.com/scl/fi/6sp81uysuvokjyt2j3rac/Whistle.jpg?rlkey=58x5sqlr9u1ic77fb25nkfk3q&amp;raw=1')"></div>
+            <div class="poster__name">Whistle</div>
+          </div>
+        </div>
     </section>
 
-    <!-- Andy + Contact (Bio + Rep only) -->
-    <section id="bio" class="section" data-reveal>
+    <!-- Bio + Representation -->
+    <section id="bio" class="section" data-reveal="">
       <div class="section__top">
         <h2 class="section__title">Andy + Contact</h2>
       </div>
@@ -130,8 +230,8 @@
           <div class="rep">
             <div class="rep__kicker">Representation</div>
             <div class="rep__body">
-              Arbel Bedak, Spectra Creative Agency<br />
-              <a href="mailto:arbel@spectracreativeagency.com">arbel@spectracreativeagency.com</a><br />
+              Arbel Bedak, Spectra Creative Agency<br>
+              <a href="mailto:arbel@spectracreativeagency.com">arbel@spectracreativeagency.com</a><br>
               323-546-8120
             </div>
           </div>
@@ -139,43 +239,49 @@
       </div>
     </section>
 
+  
+
     <footer class="footer">
       <div class="footer__inner">
-        <div>© <span id="y"></span> Andy Forsberg</div>
-        <div>Composer • Producer</div>
+        <div class="footer__left">© <span id="y">2025</span> Andy Forsberg</div>
+        <div class="footer__right">Composer • Producer</div>
       </div>
     </footer>
+
   </main>
 
-  <!-- Lightbox (app.js expects: .lb, .lb__img, .lb__bg, .lb__close) -->
+  <!-- Lightbox (app.js expects .lb, .lb__img, .lb__bg, .lb__close) -->
   <div class="lb" aria-hidden="true">
     <div class="lb__bg" aria-hidden="true"></div>
     <div class="lb__panel" role="dialog" aria-modal="true">
       <button class="lb__close" type="button" aria-label="Close">✕</button>
-      <img class="lb__img" alt="Poster" />
+      <img class="lb__img" alt="Poster">
     </div>
   </div>
 
-  <!-- Dock (app.js expects: .dock, .dock__play, .dock__title, .dock__time, .dock__wave canvas) -->
+  <!-- Player Dock (app.js expects .dock, .dock__play, .dock__title, .dock__time, .dock__wave canvas) -->
   <div class="dock" aria-hidden="true">
     <div class="dock__inner">
       <button class="dock__play" type="button" aria-label="Play/Pause">▶</button>
       <div class="dock__meta">
-        <div class="dock__title">—</div>
-        <div class="dock__time">0:00 / 0:00</div>
+        <div class="dock__title">Charlie Horse</div>
+        <div class="dock__time">0:00 / 2:06</div>
       </div>
       <button class="dock__wave" type="button" aria-label="Seek">
-        <canvas></canvas>
+        <canvas width="1" height="1"></canvas>
       </button>
     </div>
   </div>
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
-    // Optional: set your headshot here
+    // Optional: set your headshot here (keep quotes)
     // document.querySelector(".bioImg").style.backgroundImage = "url('PASTE_HEADSHOT_URL_HERE')";
   </script>
 
   <script src="app.js"></script>
-</body>
-</html>
+
+
+
+
+</body></html>
