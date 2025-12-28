@@ -18,6 +18,7 @@
       font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       -webkit-font-smoothing:antialiased;
     }
+
     .wrap{
       height:100%;
       display:flex;
@@ -26,8 +27,10 @@
       padding:28px;
       text-align:center;
     }
+
     .stack{
-      max-width:960px; width:100%;
+      max-width:960px;
+      width:100%;
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -41,15 +44,23 @@
       line-height:1.05;
     }
 
-    /* === Name: hard-cut jewel flips (NO glow) === */
+    /* === Name: hard-cut jewel flips, randomized order === */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
-      will-change:color;
       color:#ffffff;
+      will-change:color;
+      --c1:#7a5cff;
+      --c2:#5c7cff;
+      --c3:#22d3ee;
+      --c4:#34d98a;
+      --c5:#a3e635;
+      --c6:#ffd166;
+      --c7:#ff9f1c;
+      --c8:#ff4d6d;
+      --c9:#c13584;
     }
 
-    /* Hard cuts: steps(1,end) + discrete keyframes */
     .nameGlow.is-animating{
       animation: jewelCuts 20s steps(1,end) forwards;
     }
@@ -57,37 +68,36 @@
     @keyframes jewelCuts{
       0%   { color:#ffffff; }
 
-      4%   { color:#7a5cff; } /* amethyst */
-      8%   { color:#5c7cff; } /* sapphire */
-      12%  { color:#22d3ee; } /* cyan */
-      16%  { color:#34d98a; } /* emerald */
-      20%  { color:#a3e635; } /* peridot */
-      24%  { color:#ffd166; } /* amber */
-      28%  { color:#ff9f1c; } /* topaz */
-      32%  { color:#ff4d6d; } /* ruby */
-      36%  { color:#c13584; } /* magenta */
+      4%   { color:var(--c1); }
+      8%   { color:var(--c2); }
+      12%  { color:var(--c3); }
+      16%  { color:var(--c4); }
+      20%  { color:var(--c5); }
+      24%  { color:var(--c6); }
+      28%  { color:var(--c7); }
+      32%  { color:var(--c8); }
+      36%  { color:var(--c9); }
 
-      /* extra rapid “page flip” section */
-      40%  { color:#22d3ee; }
-      42%  { color:#7a5cff; }
-      44%  { color:#34d98a; }
-      46%  { color:#ff4d6d; }
-      48%  { color:#ffd166; }
-      50%  { color:#5c7cff; }
-      52%  { color:#ff9f1c; }
-      54%  { color:#c13584; }
+      /* fast section (same timing as before) */
+      40%  { color:var(--c3); }
+      42%  { color:var(--c6); }
+      44%  { color:var(--c1); }
+      46%  { color:var(--c8); }
+      48%  { color:var(--c4); }
+      50%  { color:var(--c7); }
+      52%  { color:var(--c2); }
+      54%  { color:var(--c9); }
 
-      /* faster still */
-      56%  { color:#22d3ee; }
-      57%  { color:#34d98a; }
-      58%  { color:#7a5cff; }
-      59%  { color:#ff4d6d; }
-      60%  { color:#5c7cff; }
-      61%  { color:#ffd166; }
-      62%  { color:#c13584; }
-      63%  { color:#ff9f1c; }
+      /* micro flips */
+      56%  { color:var(--c5); }
+      57%  { color:var(--c1); }
+      58%  { color:var(--c8); }
+      59%  { color:var(--c3); }
+      60%  { color:var(--c7); }
+      61%  { color:var(--c2); }
+      62%  { color:var(--c6); }
+      63%  { color:var(--c4); }
 
-      /* settle */
       80%  { color:#ffffff; }
       100% { color:#ffffff; }
     }
@@ -99,6 +109,7 @@
       text-transform:uppercase;
       color:rgba(255,255,255,.55);
     }
+
     .coming{
       margin-top:10px;
       font-size:12px;
@@ -106,15 +117,20 @@
       text-transform:uppercase;
       color:rgba(255,255,255,.45);
     }
+
     .rule{
       margin:28px 0 22px 0;
       height:1px;
       width:420px;
       max-width:90vw;
-      background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+      background:linear-gradient(
+        90deg,
+        rgba(255,255,255,.22),
+        rgba(255,255,255,0)
+      );
     }
 
-    /* === Socials (DO NOT CHANGE) === */
+    /* === Socials (UNCHANGED) === */
     .socials{
       display:flex;
       gap:12px;
@@ -164,11 +180,6 @@
       background:rgba(193,53,132,.18);
       box-shadow:0 0 0 1px rgba(193,53,132,.40), 0 0 26px rgba(193,53,132,.55);
     }
-
-    @media (prefers-reduced-motion: reduce){
-      .nameGlow.is-animating{ animation:none !important; }
-      .sbtn{ transition:none !important; }
-    }
   </style>
 </head>
 
@@ -194,12 +205,29 @@
     const name = document.getElementById("nameGlow");
     let hoverArmed = true;
 
-    // Run once per hover pass (enter triggers; leave re-arms)
+    const palette = [
+      "#7a5cff", "#5c7cff", "#22d3ee", "#34d98a",
+      "#a3e635", "#ffd166", "#ff9f1c", "#ff4d6d", "#c13584"
+    ];
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]] = [a[j],a[i]];
+      }
+      return a;
+    }
+
     name.addEventListener("mouseenter", () => {
       if (!hoverArmed) return;
       hoverArmed = false;
 
-      // restart animation cleanly
+      const colors = shuffle(palette);
+      colors.forEach((c,i)=>{
+        name.style.setProperty(`--c${i+1}`, c);
+      });
+
       name.classList.remove("is-animating");
       void name.offsetWidth;
       name.classList.add("is-animating");
@@ -209,7 +237,6 @@
       hoverArmed = true;
     });
 
-    // cleanup after it finishes (no looping)
     name.addEventListener("animationend", () => {
       name.classList.remove("is-animating");
     });
