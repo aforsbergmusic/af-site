@@ -19,7 +19,6 @@
       color:rgba(255,255,255,.92);
       font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
     }
 
     .wrap{
@@ -47,43 +46,51 @@
       line-height:1.05;
     }
 
-    /* === Jewel Signature === */
+    /* === Rapid Jewel Flip === */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
-      will-change: color, text-shadow, letter-spacing, filter;
+      will-change: color, text-shadow, filter;
     }
 
     .nameGlow.is-animating{
-      animation: jewelRapid 20s linear forwards;
+      animation: jewelFlip 20s steps(1,end) forwards;
     }
 
-    /* Faster cycling (more stops) + deeper jewel tones */
-    @keyframes jewelRapid{
-      0%{
-        color:#ffffff; text-shadow:none; letter-spacing:-.015em; filter:brightness(1);
-      }
+    @keyframes jewelFlip{
+      0%   { color:#ffffff; text-shadow:none; filter:brightness(1); }
 
-      6%{  color:#7a5cff; text-shadow:0 0 26px rgba(122,92,255,.90), 0 0 92px rgba(122,92,255,.55); letter-spacing:-.006em; filter:brightness(1.07); } /* amethyst */
-      12%{ color:#5c7cff; text-shadow:0 0 26px rgba(92,124,255,.92), 0 0 92px rgba(92,124,255,.55); letter-spacing:-.002em; filter:brightness(1.06); } /* sapphire */
-      18%{ color:#22d3ee; text-shadow:0 0 26px rgba(34,211,238,.88), 0 0 92px rgba(34,211,238,.50); letter-spacing:0em;      filter:brightness(1.06); } /* cyan gem */
-      24%{ color:#34d98a; text-shadow:0 0 26px rgba(52,217,138,.90), 0 0 92px rgba(52,217,138,.52); letter-spacing:-.003em; filter:brightness(1.07); } /* emerald */
-      30%{ color:#a3e635; text-shadow:0 0 26px rgba(163,230,53,.78),  0 0 92px rgba(163,230,53,.42); letter-spacing:-.006em; filter:brightness(1.05); } /* peridot */
-      36%{ color:#ffd166; text-shadow:0 0 26px rgba(255,209,102,.78), 0 0 92px rgba(255,209,102,.40); letter-spacing:-.010em; filter:brightness(1.04); } /* amber */
-      42%{ color:#ff9f1c; text-shadow:0 0 26px rgba(255,159,28,.82),  0 0 92px rgba(255,159,28,.44); letter-spacing:-.006em; filter:brightness(1.05); } /* topaz */
-      48%{ color:#ff4d6d; text-shadow:0 0 26px rgba(255,77,109,.88),  0 0 92px rgba(255,77,109,.52); letter-spacing:-.002em; filter:brightness(1.07); } /* ruby */
-      54%{ color:#c13584; text-shadow:0 0 26px rgba(193,53,132,.88),  0 0 92px rgba(193,53,132,.52); letter-spacing:0em;      filter:brightness(1.07); } /* magenta */
-      60%{ color:#7a5cff; text-shadow:0 0 26px rgba(122,92,255,.90), 0 0 92px rgba(122,92,255,.55); letter-spacing:-.006em; filter:brightness(1.07); }
-      66%{ color:#5c7cff; text-shadow:0 0 26px rgba(92,124,255,.92), 0 0 92px rgba(92,124,255,.55); letter-spacing:-.002em; filter:brightness(1.06); }
-      72%{ color:#22d3ee; text-shadow:0 0 26px rgba(34,211,238,.88), 0 0 92px rgba(34,211,238,.50); letter-spacing:0em;      filter:brightness(1.06); }
-      78%{ color:#34d98a; text-shadow:0 0 26px rgba(52,217,138,.90), 0 0 92px rgba(52,217,138,.52); letter-spacing:-.003em; filter:brightness(1.07); }
-      84%{ color:#ff9f1c; text-shadow:0 0 26px rgba(255,159,28,.82),  0 0 92px rgba(255,159,28,.44); letter-spacing:-.006em; filter:brightness(1.05); }
-      90%{ color:#ff4d6d; text-shadow:0 0 26px rgba(255,77,109,.88),  0 0 92px rgba(255,77,109,.52); letter-spacing:-.002em; filter:brightness(1.07); }
-      96%{ color:#c13584; text-shadow:0 0 26px rgba(193,53,132,.88),  0 0 92px rgba(193,53,132,.52); letter-spacing:0em;      filter:brightness(1.07); }
+      4%   { color:#7a5cff; text-shadow:0 0 40px rgba(122,92,255,1), 0 0 140px rgba(122,92,255,.75); }
+      8%   { color:#5c7cff; text-shadow:0 0 40px rgba(92,124,255,1), 0 0 140px rgba(92,124,255,.75); }
+      12%  { color:#22d3ee; text-shadow:0 0 40px rgba(34,211,238,1), 0 0 140px rgba(34,211,238,.75); }
+      16%  { color:#34d98a; text-shadow:0 0 40px rgba(52,217,138,1), 0 0 140px rgba(52,217,138,.75); }
+      20%  { color:#a3e635; text-shadow:0 0 40px rgba(163,230,53,1), 0 0 140px rgba(163,230,53,.70); }
+      24%  { color:#ffd166; text-shadow:0 0 40px rgba(255,209,102,1), 0 0 140px rgba(255,209,102,.70); }
+      28%  { color:#ff9f1c; text-shadow:0 0 40px rgba(255,159,28,1), 0 0 140px rgba(255,159,28,.70); }
+      32%  { color:#ff4d6d; text-shadow:0 0 40px rgba(255,77,109,1), 0 0 140px rgba(255,77,109,.75); }
+      36%  { color:#c13584; text-shadow:0 0 40px rgba(193,53,132,1), 0 0 140px rgba(193,53,132,.75); }
 
-      100%{
-        color:#ffffff; text-shadow:none; letter-spacing:-.015em; filter:brightness(1);
-      }
+      /* second fast pass */
+      40%  { color:#7a5cff; }
+      44%  { color:#5c7cff; }
+      48%  { color:#22d3ee; }
+      52%  { color:#34d98a; }
+      56%  { color:#ffd166; }
+      60%  { color:#ff9f1c; }
+      64%  { color:#ff4d6d; }
+      68%  { color:#c13584; }
+
+      /* third ultra-fast flip */
+      72%  { color:#22d3ee; }
+      74%  { color:#7a5cff; }
+      76%  { color:#34d98a; }
+      78%  { color:#ff4d6d; }
+      80%  { color:#ffd166; }
+      82%  { color:#5c7cff; }
+
+      /* deceleration */
+      90%  { color:#ffffff; text-shadow:0 0 12px rgba(255,255,255,.35); }
+      100% { color:#ffffff; text-shadow:none; }
     }
 
     .sub{
@@ -107,11 +114,7 @@
       height:1px;
       width:420px;
       max-width:90vw;
-      background:linear-gradient(
-        90deg,
-        rgba(255,255,255,.22),
-        rgba(255,255,255,0)
-      );
+      background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
     .socials{
@@ -131,37 +134,14 @@
       background:rgba(255,255,255,.03);
       color:rgba(255,255,255,.70);
       text-decoration:none;
-      transition:
-        background .25s ease,
-        border-color .25s ease,
-        color .25s ease,
-        box-shadow .25s ease,
-        transform .25s ease;
-    }
-    .sbtn:hover{ transform:translateY(-1px); }
-
-    /* Social jewel hovers */
-    .sbtn.imdb:hover{
-      color:#e6d7ff; border-color:#7a5cff; background:rgba(122,92,255,.16);
-      box-shadow:0 0 0 1px rgba(122,92,255,.35);
-    }
-    .sbtn.spotify:hover{
-      color:#d6ffe9; border-color:#1db954; background:rgba(29,185,84,.16);
-      box-shadow:0 0 0 1px rgba(29,185,84,.35);
-    }
-    .sbtn.apple:hover{
-      color:#e6f0ff; border-color:#5c7cff; background:rgba(92,124,255,.16);
-      box-shadow:0 0 0 1px rgba(92,124,255,.35);
-    }
-    .sbtn.instagram:hover{
-      color:#ffe2ef; border-color:#c13584; background:rgba(193,53,132,.16);
-      box-shadow:0 0 0 1px rgba(193,53,132,.35);
+      transition:all .25s ease;
     }
 
-    /* Respect reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .nameGlow.is-animating{ animation:none !important; }
-      .sbtn{ transition:none !important; }
+    .sbtn:hover{
+      transform:translateY(-1px);
+      color:#fff;
+      border-color:rgba(255,255,255,.28);
+      background:rgba(255,255,255,.08);
     }
   </style>
 </head>
@@ -176,10 +156,10 @@
       <div class="rule"></div>
 
       <div class="socials">
-        <a class="sbtn imdb" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
-        <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
-        <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-        <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
+        <a class="sbtn" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank">IMDb</a>
+        <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank">Spotify</a>
+        <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank">Apple Music</a>
+        <a class="sbtn" href="https://www.instagram.com/aforsbergmusic" target="_blank">Instagram</a>
       </div>
     </div>
   </div>
@@ -188,8 +168,9 @@
     const name = document.getElementById("nameGlow");
 
     name.addEventListener("mouseenter", () => {
-      if (name.classList.contains("is-animating")) return;
-      name.classList.add("is-animating");
+      if (!name.classList.contains("is-animating")) {
+        name.classList.add("is-animating");
+      }
     });
 
     name.addEventListener("animationend", () => {
