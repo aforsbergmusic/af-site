@@ -1,6 +1,8 @@
 /* =========================================================
    AF — Cinematic Minimal (B)
    Full styles.css replacement
+   + Random single jewel tone hover outlines (via JS variable --jt)
+   + Social hover like splash (solid jewel fill + crisp contrast)
    ========================================================= */
 
 :root{
@@ -31,6 +33,9 @@
 
   /* Measure */
   --measure:72ch;
+
+  /* Jewel tone (set per-element by JS; fallback if JS disabled) */
+  --jt:#7c5cff;
 }
 
 *{ box-sizing:border-box; }
@@ -103,9 +108,10 @@ a:hover{ opacity:.92; }
 
 .hdr__right{ display:flex; align-items:center; gap:14px; }
 
-/* Socials (quiet by default, crisp hover) */
+/* Socials (quiet by default; splash-style solid jewel on hover) */
 .hdr__social{ display:flex; align-items:center; gap:10px; }
 .sbtn{
+  position:relative;
   font-size:11px;
   letter-spacing:.18em;
   text-transform:uppercase;
@@ -115,16 +121,21 @@ a:hover{ opacity:.92; }
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.02);
   transition:
-    color .16s ease,
-    border-color .16s ease,
-    background .16s ease,
-    transform .16s ease;
+    color .14s ease,
+    border-color .14s ease,
+    background .14s ease,
+    transform .14s ease,
+    box-shadow .14s ease;
 }
 .sbtn:hover{
-  color:rgba(255,255,255,.90);
-  border-color:rgba(255,255,255,.18);
-  background:rgba(255,255,255,.05);
+  color:rgba(0,0,0,.86);
+  border-color:color-mix(in srgb, var(--jt) 70%, rgba(255,255,255,.25));
+  background:var(--jt);
   transform:translateY(-1px);
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.45),
+    0 0 0 1px rgba(255,255,255,.08) inset,
+    0 0 18px color-mix(in srgb, var(--jt) 45%, transparent);
 }
 
 /* Hamburger (more cinematic: tight, minimal) */
@@ -224,6 +235,7 @@ a:hover{ opacity:.92; }
 
 /* ================= Player ================= */
 .player{
+  position:relative;
   margin-top:18px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
@@ -329,6 +341,7 @@ a:hover{ opacity:.92; }
 }
 
 .poster{
+  position:relative;
   border-radius:18px;
   overflow:hidden;
   border:1px solid rgba(255,255,255,.10);
@@ -374,6 +387,7 @@ a:hover{ opacity:.92; }
 }
 
 .bioImg{
+  position:relative;
   width:100%;
   aspect-ratio:3/4;
   border-radius:18px;
@@ -417,6 +431,7 @@ a:hover{ opacity:.92; }
 
 /* ================= Info card ================= */
 .infoCard{
+  position:relative;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.03);
@@ -511,6 +526,7 @@ a:hover{ opacity:.92; }
 .dock[aria-hidden="true"]{ display:none; }
 
 .dock__inner{
+  position:relative;
   pointer-events:auto;
   width:min(980px, calc(100% - 24px));
   border-radius:999px;
@@ -578,156 +594,74 @@ a:hover{ opacity:.92; }
 }
 
 /* =========================================================
-   Jewel-tone Outline System (ADD-ON)
-   - Adds premium, color-shifting outlines + subtle glow
-   - Designed to work with dark UI and your existing borders
-   - Apply to: posters, bio image, player, lightbox panel, dock
+   Jewel-tone OUTLINE (single color, random per hover via JS)
+   - No rainbow gradients
+   - Posters: outline + subtle glow on hover
+   - Cards (player/bio/info/dock/lightbox): calmer version
    ========================================================= */
 
-/* Jewel palette */
-:root{
-  --jt1:#35d0ff; /* electric cyan */
-  --jt2:#7c5cff; /* amethyst */
-  --jt3:#ff4fd8; /* magenta */
-  --jt4:#ffb020; /* amber */
-  --jt5:#22f2a6; /* mint */
-  --jt6:#ff5a5f; /* coral */
-}
-
-/* Shared outline sizing */
 :root{
   --jtStroke: 1px;
-  --jtGlow: 16px;
-  --jtAlpha: .95;
+  --jtInset: 1px;
+  --jtGlow: 18px;
 }
 
-/* Make these elements capable of hosting a pseudo-outline */
-.player,
-.poster,
-.bioImg,
-.infoCard,
-.lb__panel,
-.dock__inner{
-  position:relative;
-}
-
-/* Default: keep your normal border, but add a “hidden” jewel outline layer */
+/* Outline layer (uses mask so it’s a true outline, not a fill) */
 .player::after,
 .poster::after,
 .bioImg::after,
 .infoCard::after,
-.lb__panel::after,
-.dock__inner::after{
+.dock__inner::after,
+.lb__panel::after{
   content:"";
   position:absolute;
-  inset:-1px;              /* sits just outside existing border */
+  inset:calc(-1 * var(--jtInset));
   border-radius:inherit;
   pointer-events:none;
   opacity:0;
   border:var(--jtStroke) solid transparent;
-  background:
-    linear-gradient(135deg,
-      rgba(53,208,255,var(--jtAlpha)),
-      rgba(124,92,255,var(--jtAlpha)),
-      rgba(255,79,216,var(--jtAlpha)),
-      rgba(255,176,32,var(--jtAlpha)),
-      rgba(34,242,166,var(--jtAlpha))
-    ) border-box;
+  background: var(--jt) border-box;
+
   -webkit-mask:
     linear-gradient(#000 0 0) padding-box,
     linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
           mask-composite:exclude;
-  filter:blur(0px);
-  transition:opacity .18s ease, filter .18s ease;
+
+  filter:drop-shadow(0 0 var(--jtGlow) color-mix(in srgb, var(--jt) 35%, transparent));
+  transition:opacity .16s ease;
 }
 
-/* Hover / focus: reveal outline + glow */
-.player:hover::after,
-.poster:hover::after,
-.bioImg:hover::after,
-.infoCard:hover::after,
-.dock__inner:hover::after,
-.lb[aria-hidden="false"] .lb__panel::after{
-  opacity:.92;
-  filter:drop-shadow(0 0 var(--jtGlow) rgba(124,92,255,.24))
-         drop-shadow(0 0 calc(var(--jtGlow) * .65) rgba(53,208,255,.20));
-}
-
-/* Posters: slightly stronger (this is the “signature”) */
+/* Posters: stronger */
 .poster:hover::after{
   opacity:1;
-  filter:drop-shadow(0 0 18px rgba(255,79,216,.22))
-         drop-shadow(0 0 14px rgba(34,242,166,.18));
+  filter:
+    drop-shadow(0 0 22px color-mix(in srgb, var(--jt) 42%, transparent))
+    drop-shadow(0 0 14px color-mix(in srgb, var(--jt) 28%, transparent));
 }
 
-/* Bio image: slightly calmer */
-.bioImg:hover::after{
-  opacity:.88;
-  filter:drop-shadow(0 0 16px rgba(53,208,255,.20))
-         drop-shadow(0 0 12px rgba(255,176,32,.14));
-}
-
-/* Lightbox panel: visible when open (not just hover) */
-.lb[aria-hidden="false"] .lb__panel::after{
-  opacity:.95;
-  filter:drop-shadow(0 0 22px rgba(124,92,255,.22))
-         drop-shadow(0 0 16px rgba(53,208,255,.18));
-}
-
-/* Dock: keep classy—small glow */
+/* Calmer for big blocks */
+.player:hover::after,
+.bioImg:hover::after,
+.infoCard:hover::after,
 .dock__inner:hover::after{
   opacity:.78;
-  filter:drop-shadow(0 0 14px rgba(34,242,166,.16));
 }
 
-/* Optional: jewel outline on social buttons ONLY on hover (does not change layout) */
-.sbtn{
-  position:relative;
-}
-.sbtn::after{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  border-radius:999px;
-  pointer-events:none;
-  opacity:0;
-  border:1px solid transparent;
-  background:
-    linear-gradient(90deg,
-      rgba(53,208,255,.95),
-      rgba(124,92,255,.95),
-      rgba(255,79,216,.95),
-      rgba(255,176,32,.95),
-      rgba(34,242,166,.95)
-    ) border-box;
-  -webkit-mask:
-    linear-gradient(#000 0 0) padding-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-          mask-composite:exclude;
-  transition:opacity .16s ease, filter .16s ease;
-}
-.sbtn:hover::after{
+/* Lightbox: visible when open */
+.lb[aria-hidden="false"] .lb__panel::after{
   opacity:.92;
-  filter:drop-shadow(0 0 12px rgba(124,92,255,.22));
 }
 
-/* Reduce motion: keep outlines but no glow “pop” */
+/* Reduce motion */
 @media (prefers-reduced-motion: reduce){
   .player::after,
   .poster::after,
   .bioImg::after,
   .infoCard::after,
-  .lb__panel::after,
   .dock__inner::after,
-  .sbtn::after{
+  .lb__panel::after{
     transition:none;
     filter:none !important;
   }
-}
-
-/* Mobile: slightly less glow so it doesn’t feel loud */
-@media (max-width: 520px){
-  :root{ --jtGlow: 12px; }
 }
