@@ -665,3 +665,55 @@ a:hover{ opacity:.92; }
     filter:none !important;
   }
 }
+
+/* =========================================================
+   Posters: hover title overlay (filled jewel, like socials)
+   - Removes below-title row (we'll stop rendering it in JS too)
+   ========================================================= */
+
+/* Safety: if any poster__name still exists, hide it */
+.poster__name{ display:none !important; }
+
+/* Add an overlay title that appears on hover */
+.poster::before{
+  content: attr(data-title);
+  position:absolute;
+  left:12px; right:12px; bottom:12px;
+  padding:10px 12px;
+  border-radius:999px;
+
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+
+  color:rgba(0,0,0,.86);
+  background:var(--jt);
+
+  border:1px solid color-mix(in srgb, var(--jt) 70%, rgba(255,255,255,.25));
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.45),
+    0 0 0 1px rgba(255,255,255,.08) inset,
+    0 0 18px color-mix(in srgb, var(--jt) 45%, transparent);
+
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .14s ease, transform .14s ease;
+
+  pointer-events:none;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.poster:hover::before,
+.poster:focus-visible::before{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Optional: subtle darkening so title reads on bright artwork */
+.poster::after{
+  /* keep your existing outline ::after rules; this adds a tiny vignette layer */
+}
+
+.poster::marker{ content:""; } /* no-op; avoids odd browser quirks */
