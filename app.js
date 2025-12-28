@@ -34,6 +34,34 @@
   // ===== Utilities =====
   const $ = (s, r=document) => r.querySelector(s);
 
+  const $ = (s, r=document) => r.querySelector(s);
+
+// ===== UI polish only (no player logic) =====
+const hdr = document.querySelector(".hdr");
+const onScroll = () => {
+  if(!hdr) return;
+  hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
+};
+window.addEventListener("scroll", onScroll, { passive:true });
+onScroll();
+
+// Section reveal (tasteful, minimal)
+const revealEls = Array.from(document.querySelectorAll("[data-reveal]"));
+if(revealEls.length){
+  const io = new IntersectionObserver((entries) => {
+    for(const e of entries){
+      if(e.isIntersecting){
+        e.target.classList.add("is-in");
+        io.unobserve(e.target);
+      }
+    }
+  }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+  revealEls.forEach(el => io.observe(el));
+}
+
+// the rest of your existing app.js continues below
+
   function fmtTime(s){
     if(!isFinite(s) || s < 0) return "0:00";
     const m = Math.floor(s/60);
@@ -389,5 +417,6 @@
   // Resize redraw
   window.addEventListener("resize", () => sync(true), { passive:true });
 })();
+
 
 
