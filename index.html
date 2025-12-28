@@ -11,7 +11,8 @@
 
   <style>
     html,body{
-      margin:0; height:100%;
+      margin:0;
+      height:100%;
       background:#0b0b0b;
       color:rgba(255,255,255,.92);
       font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -44,18 +45,24 @@
       line-height:1.05;
     }
 
-    /* === Name animation === */
+    /* === Animated Name === */
     .nameGlow{
       display:inline-block;
+      text-decoration:none;
       cursor:pointer;
       user-select:none;
       will-change:color;
 
-      --c1:#7a5cff; --c2:#5c7cff; --c3:#22d3ee; --c4:#34d98a;
-      --c5:#a3e635; --c6:#ffd166; --c7:#ff9f1c; --c8:#ff4d6d; --c9:#c13584;
-    }
+      --c1:#7a5cff;
+      --c2:#5c7cff;
+      --c3:#22d3ee;
+      --c4:#34d98a;
+      --c5:#a3e635;
+      --c6:#ffd166;
+      --c7:#ff9f1c;
+      --c8:#ff4d6d;
+      --c9:#c13584;
 
-    .nameGlow.is-animating{
       animation:jewelCuts 20s steps(1,end) infinite;
     }
 
@@ -107,7 +114,7 @@
       background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
-    /* === Socials (unchanged) === */
+    /* === Socials (locked) === */
     .socials{
       display:flex;
       gap:12px;
@@ -172,7 +179,17 @@
 <body>
   <div class="wrap">
     <div class="stack">
-      <h1><span class="nameGlow is-animating" id="nameGlow">Andy Forsberg</span></h1>
+      <h1>
+        <a
+          class="nameGlow"
+          href="https://www.imdb.com/name/nm4586039/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Andy Forsberg
+        </a>
+      </h1>
+
       <div class="sub">Composer + Producer</div>
       <div class="coming">New Site Coming 2026</div>
 
@@ -186,35 +203,5 @@
       </div>
     </div>
   </div>
-
-  <script>
-    const name = document.getElementById("nameGlow");
-    let running = true;
-
-    const palette = [
-      "#7a5cff","#5c7cff","#22d3ee","#34d98a",
-      "#a3e635","#ffd166","#ff9f1c","#ff4d6d","#c13584"
-    ];
-
-    function shuffle(a){
-      for(let i=a.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [a[i],a[j]]=[a[j],a[i]];
-      }
-      return a;
-    }
-
-    // randomize palette once at load
-    shuffle(palette).forEach((c,i)=>{
-      name.style.setProperty(`--c${i+1}`, c);
-    });
-
-    // stop animation on click
-    name.addEventListener("click", ()=>{
-      if(!running) return;
-      running=false;
-      name.classList.remove("is-animating");
-    });
-  </script>
 </body>
 </html>
