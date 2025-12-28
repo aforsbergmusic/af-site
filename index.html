@@ -4,48 +4,101 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Andy Forsberg — Coming 2026</title>
-  <meta name="description" content="Andy Forsberg — Composer + Producer. New site coming in 2026." />
+  <title>Andy Forsberg — Composer + Producer</title>
+  <meta name="description" content="Andy Forsberg — Composer + Producer. New site coming 2026." />
 
-  <!-- Same font stack you were using -->
+  <!-- SAME cinematic font as before -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    html,body{
+      margin:0;
+      height:100%;
+      background:#0b0b0b;
+      color:rgba(255,255,255,.92);
+      font-family:"Fraunces", ui-serif, Georgia, serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .wrap{
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:left;
+      padding:28px;
+    }
+
+    .stack{
+      max-width:900px;
+    }
+
+    h1{
+      font-size:clamp(46px,6vw,92px);
+      font-weight:500;
+      letter-spacing:-.02em;
+      margin:0;
+    }
+
+    .sub{
+      margin-top:16px;
+      font-size:14px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.6);
+    }
+
+    .rule{
+      margin:26px 0 18px 0;
+      height:1px;
+      width:420px;
+      max-width:90vw;
+      background:linear-gradient(
+        90deg,
+        rgba(255,255,255,.22),
+        rgba(255,255,255,0)
+      );
+    }
+
+    .socials{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .socials a{
+      font-size:11px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.55);
+      text-decoration:none;
+      transition:color .2s ease;
+    }
+
+    .socials a:hover{
+      color:rgba(255,255,255,.92);
+    }
+  </style>
 </head>
 
 <body>
-  <main class="coming">
+  <div class="wrap">
+    <div class="stack">
+      <h1>Andy Forsberg</h1>
+      <div class="sub">Composer + Producer</div>
 
-    <header class="hdr">
-      <div class="hdr__inner">
-        <a class="brand" href="/" aria-label="Home">Andy Forsberg</a>
+      <div class="rule"></div>
+
+      <div class="socials">
+        <a href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
+        <a href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer">Spotify</a>
+        <a href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+        <a href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
       </div>
-    </header>
-
-    <section class="hero">
-      <h1 class="title">New site coming 2026</h1>
-      <p class="sub">Composer + Producer</p>
-
-      <div class="rule" aria-hidden="true"></div>
-
-      <nav class="socials" aria-label="Social links">
-        <a class="sbtn" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
-        <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer">Spotify</a>
-        <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-        <a class="sbtn" href="https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a>
-      </nav>
-    </section>
-
-    <footer class="ftr">
-      <span>© <span id="y"></span> Andy Forsberg</span>
-    </footer>
-
-  </main>
-
-  <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
-  </script>
+    </div>
+  </div>
 </body>
 </html>
