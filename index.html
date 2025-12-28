@@ -7,7 +7,6 @@
   <title>Andy Forsberg — Composer + Producer</title>
   <meta name="description" content="Andy Forsberg — Composer + Producer. New site coming 2026." />
 
-  <!-- Industrial editorial font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -40,40 +39,49 @@
       align-items:center;
     }
 
-    /* ===== Name with jewel glow ===== */
     h1{
       font-size:clamp(44px,6vw,88px);
       font-weight:500;
       letter-spacing:-.015em;
       margin:0;
-      cursor:default;
-      transition:text-shadow .4s ease;
+      line-height:1.05;
     }
 
-    h1:hover{
+    /* The hover target is now explicit */
+    .nameGlow{
+      display:inline-block;
+      cursor:pointer;
+      transition:filter .25s ease;
+      will-change:text-shadow, filter;
+    }
+
+    .nameGlow:hover{
       animation:jewelGlow 3.6s ease-in-out infinite;
+      filter:brightness(1.03);
     }
 
     @keyframes jewelGlow{
       0%{
-        text-shadow:
-          0 0 0 rgba(0,0,0,0);
+        text-shadow: 0 0 0 rgba(0,0,0,0);
       }
       25%{
-        text-shadow:
-          0 0 18px rgba(122,92,255,.45); /* violet */
+        text-shadow: 0 0 22px rgba(122,92,255,.55); /* violet */
       }
       50%{
-        text-shadow:
-          0 0 18px rgba(29,185,84,.40); /* emerald */
+        text-shadow: 0 0 22px rgba(29,185,84,.50);  /* emerald */
       }
       75%{
-        text-shadow:
-          0 0 18px rgba(193,53,132,.40); /* ruby */
+        text-shadow: 0 0 22px rgba(193,53,132,.50); /* ruby */
       }
       100%{
-        text-shadow:
-          0 0 0 rgba(0,0,0,0);
+        text-shadow: 0 0 0 rgba(0,0,0,0);
+      }
+    }
+
+    /* Optional: give mobile a “tap hint” */
+    @media (hover:none){
+      .nameGlow{
+        text-shadow: 0 0 16px rgba(92,124,255,.18);
       }
     }
 
@@ -98,11 +106,7 @@
       height:1px;
       width:420px;
       max-width:90vw;
-      background:linear-gradient(
-        90deg,
-        rgba(255,255,255,.22),
-        rgba(255,255,255,0)
-      );
+      background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
     .socials{
@@ -112,7 +116,6 @@
       justify-content:center;
     }
 
-    /* Base button */
     .sbtn{
       font-size:11px;
       letter-spacing:.16em;
@@ -123,19 +126,11 @@
       background:rgba(255,255,255,.03);
       color:rgba(255,255,255,.70);
       text-decoration:none;
-      transition:
-        background .25s ease,
-        border-color .25s ease,
-        color .25s ease,
-        box-shadow .25s ease,
-        transform .25s ease;
+      transition:background .25s ease, border-color .25s ease, color .25s ease, box-shadow .25s ease, transform .25s ease;
     }
 
-    .sbtn:hover{
-      transform:translateY(-1px);
-    }
+    .sbtn:hover{ transform:translateY(-1px); }
 
-    /* Jewel tone hovers */
     .sbtn.imdb:hover{
       color:#e6d7ff;
       border-color:#7a5cff;
@@ -169,7 +164,7 @@
 <body>
   <div class="wrap">
     <div class="stack">
-      <h1>Andy Forsberg</h1>
+      <h1><span class="nameGlow">Andy Forsberg</span></h1>
       <div class="sub">Composer + Producer</div>
       <div class="coming">New Site Coming 2026</div>
 
