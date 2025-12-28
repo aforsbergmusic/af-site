@@ -47,48 +47,66 @@
       line-height:1.05;
     }
 
-    /* === Name animation target === */
+    /* === Jewel Signature === */
     .nameGlow{
       display:inline-block;
       cursor:pointer;
+      will-change: color, text-shadow, letter-spacing, filter;
     }
 
     .nameGlow.is-animating{
-      animation: jewelCycle 10s ease-in-out forwards;
+      animation: jewelSignature 20s cubic-bezier(.4,0,.2,1) forwards;
     }
 
-    @keyframes jewelCycle{
+    @keyframes jewelSignature{
       0%{
         color:#ffffff;
         text-shadow:none;
+        letter-spacing:-.015em;
+        filter:brightness(1);
       }
-      20%{
+
+      15%{
         color:#9a7cff; /* violet */
         text-shadow:
-          0 0 24px rgba(154,124,255,.85),
-          0 0 72px rgba(154,124,255,.55);
+          0 0 28px rgba(154,124,255,.85),
+          0 0 90px rgba(154,124,255,.55);
+        letter-spacing:-.005em;
+        filter:brightness(1.05);
       }
-      40%{
+
+      35%{
         color:#34d98a; /* emerald */
         text-shadow:
-          0 0 24px rgba(52,217,138,.85),
-          0 0 72px rgba(52,217,138,.55);
+          0 0 28px rgba(52,217,138,.85),
+          0 0 90px rgba(52,217,138,.55);
+        letter-spacing:0em;
+        filter:brightness(1.06);
       }
-      60%{
+
+      55%{
         color:#7fa2ff; /* sapphire */
         text-shadow:
-          0 0 24px rgba(127,162,255,.85),
-          0 0 72px rgba(127,162,255,.55);
+          0 0 28px rgba(127,162,255,.9),
+          0 0 90px rgba(127,162,255,.6);
+        letter-spacing:-.003em;
+        filter:brightness(1.05);
       }
-      80%{
+
+      75%{
         color:#e35fa8; /* ruby */
         text-shadow:
-          0 0 24px rgba(227,95,168,.85),
-          0 0 72px rgba(227,95,168,.55);
+          0 0 28px rgba(227,95,168,.9),
+          0 0 90px rgba(227,95,168,.6);
+        letter-spacing:-.008em;
+        filter:brightness(1.07);
       }
+
       100%{
         color:#ffffff;
         text-shadow:none;
+        letter-spacing:-.015em;
+        filter:brightness(1);
       }
     }
 
