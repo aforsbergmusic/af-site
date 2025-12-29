@@ -1,8 +1,10 @@
 <!-- =========================================================
-     FILE: index.html  (SPLASH)
-     VERSION: 2.3
+     FILE: splash-construction.html
+     VERSION: 2.3.1
      CHANGE:
-     - Jewel-tone social hover now re-rolls reliably (pointerenter + throttled mousemove)
+     - Jewel-tone social hover randomizes ONCE per hover (pointerenter)
+     - Also rerolls on pointerdown (tap/click) + focus (keyboard)
+     - No mousemove reroll
      ========================================================= -->
 <!doctype html>
 <html lang="en">
@@ -177,40 +179,42 @@
       return c;
     };
 
-    const applyJewel = (btn) => {
+    const applyJewelOnce = (btn) => {
+      // If we're already "hovered/active" don't reroll until we leave.
+      if (btn.dataset.hovered === "1") return;
+
       const prev = btn.dataset.jewel || "";
       const c = pickJewel(prev);
       btn.dataset.jewel = c;
+      btn.dataset.hovered = "1";
 
+      // solid jewel fill, no glow
       btn.style.borderColor = c;
-      btn.style.background = c + "2e";  // solid-ish fill, no glow
+      btn.style.background = c + "2e";
       btn.style.color = "#fff";
     };
 
     const resetBtn = (btn) => {
-      btn.dataset.jewel = "";
+      btn.dataset.hovered = "0";
       btn.style.borderColor = base.borderColor;
       btn.style.background = base.background;
       btn.style.color = base.color;
     };
 
     document.querySelectorAll(".sbtn").forEach((btn) => {
-      // Always fires when you enter the element
-      btn.addEventListener("pointerenter", () => applyJewel(btn));
+      // Desktop hover
+      btn.addEventListener("pointerenter", () => applyJewelOnce(btn));
+      btn.addEventListener("pointerleave", () => resetBtn(btn));
 
-      // Re-roll while moving inside (throttled so it doesn’t freak out)
-      let t = 0;
-      btn.addEventListener("mousemove", () => {
-        const now = performance.now();
-        if (now - t < 120) return; // reroll at most ~8x/sec
-        t = now;
-        applyJewel(btn);
+      // Mobile / tap (reroll on tap)
+      btn.addEventListener("pointerdown", () => {
+        // allow reroll on tap even if already hovered
+        btn.dataset.hovered = "0";
+        applyJewelOnce(btn);
       });
 
-      // Keyboard accessibility (tabbing)
-      btn.addEventListener("focus", () => applyJewel(btn));
-
-      btn.addEventListener("pointerleave", () => resetBtn(btn));
+      // Keyboard (tab)
+      btn.addEventListener("focus", () => applyJewelOnce(btn));
       btn.addEventListener("blur", () => resetBtn(btn));
     });
   </script>
