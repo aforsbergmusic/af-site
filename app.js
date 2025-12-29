@@ -1,5 +1,5 @@
 /* =========================================================
-   AF SITE — app.js (Editorial Grid)
+   AF SITE — app.js (Museum Posters + Editorial Plates + Drift)
    Full app.js replacement
    ========================================================= */
 
@@ -21,8 +21,7 @@
 
   function hexToRgb(hex) {
     const h = String(hex).replace("#", "").trim();
-    if (h.length !== 6) return { r: 122, g: 92, b: 255 };
-    const n = parseInt(h, 16);
+    const n = h.length === 6 ? parseInt(h, 16) : 0x7a5cff;
     return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
   }
 
@@ -49,7 +48,7 @@
     el.style.setProperty("--jtGlow2", `rgba(${r},${g},${b},.35)`);
   }
 
-  /* ---------------- Projects + Studio ---------------- */
+  /* ---------------- Content ---------------- */
   const PROJECTS = [
     { title: "Hilinski's Hope", img: "https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&raw=1" },
     { title: "The Secret Lives of Animals", img: "https://www.dropbox.com/scl/fi/9g8f8xyggs3dqlg1hmbao/The-Secret-Lives-of-Animals.webp?rlkey=s6yz5mrdz88uc9djbscr48urp&raw=1" },
@@ -57,81 +56,21 @@
     { title: "Born Wild: The Next Generation", img: "https://www.dropbox.com/scl/fi/04mok8tmb3dvvq6pofbrw/Born-Wild-The-Next-Generation.webp?rlkey=iq4b92tcumfktib1xm0t8eug1&raw=1" },
     { title: "Dodo Heroes", img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/6b91b60c-fc0d-494c-8252-6ddb0338bcfe/Dodo+Heroes.jpg?content-type=image%2Fjpeg" },
     { title: "The Last Alaskans", img: "https://www.dropbox.com/scl/fi/7u94wz7f4jbes9qr6iytz/The-Last-Alaskans.webp?rlkey=apub8dab1r8c79n3h2kdd46gu&raw=1" },
-    { title: "Thirst", img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/98561fee-a1fe-4c77-a6a9-4ec0537a73a1/Thirst.webp?content-type=image%2Fwebp" },
+    { title: "Thirst", img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/98561fee-a1fe-4c77-a6a9-4ec0533a73a1/Thirst.webp?content-type=image%2Fwebp" },
     { title: "Whistle", img: "https://www.dropbox.com/scl/fi/6sp81uysuvokjyt2j3rac/Whistle.jpg?rlkey=58x5sqlr9u1ic77fb25nkfk3q&raw=1" }
   ];
 
   const STUDIO = [
-    { img: "https://www.dropbox.com/scl/fi/xt5oi8nnc5rnwpjryivh3/Studio-Website-1.jpg?rlkey=23euuj9l2dr6xm14o177gms3u&raw=1" },
-    { img: "https://www.dropbox.com/scl/fi/rphhjgqjehuwjt4mkj35r/Studio-Website-4.jpg?rlkey=nlux8i541g627rx7e4zbrssge&raw=1" },
-    { img: "https://www.dropbox.com/scl/fi/2ofmv0l2u6mezzmk3mq3u/Studio-Website-14.jpg?rlkey=km8kcveprykqpantxl5jhf2w0&raw=1" },
-    { img: "https://www.dropbox.com/scl/fi/oyqeszrslesy3mzqx39py/Studio-Website-17.jpg?rlkey=cg41dzy78a3i4ztskargig6qo&raw=1" },
-    { img: "https://www.dropbox.com/scl/fi/3f3nihn5g455tvfdfwg63/Studio-Website-22.jpg?rlkey=gbujpgv7k1mvyptgn4r0h41ef&raw=1" },
-    { img: "https://www.dropbox.com/scl/fi/mptf3sr34x0kg4vvgwcwd/Studio-Website-24.jpg?rlkey=ated18wblqch5ksl1m4bqck68&raw=1" },
-    { img: "https://www.dropbox.com/scl/fi/xm7obyp24uik0jm78d6yf/Studio-Website-27.jpg?rlkey=jnxf40i7a9vsqimx19rw8zjjo&raw=1" }
+    "https://www.dropbox.com/scl/fi/xt5oi8nnc5rnwpjryivh3/Studio-Website-1.jpg?rlkey=23euuj9l2dr6xm14o177gms3u&raw=1",
+    "https://www.dropbox.com/scl/fi/rphhjgqjehuwjt4mkj35r/Studio-Website-4.jpg?rlkey=nlux8i541g627rx7e4zbrssge&raw=1",
+    "https://www.dropbox.com/scl/fi/2ofmv0l2u6mezzmk3mq3u/Studio-Website-14.jpg?rlkey=km8kcveprykqpantxl5jhf2w0&raw=1",
+    "https://www.dropbox.com/scl/fi/oyqeszrslesy3mzqx39py/Studio-Website-17.jpg?rlkey=cg41dzy78a3i4ztskargig6qo&raw=1",
+    "https://www.dropbox.com/scl/fi/3f3nihn5g455tvfdfwg63/Studio-Website-22.jpg?rlkey=gbujpgv7k1mvyptgn4r0h41ef&raw=1",
+    "https://www.dropbox.com/scl/fi/mptf3sr34x0kg4vvgwcwd/Studio-Website-24.jpg?rlkey=ated18wblqch5ksl1m4bqck68&raw=1",
+    "https://www.dropbox.com/scl/fi/xm7obyp24uik0jm78d6yf/Studio-Website-27.jpg?rlkey=jnxf40i7a9vsqimx19rw8zjjo&raw=1"
   ];
 
-  /* Editorial rhythm:
-     - Projects are consistent posters.
-     - Studio plates get size variation in a curated, repeating pattern.
-  */
-  const PLATE_PATTERN = [
-    "plate--wide",
-    "plate--square",
-    "plate--tall",
-    "plate--square",
-    "plate--hero",
-    "plate--square",
-    "plate--wide"
-  ];
-
-  function buildGridItems() {
-    const items = [];
-    const p = PROJECTS.slice();
-    const s = STUDIO.slice();
-
-    // Magazine beat: after every 1–2 posters, drop a plate
-    let pi = 0, si = 0;
-    const beats = [2,1,2,1,2,1,2];
-    let b = 0;
-
-    while (pi < p.length || si < s.length) {
-      const take = beats[b++ % beats.length];
-      for (let k = 0; k < take && pi < p.length; k++) {
-        items.push({ kind: "project", title: p[pi].title, img: p[pi].img });
-        pi++;
-      }
-      if (si < s.length) {
-        const cls = PLATE_PATTERN[si % PLATE_PATTERN.length];
-        items.push({ kind: "studio", img: s[si].img, cls });
-        si++;
-      }
-      if (pi >= p.length && si < s.length) {
-        while (si < s.length) {
-          const cls = PLATE_PATTERN[si % PLATE_PATTERN.length];
-          items.push({ kind: "studio", img: s[si].img, cls });
-          si++;
-        }
-      }
-    }
-    return items;
-  }
-
-  const FEATURED_TRACKS = [
-    { title: "Charlie Horse", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/9b1a0c45-e055-4c88-b7b3-5f68e21c868e/Charlie%20Horse.mp3" },
-    { title: "Beneath The City", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7a797f68-c4b0-48a2-bd22-2e4d0d42cb3f/Beneath%20The%20City.mp3" },
-    { title: "Stars To Guide Us", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e08b2007-7b7a-45b5-9bc2-5e16f7c663f1/Stars%20To%20Guide%20Us.mp3" },
-    { title: "Drive To Isleworth", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e021b12d-70ad-45ad-8372-54e5bad51945/Drive%20To%20Isleworth.mp3" },
-    { title: "The Summit", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/5731e845-e98a-4ae5-b843-cc3280fa8236/The%20Summit.mp3" },
-    { title: "Travelers", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/4c0e765b-129e-4146-ac5e-b09678d0d208/Travelers.mp3" },
-    { title: "Finding The Pride", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/be647ea5-b2d5-4126-b775-c98ebf1c5b17/Finding%20The%20Pride.mp3" },
-    { title: "The Cathedral", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/f8c8b063-f39a-414f-8cf0-f74e7b407779/The%20Cathedral.mp3" },
-    { title: "Magic", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7406101c-2eae-4121-9739-64efdac180a5/Magic.mp3" },
-    { title: "Emma's Drive", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/de7bab66-ddb1-4f58-a73c-38a842a07a59/Emma's%20Drive.mp3" },
-    { title: "It's Everywhere", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/4b46f910-babb-4bd0-a74d-16a99ca01c4e/It's%20Everywhere.mp3" },
-    { title: "Bonded For Life", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/fbfcad1d-0ad1-45e5-b266-058e629d5468/Bonded%20For%20Life.mp3" }
-  ];
-
+  /* ---------------- Utilities ---------------- */
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
   const fmtTime = (s) => {
     if (!isFinite(s) || s < 0) return "0:00";
@@ -300,15 +239,61 @@
     }
   }
 
+  /* =========================================================
+     Drift (subtle, cinematic)
+     - each plate gets its own drift vector
+     - moves slightly based on scroll position
+     ========================================================= */
+  function setupDrift() {
+    const plates = $$(".plate");
+    if (!plates.length) return;
+
+    const items = plates.map((el) => {
+      const inner = $(".plate__drift", el) || el;
+      const dx = (Math.random() * 2 - 1) * 8;  // px
+      const dy = (Math.random() * 2 - 1) * 8;  // px
+      const phase = Math.random() * Math.PI * 2;
+      return { el, inner, dx, dy, phase };
+    });
+
+    let raf = null;
+    const tick = () => {
+      raf = null;
+      const vh = window.innerHeight || 800;
+      const scrollY = window.scrollY || 0;
+
+      for (const it of items) {
+        const rect = it.el.getBoundingClientRect();
+        const center = rect.top + rect.height * 0.5;
+        const t = (center / vh) * 2 - 1; // -1..1
+        const sway = Math.sin((scrollY * 0.002) + it.phase);
+
+        const x = it.dx * (t * 0.35) + sway * 2.2;
+        const y = it.dy * (t * 0.35) + sway * 1.4;
+
+        it.inner.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+      }
+    };
+
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    onScroll();
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     /* Header scroll */
     const hdr = $(".hdr");
-    const onScroll = () => hdr && hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    const onHdrScroll = () => hdr && hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
+    window.addEventListener("scroll", onHdrScroll, { passive: true });
+    onHdrScroll();
 
     /* Random jewel tone on hover (delegated) */
-    const hoverTargets = (el) => el?.closest(".poster, .row, .wave, .playBtn, .menuBtn, .dock__inner");
+    const hoverTargets = (el) => el?.closest(".poster, .row, .wave, .playBtn, .menuBtn, .dock__inner, .plate");
     document.addEventListener("pointerenter", (e) => {
       const t = hoverTargets(e.target);
       if (t) applyJewelVars(t);
@@ -339,7 +324,7 @@
       window.addEventListener("keydown", (e) => e.key === "Escape" && closeMenu());
     }
 
-    /* Social links + ensure classes for hover styling */
+    /* Social links + ensure classes */
     const sImdb = $("#social-imdb");
     const sApple = $("#social-apple");
     const sSpotify = $("#social-spotify");
@@ -353,32 +338,58 @@
     const bioImg = $(".bioImg");
     if (bioImg && PROFILE_IMG_URL) bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
 
-    /* Posters grid (editorial) */
+    /* ---------- Posters: museum wall (contain, no crop) ---------- */
     const postersEl = $(".posters");
-    const GRID = buildGridItems();
-
-    if (postersEl && GRID.length) {
-      postersEl.innerHTML = GRID.map((item, i) => {
-        const img = item.img || "";
-        if (item.kind === "project") {
-          const safeTitle = (item.title || "Project").replace(/"/g, "&quot;");
-          return `
-            <div class="poster poster--project" data-kind="project" data-idx="${i}" data-title="${safeTitle}" role="button" aria-label="Open ${safeTitle}">
-              <div class="poster__img" style="background-image:url('${img}')"></div>
-              <div class="poster__name">${safeTitle}</div>
-            </div>
-          `;
-        }
-        const cls = item.cls || "plate--square";
+    if (postersEl && PROJECTS.length) {
+      postersEl.innerHTML = PROJECTS.map((p, i) => {
+        const safeTitle = (p.title || "Project").replace(/"/g, "&quot;");
+        const img = p.img || "";
         return `
-          <div class="poster poster--studio ${cls}" data-kind="studio" data-idx="${i}" role="button" aria-label="Open studio image">
-            <div class="poster__img" style="background-image:url('${img}')"></div>
+          <div class="poster" data-idx="${i}" data-title="${safeTitle}" role="button" aria-label="Open ${safeTitle}">
+            <div class="poster__img">
+              <img loading="lazy" alt="${safeTitle}" src="${img}">
+            </div>
+            <div class="poster__name">${safeTitle}</div>
           </div>
         `;
       }).join("");
     }
 
-    /* Lightbox */
+    /* ---------- Studio placements (diptych / rail / anchor) ---------- */
+    const diptych = $("#studio-diptych");
+    const rail = $("#studio-rail");
+    const anchor = $("#studio-anchor");
+
+    const mkPlate = (src, variant) => `
+      <div class="plate ${variant || ""}" role="button" aria-label="Open studio image" data-src="${src}">
+        <div class="plate__frame">
+          <div class="plate__drift">
+            <img loading="lazy" alt="Studio photo" src="${src}">
+          </div>
+        </div>
+      </div>
+    `;
+
+    if (diptych) {
+      const a = STUDIO[0], b = STUDIO[1];
+      diptych.innerHTML = [
+        mkPlate(a, "plate--wide"),
+        mkPlate(b, "plate--tall")
+      ].join("");
+    }
+
+    if (rail) {
+      // curated rail: a few “beats”
+      const picks = [STUDIO[2], STUDIO[3], STUDIO[4], STUDIO[5]];
+      rail.innerHTML = picks.map((src, idx) => mkPlate(src, idx % 2 ? "plate--wide" : "plate--tall")).join("");
+    }
+
+    if (anchor) {
+      const src = STUDIO[6] || STUDIO[0];
+      anchor.innerHTML = mkPlate(src, "plate--anchor");
+    }
+
+    /* ---------- Lightbox (works for posters + plates) ---------- */
     const lb = $(".lb");
     const lbImg = $(".lb__img");
     const lbBg = $(".lb__bg");
@@ -401,19 +412,45 @@
       if (e.key === "Escape" && lb && lb.getAttribute("aria-hidden") === "false") closeLB();
     });
 
+    // posters open
     if (postersEl) {
       postersEl.addEventListener("click", (e) => {
         const p = e.target.closest(".poster");
         if (!p) return;
         const idx = Number(p.dataset.idx);
-        const item = GRID[idx];
+        const item = PROJECTS[idx];
         if (item?.img) openLB(item.img);
       });
     }
+    // plates open
+    document.addEventListener("click", (e) => {
+      const plate = e.target.closest(".plate");
+      if (!plate) return;
+      const src = plate.getAttribute("data-src");
+      if (src) openLB(src);
+    });
+
+    /* Drift init */
+    setupDrift();
 
     /* =========================================================
-       PLAYER (kept as your smooth version)
+       PLAYER (your smooth version unchanged in behavior)
        ========================================================= */
+    const FEATURED_TRACKS = [
+      { title: "Charlie Horse", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/9b1a0c45-e055-4c88-b7b3-5f68e21c868e/Charlie%20Horse.mp3" },
+      { title: "Beneath The City", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7a797f68-c4b0-48a2-bd22-2e4d0d42cb3f/Beneath%20The%20City.mp3" },
+      { title: "Stars To Guide Us", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e08b2007-7b7a-45b5-9bc2-5e16f7c663f1/Stars%20To%20Guide%20Us.mp3" },
+      { title: "Drive To Isleworth", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e021b12d-70ad-45ad-8372-54e5bad51945/Drive%20To%20Isleworth.mp3" },
+      { title: "The Summit", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/5731e845-e98a-4ae5-b843-cc3280fa8236/The%20Summit.mp3" },
+      { title: "Travelers", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/4c0e765b-129e-4146-ac5e-b09678d0d208/Travelers.mp3" },
+      { title: "Finding The Pride", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/be647ea5-b2d5-4126-b775-c98ebf1c5b17/Finding%20The%20Pride.mp3" },
+      { title: "The Cathedral", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/f8c8b063-f39a-414f-8cf0-f74e7b407779/The%20Cathedral.mp3" },
+      { title: "Magic", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7406101c-2eae-4121-9739-64efdac180a5/Magic.mp3" },
+      { title: "Emma's Drive", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/de7bab66-ddb1-4f58-a73c-38a842a07a59/Emma's%20Drive.mp3" },
+      { title: "It's Everywhere", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/4b46f910-babb-4bd0-a74d-16a99ca01c4e/It's%20Everywhere.mp3" },
+      { title: "Bonded For Life", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/fbfcad1d-0ad1-45e5-b266-058e629d5468/Bonded%20For%20Life.mp3" }
+    ];
+
     const player = $(".player");
     const playBtn = $(".playBtn");
     const npTitle = $(".npTitle");
@@ -422,7 +459,6 @@
     const waveCanvas = waveBtn ? $("canvas", waveBtn) : null;
     const tracklist = $(".tracklist");
 
-    // Dock
     const dock = $(".dock");
     const dockPlay = $(".dock__play");
     const dockTitle = $(".dock__title");
