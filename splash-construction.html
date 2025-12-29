@@ -73,7 +73,7 @@ h1{
   background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
 }
 
-/* ===== Socials ===== */
+/* ================= Socials ================= */
 .socials{
   display:flex;
   gap:12px;
@@ -92,17 +92,44 @@ h1{
   color:rgba(255,255,255,.70);
   text-decoration:none;
   transition:
-    background .12s ease,
-    border-color .12s ease,
-    color .12s ease,
-    transform .12s ease;
+    background .14s ease,
+    border-color .14s ease,
+    color .14s ease,
+    transform .14s ease;
 }
 
 .sbtn:hover{
   transform:translateY(-1px);
+  color:#fff;
 }
 
-/* Mobile portrait stacking */
+/* ===== Jewel tone mapping (solid, no glow) ===== */
+
+/* IMDb — Yellow jewel */
+.sbtn.imdb:hover{
+  border-color:#ffd166;
+  background:rgba(255,209,102,.22);
+}
+
+/* Spotify — Green jewel */
+.sbtn.spotify:hover{
+  border-color:#1db954;
+  background:rgba(29,185,84,.22);
+}
+
+/* Apple Music — Pink jewel */
+.sbtn.apple:hover{
+  border-color:#ff4d6d;
+  background:rgba(255,77,109,.22);
+}
+
+/* Instagram — Orange jewel */
+.sbtn.instagram:hover{
+  border-color:#ff9f1c;
+  background:rgba(255,159,28,.22);
+}
+
+/* Mobile stacking */
 @media (max-width:520px){
   .socials{
     flex-direction:column;
@@ -132,48 +159,13 @@ h1{
     <div class="rule"></div>
 
     <div class="socials">
-      <a class="sbtn" href="https://www.imdb.com/name/nm4586039/" target="_blank">IMDb</a>
-      <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank">Spotify</a>
-      <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank">Apple Music</a>
-      <a class="sbtn" href="https://www.instagram.com/aforsbergmusic" target="_blank">Instagram</a>
+      <a class="sbtn imdb" href="https://www.imdb.com/name/nm4586039/" target="_blank">IMDb</a>
+      <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank">Spotify</a>
+      <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank">Apple Music</a>
+      <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank">Instagram</a>
     </div>
 
   </div>
 </div>
-
-<script>
-/* ======================================================
-   Jewel tone randomizer — deterministic & visible
-   ====================================================== */
-
-const JEWELS = [
-  "#7a5cff", // violet
-  "#5c7cff", // blue
-  "#22d3ee", // cyan
-  "#34d98a", // emerald
-  "#a3e635", // lime
-  "#ffd166", // amber
-  "#ff9f1c", // orange
-  "#ff4d6d", // rose
-  "#c13584"  // magenta
-];
-
-function randomJewel(){
-  return JEWELS[Math.floor(Math.random() * JEWELS.length)];
-}
-
-document.querySelectorAll(".sbtn").forEach(btn => {
-  const apply = () => {
-    const c = randomJewel();
-    btn.style.borderColor = c;
-    btn.style.background = `${c}22`;
-    btn.style.color = "#fff";
-  };
-
-  btn.addEventListener("mouseenter", apply);
-  btn.addEventListener("touchstart", apply, { passive:true });
-});
-</script>
-
 </body>
 </html>
