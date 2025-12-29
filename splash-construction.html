@@ -1,222 +1,179 @@
-<!-- =========================================================
-     FILE: splash-construction.html
-     VERSION: 2.3.1
-     CHANGE:
-     - Jewel-tone social hover randomizes ONCE per hover (pointerenter)
-     - Also rerolls on pointerdown (tap/click) + focus (keyboard)
-     - No mousemove reroll
-     ========================================================= -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Andy Forsberg — Composer + Producer</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Andy Forsberg — Composer + Producer</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <style>
-    html,body{
-      margin:0;
-      height:100%;
-      background:#0b0b0b;
-      color:rgba(255,255,255,.92);
-      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
-    }
+<style>
+html,body{
+  margin:0;
+  height:100%;
+  background:#0b0b0b;
+  color:rgba(255,255,255,.92);
+  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  -webkit-font-smoothing:antialiased;
+}
 
-    .wrap{
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:28px;
-      text-align:center;
-    }
+.wrap{
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+  text-align:center;
+}
 
-    .stack{
-      max-width:960px;
-      width:100%;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-    }
+.stack{
+  max-width:960px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
 
-    h1{
-      font-size:clamp(40px, 6vw, 88px);
-      font-weight:500;
-      letter-spacing:-.015em;
-      margin:0;
-      line-height:1.05;
-    }
+h1{
+  font-size:clamp(40px, 6vw, 88px);
+  font-weight:500;
+  letter-spacing:-.015em;
+  margin:0;
+  line-height:1.05;
+}
 
-    /* === Animated Name (unchanged) === */
-    .nameGlow{
-      display:inline-block;
-      text-decoration:none;
-      user-select:none;
+.name{
+  color:#fff;
+  text-decoration:none;
+}
 
-      --c1:#7a5cff;
-      --c2:#5c7cff;
-      --c3:#22d3ee;
-      --c4:#34d98a;
-      --c5:#a3e635;
-      --c6:#ffd166;
-      --c7:#ff9f1c;
-      --c8:#ff4d6d;
-      --c9:#c13584;
+.sub{
+  margin-top:14px;
+  font-size:13px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+}
 
-      animation:jewelCuts 20s steps(1,end) infinite;
-    }
+.coming{
+  margin-top:10px;
+  font-size:12px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+}
 
-    @keyframes jewelCuts{
-      0%{color:var(--c1)} 10%{color:var(--c3)} 20%{color:var(--c5)}
-      30%{color:var(--c7)} 40%{color:var(--c9)} 50%{color:var(--c2)}
-      60%{color:var(--c4)} 70%{color:var(--c6)} 80%{color:var(--c8)}
-      100%{color:var(--c1)}
-    }
+.rule{
+  margin:28px 0 22px;
+  height:1px;
+  width:420px;
+  max-width:92vw;
+  background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+}
 
-    .sub{
-      margin-top:14px;
-      font-size:13px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.55);
-    }
+/* ===== Socials ===== */
+.socials{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
 
-    .coming{
-      margin-top:10px;
-      font-size:12px;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.45);
-    }
+.sbtn{
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.03);
+  color:rgba(255,255,255,.70);
+  text-decoration:none;
+  transition:
+    background .12s ease,
+    border-color .12s ease,
+    color .12s ease,
+    transform .12s ease;
+}
 
-    .rule{
-      margin:28px 0 22px;
-      height:1px;
-      width:420px;
-      max-width:92vw;
-      background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
-    }
+.sbtn:hover{
+  transform:translateY(-1px);
+}
 
-    .socials{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
-
-    .sbtn{
-      font-size:11px;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.03);
-      color:rgba(255,255,255,.70);
-      text-decoration:none;
-      transition:
-        background .18s ease,
-        border-color .18s ease,
-        color .18s ease,
-        transform .18s ease;
-    }
-
-    .sbtn:hover{ transform:translateY(-1px); }
-
-    @media (max-width:520px) and (orientation:portrait){
-      .socials{ flex-direction:column; align-items:center; }
-      .sbtn{ width:220px; text-align:center; }
-    }
-  </style>
+/* Mobile portrait stacking */
+@media (max-width:520px){
+  .socials{
+    flex-direction:column;
+    align-items:center;
+  }
+  .sbtn{
+    width:220px;
+    text-align:center;
+  }
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="stack">
-      <h1>
-        <a class="nameGlow" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">
-          Andy Forsberg
-        </a>
-      </h1>
+<div class="wrap">
+  <div class="stack">
 
-      <div class="sub">Composer + Producer</div>
-      <div class="coming">New Site Coming 2026</div>
+    <h1>
+      <a class="name" href="https://www.imdb.com/name/nm4586039/" target="_blank">
+        Andy Forsberg
+      </a>
+    </h1>
 
-      <div class="rule"></div>
+    <div class="sub">Composer + Producer</div>
+    <div class="coming">New Site Coming 2026</div>
 
-      <div class="socials">
-        <a class="sbtn" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
-        <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
-        <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-        <a class="sbtn" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
-      </div>
+    <div class="rule"></div>
+
+    <div class="socials">
+      <a class="sbtn" href="https://www.imdb.com/name/nm4586039/" target="_blank">IMDb</a>
+      <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank">Spotify</a>
+      <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank">Apple Music</a>
+      <a class="sbtn" href="https://www.instagram.com/aforsbergmusic" target="_blank">Instagram</a>
     </div>
+
   </div>
+</div>
 
-  <script>
-    const JEWELS = [
-      "#7a5cff","#5c7cff","#22d3ee",
-      "#34d98a","#a3e635","#ffd166",
-      "#ff9f1c","#ff4d6d","#c13584"
-    ];
+<script>
+/* ======================================================
+   Jewel tone randomizer — deterministic & visible
+   ====================================================== */
 
-    const base = {
-      borderColor: "rgba(255,255,255,.14)",
-      background: "rgba(255,255,255,.03)",
-      color: "rgba(255,255,255,.70)"
-    };
+const JEWELS = [
+  "#7a5cff", // violet
+  "#5c7cff", // blue
+  "#22d3ee", // cyan
+  "#34d98a", // emerald
+  "#a3e635", // lime
+  "#ffd166", // amber
+  "#ff9f1c", // orange
+  "#ff4d6d", // rose
+  "#c13584"  // magenta
+];
 
-    const pickJewel = (prev) => {
-      if (JEWELS.length <= 1) return JEWELS[0];
-      let c = prev;
-      while (c === prev) c = JEWELS[Math.floor(Math.random() * JEWELS.length)];
-      return c;
-    };
+function randomJewel(){
+  return JEWELS[Math.floor(Math.random() * JEWELS.length)];
+}
 
-    const applyJewelOnce = (btn) => {
-      // If we're already "hovered/active" don't reroll until we leave.
-      if (btn.dataset.hovered === "1") return;
+document.querySelectorAll(".sbtn").forEach(btn => {
+  const apply = () => {
+    const c = randomJewel();
+    btn.style.borderColor = c;
+    btn.style.background = `${c}22`;
+    btn.style.color = "#fff";
+  };
 
-      const prev = btn.dataset.jewel || "";
-      const c = pickJewel(prev);
-      btn.dataset.jewel = c;
-      btn.dataset.hovered = "1";
+  btn.addEventListener("mouseenter", apply);
+  btn.addEventListener("touchstart", apply, { passive:true });
+});
+</script>
 
-      // solid jewel fill, no glow
-      btn.style.borderColor = c;
-      btn.style.background = c + "2e";
-      btn.style.color = "#fff";
-    };
-
-    const resetBtn = (btn) => {
-      btn.dataset.hovered = "0";
-      btn.style.borderColor = base.borderColor;
-      btn.style.background = base.background;
-      btn.style.color = base.color;
-    };
-
-    document.querySelectorAll(".sbtn").forEach((btn) => {
-      // Desktop hover
-      btn.addEventListener("pointerenter", () => applyJewelOnce(btn));
-      btn.addEventListener("pointerleave", () => resetBtn(btn));
-
-      // Mobile / tap (reroll on tap)
-      btn.addEventListener("pointerdown", () => {
-        // allow reroll on tap even if already hovered
-        btn.dataset.hovered = "0";
-        applyJewelOnce(btn);
-      });
-
-      // Keyboard (tab)
-      btn.addEventListener("focus", () => applyJewelOnce(btn));
-      btn.addEventListener("blur", () => resetBtn(btn));
-    });
-  </script>
 </body>
 </html>
