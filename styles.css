@@ -1,37 +1,23 @@
 /* =========================================================
-   AF — Cinematic Minimal (2.0+) — styles.css
-   - Random jewel-tone hover (solid fill + outline)
-   - Posters show title on hover (projects only)
-   - Studio "plates" in same grid (no captions, subtle grain)
+   AF — Cinematic Minimal (Editorial Grid)
+   Full styles.css replacement
    ========================================================= */
 
 :root{
-  /* Palette */
   --bg:#0b0b0b;
   --bg2:#0f0f0f;
   --card:rgba(255,255,255,.03);
-  --card2:rgba(255,255,255,.05);
   --text:rgba(255,255,255,.90);
-  --text2:rgba(255,255,255,.84);
   --muted:rgba(255,255,255,.62);
-  --muted2:rgba(255,255,255,.50);
-  --line:rgba(255,255,255,.10);
-  --line2:rgba(255,255,255,.14);
 
-  /* Type */
   --sans:"Space Grotesk", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
 
-  /* Sizing */
   --pad:clamp(18px,3vw,44px);
   --h1:clamp(44px,5.1vw,82px);
-  --h2:clamp(22px,2.35vw,34px);
 
-  /* Rhythm */
   --radius:18px;
   --lh-body:1.72;
   --lh-tight:1.06;
-
-  /* Measure */
   --measure:72ch;
 
   /* Jewel vars (JS sets per-hover per-element) */
@@ -51,7 +37,6 @@ html,body{
   -moz-osx-font-smoothing:grayscale;
 }
 body{ overflow-x:hidden; }
-
 a{ color:var(--text); text-decoration:none; }
 a:hover{ opacity:.92; }
 
@@ -73,18 +58,13 @@ a:hover{ opacity:.92; }
   background:rgba(11,11,11,.78);
   border-bottom-color:rgba(255,255,255,.08);
 }
-
 .hdr__inner{
   max-width:1200px; margin:0 auto;
   padding:20px var(--pad);
   display:flex; align-items:center; justify-content:space-between;
   gap:16px;
 }
-
-.brand{
-  display:flex; align-items:center; gap:12px;
-  min-width:0;
-}
+.brand{ display:flex; align-items:center; gap:12px; min-width:0; }
 .brand__name{
   font-weight:500;
   letter-spacing:-.01em;
@@ -94,12 +74,10 @@ a:hover{ opacity:.92; }
   overflow:hidden;
   text-overflow:ellipsis;
 }
-
 .hdr__right{ display:flex; align-items:center; gap:14px; }
 
-/* ================= Socials (splash-style hover) ================= */
+/* ================= Socials ================= */
 .hdr__social{ display:flex; align-items:center; gap:10px; }
-
 .sbtn{
   font-size:11px;
   letter-spacing:.18em;
@@ -109,16 +87,9 @@ a:hover{ opacity:.92; }
   border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.02);
-  transition:
-    color .16s ease,
-    border-color .16s ease,
-    background .16s ease,
-    box-shadow .16s ease,
-    transform .16s ease;
+  transition: color .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease;
 }
 .sbtn:hover{ transform:translateY(-1px); }
-
-/* These require the .imdb/.spotify/.apple/.instagram classes (app.js adds them safely) */
 .hdr__social .sbtn.imdb:hover{
   color:#fff6dc;
   border-color:#ffd166;
@@ -160,12 +131,7 @@ a:hover{ opacity:.92; }
   transform:translateY(-1px);
   box-shadow:0 0 0 1px var(--jt), 0 0 22px var(--jtGlow2);
 }
-.menuBtn__lines{
-  display:block;
-  width:18px; height:12px;
-  margin:0 auto;
-  position:relative;
-}
+.menuBtn__lines{ display:block; width:18px; height:12px; margin:0 auto; position:relative; }
 .menuBtn__lines::before,
 .menuBtn__lines::after{
   content:"";
@@ -177,14 +143,8 @@ a:hover{ opacity:.92; }
 .menuBtn__lines::after{ bottom:2px; }
 
 /* ================= Menu overlay ================= */
-.menu{
-  position:fixed; inset:0;
-  display:none;
-  background:rgba(0,0,0,.62);
-  z-index:999;
-}
+.menu{ position:fixed; inset:0; display:none; background:rgba(0,0,0,.62); z-index:999; }
 .menu[aria-hidden="false"]{ display:block; }
-
 .menu__panel{
   position:absolute;
   right:18px; top:78px;
@@ -195,7 +155,6 @@ a:hover{ opacity:.92; }
   backdrop-filter:blur(18px);
   padding:14px;
 }
-
 .menu__link{
   display:block;
   padding:14px 14px;
@@ -211,7 +170,6 @@ a:hover{ opacity:.92; }
 /* ================= Sections ================= */
 .section{ margin-top:94px; }
 .section__top{ margin-bottom:22px; }
-
 .section__title{
   font-weight:500;
   letter-spacing:.14em;
@@ -248,11 +206,7 @@ a:hover{ opacity:.92; }
   background:rgba(255,255,255,.03);
   padding:18px;
 }
-
-.np{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px;
-}
+.np{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .np__left{ display:flex; align-items:center; gap:14px; min-width:0; }
 
 .playBtn{
@@ -271,7 +225,6 @@ a:hover{ opacity:.92; }
   transform:translateY(-1px);
   box-shadow:0 0 0 1px var(--jt), 0 0 22px var(--jtGlow2);
 }
-
 .np__meta{ min-width:0; }
 .npTitle{
   font-weight:500;
@@ -290,7 +243,6 @@ a:hover{ opacity:.92; }
   letter-spacing:.04em;
   text-transform:uppercase;
 }
-
 .wave{
   width:100%;
   height:74px;
@@ -309,17 +261,9 @@ a:hover{ opacity:.92; }
 }
 .wave canvas{ width:100%; height:100%; display:block; }
 
-.tracklist{
-  margin-top:14px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
+.tracklist{ margin-top:14px; display:flex; flex-direction:column; gap:10px; }
 .row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display:flex; align-items:center; justify-content:space-between;
   gap:14px;
   padding:12px 14px;
   border-radius:16px;
@@ -328,20 +272,16 @@ a:hover{ opacity:.92; }
   cursor:pointer;
   transition:background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
 }
-
-/* Solid jewel fill + jewel outline on hover (randomized by JS) */
 .row:hover{
   transform:translateY(-1px);
   border-color:rgba(255,255,255,.18);
   background:var(--jtFill);
   box-shadow:0 0 0 1px var(--jt), 0 0 22px var(--jtGlow2);
 }
-
 .row.is-active{
   border-color:rgba(255,255,255,.20);
   background:rgba(255,255,255,.05);
 }
-
 .row__t{
   font-size:13px;
   font-weight:500;
@@ -352,13 +292,21 @@ a:hover{ opacity:.92; }
   text-overflow:ellipsis;
 }
 
-/* ================= Posters + Studio Plates ================= */
+/* =========================================================
+   EDITORIAL GRID (Magazine)
+   - 12-column layout, dense packing
+   - Projects: consistent “poster” tiles
+   - Studio plates: varied sizes
+   ========================================================= */
 .posters{
   display:grid;
-  grid-template-columns:repeat(4, minmax(0, 1fr));
+  grid-template-columns:repeat(12, minmax(0, 1fr));
+  grid-auto-flow:dense;
+  grid-auto-rows:14px;          /* masonry unit */
   gap:18px;
 }
 
+/* Base tile */
 .poster{
   position:relative;
   border-radius:18px;
@@ -375,9 +323,11 @@ a:hover{ opacity:.92; }
   box-shadow:0 0 0 1px var(--jt), 0 0 28px var(--jtGlow2);
 }
 
+/* Fill the tile box (tile height is controlled by row span) */
 .poster__img{
   position:relative;
-  aspect-ratio:2/3;
+  width:100%;
+  height:100%;
   background-size:cover;
   background-position:center;
   transform:scale(1);
@@ -388,16 +338,25 @@ a:hover{ opacity:.92; }
   filter:brightness(1.03);
 }
 
-/* Studio Plates: subtle grain + slightly moodier grade */
+/* ------- Project poster tile sizing ------- */
+.poster--project{
+  grid-column:span 3;     /* 4 across */
+  grid-row:span 30;       /* tuned for 2:3-ish poster feel */
+}
+.poster--project .poster__img{
+  /* optional gentle grade */
+  filter:saturate(1.02) contrast(1.02);
+}
+
+/* ------- Studio plate grain + grade ------- */
 .poster--studio .poster__img{
-  filter:saturate(1.05) contrast(1.02) brightness(.98);
+  filter:saturate(1.06) contrast(1.03) brightness(.98);
 }
 .poster--studio .poster__img::after{
   content:"";
   position:absolute;
   inset:0;
   pointer-events:none;
-  /* fake “film grain” (cheap + reliable) */
   background:
     linear-gradient(0deg, rgba(255,255,255,.06), rgba(255,255,255,0) 40%),
     repeating-linear-gradient(90deg,
@@ -416,52 +375,44 @@ a:hover{ opacity:.92; }
   mix-blend-mode:overlay;
 }
 
-/* Title pill: ONLY for project posters (when data-title exists) */
-.poster[data-title]::after{
+/* ------- Studio plate sizes (magazine rhythm) ------- */
+.plate--square{ grid-column:span 3; grid-row:span 22; }  /* small square-ish */
+.plate--wide{   grid-column:span 6; grid-row:span 22; }  /* panoramic beat */
+.plate--tall{   grid-column:span 3; grid-row:span 34; }  /* vertical accent */
+.plate--hero{   grid-column:span 6; grid-row:span 34; }  /* statement image */
+
+/* Title pill: ONLY for project posters */
+.poster--project::after{
   content:attr(data-title);
   position:absolute;
-  left:10px;
-  right:10px;
-  bottom:10px;
+  left:10px; right:10px; bottom:10px;
   padding:10px 12px;
   border-radius:14px;
-
   font-size:11px;
   letter-spacing:.18em;
   text-transform:uppercase;
-
   color:rgba(255,255,255,.92);
   background:rgba(12,12,12,.72);
   border:1px solid rgba(255,255,255,.12);
   backdrop-filter:blur(12px);
-
   opacity:0;
   transform:translateY(6px);
   transition:opacity .18s ease, transform .18s ease, border-color .18s ease, box-shadow .18s ease;
-
   pointer-events:none;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
-.poster[data-title]:hover::after{
+.poster--project:hover::after{
   opacity:1;
   transform:translateY(0);
   border-color:rgba(255,255,255,.18);
   box-shadow:0 0 0 1px rgba(255,255,255,.05), 0 0 18px var(--jtGlow2);
 }
-
-/* Hide legacy label (we only show on hover now) */
 .poster__name{ display:none !important; }
 
 /* ================= Bio ================= */
-.bio{
-  display:grid;
-  grid-template-columns:220px 1fr;
-  gap:36px;
-  align-items:start;
-}
-
+.bio{ display:grid; grid-template-columns:220px 1fr; gap:36px; align-items:start; }
 .bioImg{
   width:100%;
   aspect-ratio:3/4;
@@ -473,9 +424,7 @@ a:hover{ opacity:.92; }
   background-size:cover;
   background-position:center;
 }
-
 .bioText{ max-width:var(--measure); }
-
 .bioText p{
   margin:0 0 18px 0;
   color:rgba(255,255,255,.82);
@@ -484,32 +433,8 @@ a:hover{ opacity:.92; }
   letter-spacing:.01em;
 }
 
-.rep{
-  margin-top:20px;
-  padding-top:16px;
-  border-top:1px solid rgba(255,255,255,.10);
-}
-.rep__kicker{
-  font-size:11px;
-  color:rgba(255,255,255,.54);
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  margin-bottom:10px;
-}
-.rep__body{
-  color:rgba(255,255,255,.82);
-  line-height:1.7;
-  font-size:14px;
-  letter-spacing:.01em;
-}
-.rep__body a{ border-bottom:1px solid rgba(255,255,255,.18); }
-
 /* ================= Footer ================= */
-.footer{
-  margin-top:110px;
-  padding:26px 0 0;
-  border-top:1px solid rgba(255,255,255,.08);
-}
+.footer{ margin-top:110px; padding:26px 0 0; border-top:1px solid rgba(255,255,255,.08); }
 .footer__inner{
   display:flex;
   justify-content:space-between;
@@ -521,13 +446,7 @@ a:hover{ opacity:.92; }
 }
 
 /* ================= Lightbox ================= */
-.lb{
-  position:fixed; inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
+.lb{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:9999; }
 .lb[aria-hidden="false"]{ display:flex; }
 .lb__bg{ position:absolute; inset:0; background:rgba(0,0,0,.74); }
 .lb__panel{
@@ -569,7 +488,6 @@ a:hover{ opacity:.92; }
   pointer-events:none;
 }
 .dock[aria-hidden="true"]{ display:none; }
-
 .dock__inner{
   pointer-events:auto;
   width:min(980px, calc(100% - 24px));
@@ -587,7 +505,6 @@ a:hover{ opacity:.92; }
   border-color:rgba(255,255,255,.16);
   box-shadow:0 0 0 1px var(--jt), 0 0 22px var(--jtGlow2);
 }
-
 .dock__play{
   width:44px; height:44px;
   border-radius:999px;
@@ -630,10 +547,17 @@ a:hover{ opacity:.92; }
 /* ================= Mobile ================= */
 @media (max-width: 900px){
   .hdr__social{ display:none; }
-  .posters{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
   .bio{ grid-template-columns:1fr; }
   .bioText{ max-width:100%; }
   .dock__wave{ width:52%; }
+
+  /* 6-column magazine grid on mobile */
+  .posters{ grid-template-columns:repeat(6, minmax(0, 1fr)); grid-auto-rows:14px; }
+  .poster--project{ grid-column:span 3; grid-row:span 30; } /* 2 across */
+  .plate--square{ grid-column:span 3; grid-row:span 22; }
+  .plate--wide{ grid-column:span 6; grid-row:span 22; }
+  .plate--tall{ grid-column:span 3; grid-row:span 34; }
+  .plate--hero{ grid-column:span 6; grid-row:span 34; }
 }
 
 @media (max-width: 520px){
