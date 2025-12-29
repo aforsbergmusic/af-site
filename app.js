@@ -1,9 +1,6 @@
 /* =========================================================
-   AF SITE — app.js (2.0+)
-   - Studio photos inserted into posters grid as "plates" (no captions)
-   - Random jewel tone hover per-element (solid fill + outline)
-   - Social buttons get proper classes so hover colors work
-   - Player stays smooth
+   AF SITE — app.js (Editorial Grid)
+   Full app.js replacement
    ========================================================= */
 
 (() => {
@@ -20,17 +17,7 @@
   };
 
   /* ---------------- Jewel tone palette (no pastels) ---------------- */
-  const JEWELS = [
-    "#7a5cff", // amethyst
-    "#5c7cff", // sapphire
-    "#22d3ee", // cyan (jewel)
-    "#34d98a", // emerald
-    "#a3e635", // chartreuse (bright but not pastel)
-    "#ffd166", // gold
-    "#ff9f1c", // amber
-    "#ff4d6d", // ruby
-    "#c13584"  // magenta
-  ];
+  const JEWELS = ["#7a5cff","#5c7cff","#22d3ee","#34d98a","#a3e635","#ffd166","#ff9f1c","#ff4d6d","#c13584"];
 
   function hexToRgb(hex) {
     const h = String(hex).replace("#", "").trim();
@@ -62,7 +49,7 @@
     el.style.setProperty("--jtGlow2", `rgba(${r},${g},${b},.35)`);
   }
 
-  /* ---------------- Content ---------------- */
+  /* ---------------- Projects + Studio ---------------- */
   const PROJECTS = [
     { title: "Hilinski's Hope", img: "https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&raw=1" },
     { title: "The Secret Lives of Animals", img: "https://www.dropbox.com/scl/fi/9g8f8xyggs3dqlg1hmbao/The-Secret-Lives-of-Animals.webp?rlkey=s6yz5mrdz88uc9djbscr48urp&raw=1" },
@@ -84,16 +71,28 @@
     { img: "https://www.dropbox.com/scl/fi/xm7obyp24uik0jm78d6yf/Studio-Website-27.jpg?rlkey=jnxf40i7a9vsqimx19rw8zjjo&raw=1" }
   ];
 
+  /* Editorial rhythm:
+     - Projects are consistent posters.
+     - Studio plates get size variation in a curated, repeating pattern.
+  */
+  const PLATE_PATTERN = [
+    "plate--wide",
+    "plate--square",
+    "plate--tall",
+    "plate--square",
+    "plate--hero",
+    "plate--square",
+    "plate--wide"
+  ];
+
   function buildGridItems() {
-    // A + 1 = studio plates are equal citizens in the same grid.
-    // We’ll interleave them in a pleasing rhythm (editorial “beats”).
     const items = [];
     const p = PROJECTS.slice();
     const s = STUDIO.slice();
 
-    // Pattern: after every 1–2 projects, drop a studio plate until we run out.
+    // Magazine beat: after every 1–2 posters, drop a plate
     let pi = 0, si = 0;
-    const beats = [1, 2, 1, 2, 1, 2, 1, 2]; // repeats nicely
+    const beats = [2,1,2,1,2,1,2];
     let b = 0;
 
     while (pi < p.length || si < s.length) {
@@ -103,12 +102,16 @@
         pi++;
       }
       if (si < s.length) {
-        items.push({ kind: "studio", img: s[si].img });
+        const cls = PLATE_PATTERN[si % PLATE_PATTERN.length];
+        items.push({ kind: "studio", img: s[si].img, cls });
         si++;
       }
       if (pi >= p.length && si < s.length) {
-        // if projects end first, just append remaining studio plates
-        while (si < s.length) items.push({ kind: "studio", img: s[si++].img });
+        while (si < s.length) {
+          const cls = PLATE_PATTERN[si % PLATE_PATTERN.length];
+          items.push({ kind: "studio", img: s[si].img, cls });
+          si++;
+        }
       }
     }
     return items;
@@ -178,15 +181,11 @@
       const obj = JSON.parse(raw);
       if (!obj || !Array.isArray(obj.p) || typeof obj.d !== "number") return null;
       return { peaks: obj.p, duration: obj.d };
-    } catch {
-      return null;
-    }
+    } catch { return null; }
   }
 
   function savePeaksLS(src, peaks, duration) {
-    try {
-      localStorage.setItem(lsKey(src), JSON.stringify({ p: peaks, d: duration }));
-    } catch {}
+    try { localStorage.setItem(lsKey(src), JSON.stringify({ p: peaks, d: duration })); } catch {}
   }
 
   function computePeaks(audioBuffer, n) {
@@ -220,10 +219,7 @@
     if (waveCache.has(src)) return waveCache.get(src);
 
     const fromLS = loadPeaksLS(src);
-    if (fromLS) {
-      waveCache.set(src, fromLS);
-      return fromLS;
-    }
+    if (fromLS) { waveCache.set(src, fromLS); return fromLS; }
 
     const ctx = getAudioCtx();
     const res = await fetch(src, { mode: "cors", cache: "force-cache" });
@@ -236,10 +232,8 @@
     return out;
   }
 
-  /* ---------------- Waveform draw ---------------- */
   function drawWave(canvas, peaks, progress01) {
     if (!canvas || !peaks || !peaks.length) return;
-
     const ctx = canvas.getContext("2d");
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0, 0, w, h);
@@ -278,7 +272,6 @@
 
       const shaped = Math.sqrt(Math.max(0, smooth));
       const amp = Math.max(minAmp, shaped * maxAmp);
-
       const y0 = mid - amp;
       const hh = amp * 2;
 
@@ -308,24 +301,20 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    /* ---------------- Header scroll state ---------------- */
+    /* Header scroll */
     const hdr = $(".hdr");
     const onScroll = () => hdr && hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
-    /* ---------------- Random jewel tone on hover (delegated) ---------------- */
-    const hoverTargets = (el) => {
-      if (!el) return null;
-      return el.closest(".poster, .row, .wave, .playBtn, .menuBtn, .dock__inner");
-    };
-
+    /* Random jewel tone on hover (delegated) */
+    const hoverTargets = (el) => el?.closest(".poster, .row, .wave, .playBtn, .menuBtn, .dock__inner");
     document.addEventListener("pointerenter", (e) => {
       const t = hoverTargets(e.target);
       if (t) applyJewelVars(t);
     }, true);
 
-    /* ---------------- Hamburger menu ---------------- */
+    /* Hamburger */
     const menu = $(".menu");
     const menuBtn = $(".menuBtn");
     const closeMenu = () => {
@@ -338,37 +327,33 @@
       menu.setAttribute("aria-hidden", "false");
       menuBtn.setAttribute("aria-expanded", "true");
     };
-
     if (menuBtn && menu) {
       menuBtn.addEventListener("click", () => {
         const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
         isOpen ? closeMenu() : openMenu();
       });
-
       menu.addEventListener("click", (e) => {
         if (e.target === menu) closeMenu();
         if (e.target.closest(".menu__link")) closeMenu();
       });
-
       window.addEventListener("keydown", (e) => e.key === "Escape" && closeMenu());
     }
 
-    /* ---------------- Social links + ensure classes for hover styling ---------------- */
+    /* Social links + ensure classes for hover styling */
     const sImdb = $("#social-imdb");
     const sApple = $("#social-apple");
     const sSpotify = $("#social-spotify");
     const sIg = $("#social-instagram");
-
     if (sImdb) { sImdb.href = SOCIALS.imdb; sImdb.classList.add("imdb"); }
     if (sSpotify) { sSpotify.href = SOCIALS.spotify; sSpotify.classList.add("spotify"); }
     if (sApple) { sApple.href = SOCIALS.apple; sApple.classList.add("apple"); }
     if (sIg) { sIg.href = SOCIALS.instagram; sIg.classList.add("instagram"); }
 
-    /* ---------------- Bio image ---------------- */
+    /* Bio image */
     const bioImg = $(".bioImg");
     if (bioImg && PROFILE_IMG_URL) bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
 
-    /* ---------------- Posters (Projects + Studio plates) ---------------- */
+    /* Posters grid (editorial) */
     const postersEl = $(".posters");
     const GRID = buildGridItems();
 
@@ -378,22 +363,22 @@
         if (item.kind === "project") {
           const safeTitle = (item.title || "Project").replace(/"/g, "&quot;");
           return `
-            <div class="poster" data-kind="project" data-idx="${i}" data-title="${safeTitle}" role="button" aria-label="Open ${safeTitle}">
+            <div class="poster poster--project" data-kind="project" data-idx="${i}" data-title="${safeTitle}" role="button" aria-label="Open ${safeTitle}">
               <div class="poster__img" style="background-image:url('${img}')"></div>
               <div class="poster__name">${safeTitle}</div>
             </div>
           `;
         }
-        // Studio plate: no data-title, no label, has grain via CSS class
+        const cls = item.cls || "plate--square";
         return `
-          <div class="poster poster--studio" data-kind="studio" data-idx="${i}" role="button" aria-label="Open studio image">
+          <div class="poster poster--studio ${cls}" data-kind="studio" data-idx="${i}" role="button" aria-label="Open studio image">
             <div class="poster__img" style="background-image:url('${img}')"></div>
           </div>
         `;
       }).join("");
     }
 
-    /* ---------------- Lightbox ---------------- */
+    /* Lightbox */
     const lb = $(".lb");
     const lbImg = $(".lb__img");
     const lbBg = $(".lb__bg");
@@ -427,7 +412,7 @@
     }
 
     /* =========================================================
-       PLAYER (smooth)
+       PLAYER (kept as your smooth version)
        ========================================================= */
     const player = $(".player");
     const playBtn = $(".playBtn");
@@ -451,20 +436,17 @@
     let tIdx = 0;
     let peaksObj = null;
 
-    // Seek smoothing
     let draggingMain = false;
     let draggingDock = false;
     let seekTarget = null;
     let wasPlayingBeforeDrag = false;
 
-    // UI loop
     let uiRaf = null;
     let lastDrawTs = 0;
     const DRAW_EVERY_MS = 33;
     const SEEK_APPLY_EVERY_MS = 33;
     let lastSeekApplyTs = 0;
 
-    // Diffed DOM writes
     const lastText = new Map();
     const setText = (el, v) => {
       if (!el) return;
