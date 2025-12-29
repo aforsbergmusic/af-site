@@ -1,7 +1,3 @@
-<!-- =========================================================
-     AF MAIN SITE — site.html (with studio injections)
-     Paste this whole file as your new site.html
-     ========================================================= -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,63 +9,48 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <!-- If you already link styles.css externally, keep that and remove this line -->
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- ================= Header ================= -->
   <header class="hdr">
     <div class="hdr__inner">
-      <div class="brand">
-        <div class="brand__name">Andy Forsberg</div>
-      </div>
+      <a class="brand" href="#top" aria-label="Home">
+        <span class="brand__name">Andy Forsberg</span>
+        <span class="brand__role">Composer + Producer</span>
+      </a>
 
       <div class="hdr__right">
         <nav class="hdr__social" aria-label="Social links">
-          <a class="sbtn imdb" id="social-imdb" href="#" target="_blank" rel="noreferrer">IMDb</a>
-          <a class="sbtn spotify" id="social-spotify" href="#" target="_blank" rel="noreferrer">Spotify</a>
-          <a class="sbtn apple" id="social-apple" href="#" target="_blank" rel="noreferrer">Apple Music</a>
-          <a class="sbtn instagram" id="social-instagram" href="#" target="_blank" rel="noreferrer">Instagram</a>
+          <a id="social-imdb" class="sbtn imdb" href="#" target="_blank" rel="noreferrer">IMDb</a>
+          <a id="social-spotify" class="sbtn spotify" href="#" target="_blank" rel="noreferrer">Spotify</a>
+          <a id="social-apple" class="sbtn apple" href="#" target="_blank" rel="noreferrer">Apple</a>
+          <a id="social-instagram" class="sbtn instagram" href="#" target="_blank" rel="noreferrer">IG</a>
         </nav>
 
-        <button class="menuBtn" aria-label="Open menu" aria-expanded="false" type="button">
+        <button class="menuBtn" type="button" aria-label="Menu" aria-expanded="false">
           <span class="menuBtn__lines" aria-hidden="true"></span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- ================= Menu overlay ================= -->
   <div class="menu" aria-hidden="true">
-    <div class="menu__panel" role="dialog" aria-label="Menu">
+    <div class="menu__panel">
+      <a class="menu__link" href="#listen">Listen</a>
+      <a class="menu__link" href="#studio">Studio</a>
       <a class="menu__link" href="#work">Work</a>
-      <a class="menu__link" href="#music">Music</a>
-      <a class="menu__link" href="#bio">Bio</a>
-      <a class="menu__link" href="#contact">Contact</a>
+      <a class="menu__link" href="#bio">Bio + Contact</a>
     </div>
   </div>
 
-  <!-- ================= Page ================= -->
-  <main class="page">
-    <!-- ================= Hero ================= -->
-    <section class="hero" id="top">
-      <h1 class="hero__title">Composer + Producer</h1>
-      <p class="hero__sub">
-        Music for film, television, and documentary — built with story-first restraint and modern texture.
-      </p>
+  <main id="top" class="page">
 
-      <!-- ✅ INJECTION A: Studio diptych (under hero copy) -->
-      <div class="studioDiptych" id="studio-diptych" aria-label="Studio photos"></div>
-    </section>
+    <!-- Listen -->
+    <section id="listen" class="section" data-reveal>
+      <div class="sep" aria-hidden="true"></div>
 
-    <!-- ================= Music ================= -->
-    <section class="section" id="music">
-      <div class="section__top">
-        <h2 class="section__title">Featured Music</h2>
-      </div>
-
-      <div class="player" aria-label="Media player">
+      <div class="player">
         <div class="np">
           <div class="np__left">
             <button class="playBtn" type="button" aria-label="Play/Pause">▶</button>
@@ -80,108 +61,107 @@
           </div>
         </div>
 
-        <div class="wave" role="button" aria-label="Waveform seek">
+        <button class="wave" type="button" aria-label="Waveform seek">
           <canvas></canvas>
-        </div>
+        </button>
 
         <div class="tracklist" aria-label="Track list"></div>
       </div>
     </section>
 
-    <!-- ================= Work / Posters ================= -->
-    <section class="section" id="work">
-      <div class="section__top">
-        <h2 class="section__title">Selected Work</h2>
-      </div>
-
-      <div class="posters" aria-label="Project posters"></div>
-
-      <!-- ✅ INJECTION B: Studio rail (between Work and Bio) -->
-      <div class="studioRail" id="studio-rail" aria-label="Studio photo rail"></div>
+    <!-- Studio -->
+    <section id="studio" class="section" data-reveal>
+      <div class="sep" aria-hidden="true"></div>
+      <div class="studioGrid" id="studioGrid" aria-label="Studio gallery"></div>
     </section>
 
-    <!-- ================= Bio ================= -->
-    <section class="section" id="bio">
-      <div class="section__top">
-        <h2 class="section__title">Bio</h2>
-      </div>
+    <!-- Work -->
+    <section id="work" class="section" data-reveal>
+      <div class="sep" aria-hidden="true"></div>
+      <div class="posters" aria-label="Project posters"></div>
+    </section>
+
+    <!-- Bio -->
+    <section id="bio" class="section" data-reveal>
+      <div class="sep" aria-hidden="true"></div>
 
       <div class="bio">
-        <div class="bioImg" aria-label="Profile image"></div>
+        <div class="bioImg" aria-label="Portrait"></div>
 
         <div class="bioText">
           <p>
-            Andy Forsberg is a composer and producer focused on cinematic storytelling—balancing melody,
-            texture, and modern rhythm to support emotion and clarity.
+            Andy Forsberg is a media composer and producer based in Los Angeles.
+            After studying at the Berklee College of Music, Andy’s journey began working for
+            acclaimed composer/arranger William Ross (Harry Potter and The Chamber of Secrets, Barbara Streisand).
+            Shortly after, he co-founded video game music and sound design house Hexany Audio, where he served
+            as its lead composer until 2016.
           </p>
-
           <p>
-            Credits include documentary and series work across a range of styles, from intimate piano and
-            strings to bold synth-forward scoring.
+            Andy has since carved out his own path through his unique patchwork of styles, combining Neoclassical,
+            electronic, and sweeping orchestral palettes. He has composed and contributed music for several of
+            Nat Geo/Disney, BBC/Apple, and Discovery Channel’s high profile projects, including Born Wild: The Next Generation
+            narrated by Robin Roberts, The Secret Lives of Animals, The Last Alaskans, Europe from Above, and Magic of Disney’s Animal Kingdom.
+          </p>
+          <p>
+            Among his documentary work, Andy has made a quick name for himself in many genres, scoring several of Lifetime Network’s
+            lauded list of TV movie thrillers, Thirst for Hulu’s bite sized Halloween directed by Stefan Dezil, and the award-winning film Whistle
+            created by director Jen Araki, starring Dylan Playfair (Letterkenny, The Mighty Ducks: Game Changers).
+          </p>
+          <p>
+            An avid conductor, Andy has led the Hollywood Chamber Orchestra at the Ricardo Montalbán Theatre for the world premiere of his concert work
+            “Beyond Us”, recorded and conducted his own music at multiple historic scoring stages, and was one of Broadcast Music Inc.’s (BMI) selected fellows
+            for their 2018 intensive conducting workshop, led by acclaimed conductor/composer Lucas Richman.
+          </p>
+          <p>
+            Through his work in documentaries, thrillers, and dramas, Andy has found an intense passion for real-life storytelling,
+            and finding light in the darker elements of human nature.
           </p>
 
           <div class="rep">
             <div class="rep__kicker">Representation</div>
             <div class="rep__body">
-              <a href="mailto:you@example.com">you@example.com</a>
+              Arbel Bedak, Spectra Creative Agency<br />
+              <a href="mailto:arbel@spectracreativeagency.com">arbel@spectracreativeagency.com</a><br />
+              323-546-8120
             </div>
           </div>
         </div>
       </div>
-
-      <!-- ✅ INJECTION C: Studio anchor (near bottom, before footer) -->
-      <div class="studioAnchor" id="studio-anchor" aria-label="Studio anchor photo"></div>
     </section>
 
-    <!-- ================= Contact ================= -->
-    <section class="section" id="contact">
-      <div class="section__top">
-        <h2 class="section__title">Contact</h2>
+    <footer class="footer">
+      <div class="footer__inner">
+        <div>© <span id="y"></span> Andy Forsberg</div>
+        <div>Composer • Producer</div>
       </div>
+    </footer>
 
-      <p style="max-width:72ch;color:rgba(255,255,255,.72);line-height:1.72;margin:0;">
-        For scoring inquiries, collaborations, or licensing: <a href="mailto:you@example.com" style="border-bottom:1px solid rgba(255,255,255,.18);">you@example.com</a>
-      </p>
-
-      <footer class="footer">
-        <div class="footer__inner">
-          <div>© <span id="y"></span> Andy Forsberg</div>
-          <div>Composer + Producer</div>
-        </div>
-      </footer>
-    </section>
   </main>
 
-  <!-- ================= Lightbox ================= -->
-  <div class="lb" aria-hidden="true" aria-label="Image lightbox">
+  <!-- Lightbox -->
+  <div class="lb" aria-hidden="true">
     <div class="lb__bg" aria-hidden="true"></div>
-    <div class="lb__panel" role="dialog" aria-label="Lightbox dialog">
+    <div class="lb__panel" role="dialog" aria-modal="true">
       <button class="lb__close" type="button" aria-label="Close">✕</button>
-      <img class="lb__img" alt="Lightbox image" />
+      <img class="lb__img" alt="Image" />
     </div>
   </div>
 
-  <!-- ================= Dock Player ================= -->
-  <div class="dock" aria-hidden="true" aria-label="Dock player">
+  <!-- Player Dock -->
+  <div class="dock" aria-hidden="true">
     <div class="dock__inner">
       <button class="dock__play" type="button" aria-label="Play/Pause">▶</button>
       <div class="dock__meta">
         <div class="dock__title">—</div>
         <div class="dock__time">0:00 / 0:00</div>
       </div>
-      <div class="dock__wave" role="button" aria-label="Dock waveform seek">
+      <button class="dock__wave" type="button" aria-label="Seek">
         <canvas></canvas>
-      </div>
+      </button>
     </div>
   </div>
 
-  <script>
-    // tiny helper so footer year stays current
-    const y = document.getElementById("y");
-    if (y) y.textContent = new Date().getFullYear();
-  </script>
-
-  <!-- Your app logic (posters, studio plates, player, drift, etc.) -->
-  <script src="./app.js"></script>
+  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+  <script src="app.js"></script>
 </body>
 </html>
