@@ -1,9 +1,6 @@
 <!-- =========================================================
      FILE: index.html  (SPLASH LIVE)
-     Purpose: serve splash directly so nothing can 404.
-     To switch back later:
-       - Option A: replace this file with your main site HTML
-       - Option B: change the link below to site.html and use it manually
+     Version: 2.1
      ========================================================= -->
 <!doctype html>
 <html lang="en">
@@ -174,19 +171,6 @@
       box-shadow:0 0 0 1px rgba(193,53,132,.30), 0 0 20px rgba(193,53,132,.20);
     }
 
-    /* Optional “backdoor” link to main site (won’t break anything if site.html 404s) */
-    .backdoor{
-      margin-top:20px;
-      font-size:11px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.35);
-    }
-    .backdoor a{
-      color:rgba(255,255,255,.55);
-      border-bottom:1px solid rgba(255,255,255,.20);
-    }
-
     @media (max-width:520px) and (orientation:portrait){
       .socials{ flex-direction:column; align-items:center; }
       .sbtn{ width:220px; text-align:center; }
@@ -220,10 +204,6 @@
         <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
         <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
         <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
-      </div>
-
-      <div class="backdoor">
-        (Admin) <a href="site.html">open main site</a>
       </div>
     </div>
   </div>
