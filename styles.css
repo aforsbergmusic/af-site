@@ -1,33 +1,22 @@
 /* =========================================================
-   AF — Cinematic Minimal (Museum Posters + Editorial Plates)
-   Full styles.css replacement
+   AF — Cinematic Minimal (2.x) — styles.css
+   (safe changes; avoids breaking player spacing & socials)
    ========================================================= */
 
 :root{
   --bg:#0b0b0b;
-  --bg2:#0f0f0f;
-  --card:rgba(255,255,255,.03);
   --text:rgba(255,255,255,.90);
   --muted:rgba(255,255,255,.62);
+  --line:rgba(255,255,255,.10);
 
   --sans:"Space Grotesk", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-
   --pad:clamp(18px,3vw,44px);
-  --h1:clamp(44px,5.1vw,82px);
-
-  --radius:18px;
-  --lh-body:1.72;
-  --lh-tight:1.06;
   --measure:72ch;
 
-  /* Jewel vars (set by JS per-hover per-element) */
+  /* Jewel vars (player/poster hover use these) */
   --jt:#7a5cff;
   --jtFill:rgba(122,92,255,.18);
   --jtGlow2:rgba(122,92,255,.35);
-
-  /* Poster inner matte */
-  --matte:rgba(0,0,0,.44);
-  --matte2:rgba(255,255,255,.06);
 }
 
 *{ box-sizing:border-box; }
@@ -41,15 +30,12 @@ html,body{
   -moz-osx-font-smoothing:grayscale;
 }
 body{ overflow-x:hidden; }
-
 a{ color:var(--text); text-decoration:none; }
-a:hover{ opacity:.92; }
 
-/* ================= Layout ================= */
 .page{
   max-width:1200px;
   margin:0 auto;
-  padding:calc(var(--pad) + 56px) var(--pad) 120px;
+  padding:calc(var(--pad) + 56px) var(--pad) 110px;
 }
 
 /* ================= Header ================= */
@@ -65,24 +51,32 @@ a:hover{ opacity:.92; }
 }
 .hdr__inner{
   max-width:1200px; margin:0 auto;
-  padding:20px var(--pad);
+  padding:18px var(--pad);
   display:flex; align-items:center; justify-content:space-between;
   gap:16px;
 }
-.brand{ display:flex; align-items:center; gap:12px; min-width:0; }
+.brand{ display:flex; align-items:baseline; gap:10px; min-width:0; }
 .brand__name{
   font-weight:500;
   letter-spacing:-.01em;
   font-size:16px;
   color:rgba(255,255,255,.92);
   white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+}
+.brand__role{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.50);
+  white-space:nowrap;
+  position:relative;
+  top:-1px;
 }
 .hdr__right{ display:flex; align-items:center; gap:14px; }
 
-/* ================= Socials ================= */
+/* Socials — keep EXACT hover behavior (no randomization here) */
 .hdr__social{ display:flex; align-items:center; gap:10px; }
+
 .sbtn{
   font-size:11px;
   letter-spacing:.18em;
@@ -92,35 +86,37 @@ a:hover{ opacity:.92; }
   border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.02);
-  transition: color .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease;
+  transition:color .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease;
 }
 .sbtn:hover{ transform:translateY(-1px); }
+
+/* Fixed jewel tones */
 .hdr__social .sbtn.imdb:hover{
-  color:#fff6dc;
+  color:#fff1c2;
   border-color:#ffd166;
   background:rgba(255,209,102,.18);
   box-shadow:0 0 0 1px rgba(255,209,102,.40), 0 0 26px rgba(255,209,102,.45);
 }
 .hdr__social .sbtn.spotify:hover{
   color:#d9ffe9;
-  border-color:#1db954;
-  background:rgba(29,185,84,.18);
-  box-shadow:0 0 0 1px rgba(29,185,84,.40), 0 0 26px rgba(29,185,84,.42);
+  border-color:#34d98a;
+  background:rgba(52,217,138,.18);
+  box-shadow:0 0 0 1px rgba(52,217,138,.40), 0 0 26px rgba(52,217,138,.40);
 }
 .hdr__social .sbtn.apple:hover{
   color:#ffe2f3;
   border-color:#ff4d6d;
   background:rgba(255,77,109,.18);
-  box-shadow:0 0 0 1px rgba(255,77,109,.40), 0 0 26px rgba(255,77,109,.42);
+  box-shadow:0 0 0 1px rgba(255,77,109,.40), 0 0 26px rgba(255,77,109,.40);
 }
 .hdr__social .sbtn.instagram:hover{
-  color:#ffe8d0;
+  color:#ffe4c7;
   border-color:#ff9f1c;
   background:rgba(255,159,28,.18);
-  box-shadow:0 0 0 1px rgba(255,159,28,.40), 0 0 26px rgba(255,159,28,.42);
+  box-shadow:0 0 0 1px rgba(255,159,28,.40), 0 0 26px rgba(255,159,28,.40);
 }
 
-/* ================= Hamburger ================= */
+/* Hamburger */
 .menuBtn{
   width:44px; height:44px;
   border-radius:999px;
@@ -147,12 +143,17 @@ a:hover{ opacity:.92; }
 .menuBtn__lines::before{ top:2px; }
 .menuBtn__lines::after{ bottom:2px; }
 
-/* ================= Menu overlay ================= */
-.menu{ position:fixed; inset:0; display:none; background:rgba(0,0,0,.62); z-index:999; }
+/* Menu overlay */
+.menu{
+  position:fixed; inset:0;
+  display:none;
+  background:rgba(0,0,0,.62);
+  z-index:999;
+}
 .menu[aria-hidden="false"]{ display:block; }
 .menu__panel{
   position:absolute;
-  right:18px; top:78px;
+  right:18px; top:74px;
   width:min(380px, calc(100% - 36px));
   border-radius:20px;
   background:rgba(13,13,13,.92);
@@ -172,40 +173,17 @@ a:hover{ opacity:.92; }
 }
 .menu__link:hover{ background:rgba(255,255,255,.06); }
 
-/* ================= Sections ================= */
-.section{ margin-top:94px; }
-.section__top{ margin-bottom:22px; }
-.section__title{
-  font-weight:500;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  font-size:13px;
-  margin:0;
-  color:rgba(255,255,255,.72);
+/* Sections (no titles, clean separation) */
+.section{ margin-top:64px; }
+.sep{
+  height:1px;
+  width:min(980px, 100%);
+  margin:0 0 22px 0;
+  background:linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,0));
 }
 
-/* ================= Hero ================= */
-.hero{ margin-top:26px; }
-.hero__title{
-  font-weight:500;
-  letter-spacing:-.02em;
-  font-size:var(--h1);
-  line-height:var(--lh-tight);
-  margin:0 0 14px 0;
-  color:rgba(255,255,255,.94);
-}
-.hero__sub{
-  margin:0;
-  color:rgba(255,255,255,.66);
-  max-width:var(--measure);
-  font-size:16px;
-  line-height:1.7;
-  letter-spacing:.01em;
-}
-
-/* ================= Player ================= */
+/* ================= Player (keep spacing stable) ================= */
 .player{
-  margin-top:18px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.03);
@@ -229,7 +207,6 @@ a:hover{ opacity:.92; }
   transform:translateY(-1px);
   box-shadow:0 0 0 1px var(--jt), 0 0 22px var(--jtGlow2);
 }
-.np__meta{ min-width:0; }
 .npTitle{
   font-weight:500;
   font-size:14px;
@@ -247,6 +224,7 @@ a:hover{ opacity:.92; }
   letter-spacing:.04em;
   text-transform:uppercase;
 }
+
 .wave{
   width:100%;
   height:74px;
@@ -266,6 +244,7 @@ a:hover{ opacity:.92; }
 .wave canvas{ width:100%; height:100%; display:block; }
 
 .tracklist{ margin-top:14px; display:flex; flex-direction:column; gap:10px; }
+
 .row{
   display:flex; align-items:center; justify-content:space-between;
   gap:14px;
@@ -278,35 +257,78 @@ a:hover{ opacity:.92; }
 }
 .row:hover{
   transform:translateY(-1px);
-  border-color:rgba(255,255,255,.18);
+  border-color:color-mix(in srgb, var(--jt) 70%, rgba(255,255,255,.16));
   background:var(--jtFill);
   box-shadow:0 0 0 1px var(--jt), 0 0 22px var(--jtGlow2);
 }
-.row.is-active{
-  border-color:rgba(255,255,255,.20);
-  background:rgba(255,255,255,.05);
-}
+.row.is-active{ border-color:rgba(255,255,255,.20); background:rgba(255,255,255,.05); }
 .row__t{
-  font-size:13px;
-  font-weight:500;
+  font-size:13px; font-weight:500;
   letter-spacing:.02em;
   color:rgba(255,255,255,.84);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
-/* =========================================================
-   MUSEUM WALL: Film posters
-   - Posters are 2:3, consistent size, NEVER crop
-   - Image uses "contain" with a matte backing
-   ========================================================= */
+/* ================= Studio Gallery (show full image, no black bars) ================= */
+.studioGrid{
+  display:grid;
+  grid-template-columns:repeat(12, minmax(0, 1fr));
+  gap:14px;
+}
+
+.sCard{
+  position:relative;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.02);
+  min-height:240px;
+  transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+.sCard:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.18);
+  box-shadow:0 0 0 1px var(--jt), 0 0 26px var(--jtGlow2);
+}
+
+/* blurred backdrop so "contain" feels premium */
+.sCard::before{
+  content:"";
+  position:absolute; inset:-18px;
+  background-image:var(--bgimg);
+  background-size:cover;
+  background-position:center;
+  filter:blur(14px) brightness(.85);
+  transform:scale(1.08);
+  opacity:.9;
+}
+.sCard::after{
+  content:"";
+  position:absolute; inset:0;
+  background:radial-gradient(120% 100% at 50% 0%, rgba(0,0,0,0), rgba(0,0,0,.55));
+  pointer-events:none;
+}
+
+.sImg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:contain;
+  padding:14px;
+  z-index:1;
+}
+
+/* curated spans */
+.s--wide{ grid-column:span 7; min-height:300px; }
+.s--med{ grid-column:span 5; min-height:300px; }
+.s--tall{ grid-column:span 5; min-height:420px; }
+.s--small{ grid-column:span 4; min-height:260px; }
+
+/* ================= Posters (movie poster size stays) ================= */
 .posters{
   display:grid;
   grid-template-columns:repeat(4, minmax(0, 1fr));
   gap:18px;
 }
-
 .poster{
   position:relative;
   border-radius:18px;
@@ -322,29 +344,15 @@ a:hover{ opacity:.92; }
   background:rgba(255,255,255,.03);
   box-shadow:0 0 0 1px var(--jt), 0 0 28px var(--jtGlow2);
 }
-
-/* Lock tile to movie poster ratio */
 .poster__img{
-  width:100%;
-  aspect-ratio:2/3;                 /* hard rule */
-  background:radial-gradient(120% 120% at 18% 8%, var(--matte2), rgba(0,0,0,0) 55%), var(--matte);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:10px;                     /* breathing room around contained art */
+  aspect-ratio:2/3;
+  background-size:cover;
+  background-position:center;
+  transform:scale(1);
+  transition:transform .22s ease, filter .22s ease;
 }
+.poster:hover .poster__img{ transform:scale(1.02); filter:brightness(1.03); }
 
-/* Actual image element (we'll render <img> in JS for contain) */
-.poster__img img{
-  width:100%;
-  height:100%;
-  object-fit:contain;               /* NEVER crop */
-  object-position:center;
-  border-radius:12px;
-  filter:saturate(1.02) contrast(1.02);
-}
-
-/* Hover title pill */
 .poster::after{
   content:attr(data-title);
   position:absolute;
@@ -362,104 +370,29 @@ a:hover{ opacity:.92; }
   transform:translateY(6px);
   transition:opacity .18s ease, transform .18s ease, border-color .18s ease, box-shadow .18s ease;
   pointer-events:none;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .poster:hover::after{
   opacity:1;
   transform:translateY(0);
-  border-color:rgba(255,255,255,.18);
-  box-shadow:0 0 0 1px rgba(255,255,255,.05), 0 0 18px var(--jtGlow2);
+  border-color:color-mix(in srgb, var(--jt) 55%, rgba(255,255,255,.12));
+  box-shadow:0 0 18px var(--jtGlow2);
 }
 .poster__name{ display:none !important; }
 
-/* =========================================================
-   EDITORIAL PLATES: Studio photos
-   - Full image visible (contain)
-   - Subtle drift motion (parallax-ish)
-   ========================================================= */
-.studioDiptych{
-  margin-top:24px;
-  display:grid;
-  grid-template-columns:1.15fr .85fr;
-  gap:18px;
-}
-.studioRail{
-  margin-top:26px;
-  display:flex;
-  gap:14px;
-  overflow:auto;
-  padding:6px 2px;
-  scroll-snap-type:x mandatory;
-  -webkit-overflow-scrolling:touch;
-}
-.studioAnchor{
-  margin-top:28px;
-}
-
-.plate{
-  position:relative;
-  border-radius:18px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.02);
-  cursor:pointer;
-  transition:transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
-}
-.plate:hover{
-  transform:translateY(-2px);
-  border-color:rgba(255,255,255,.18);
-  box-shadow:0 0 0 1px var(--jt), 0 0 28px var(--jtGlow2);
-}
-
-/* plate image area */
-.plate__frame{
-  background:radial-gradient(120% 120% at 18% 8%, rgba(255,255,255,.06), rgba(0,0,0,0) 55%), rgba(0,0,0,.46);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:10px;
-  height:100%;
-}
-.plate__frame img{
-  width:100%;
-  height:100%;
-  object-fit:contain;               /* full picture */
-  object-position:center;
-  border-radius:12px;
-  filter:saturate(1.06) contrast(1.03) brightness(.98);
-}
-
-/* Sizes */
-.plate--wide{ aspect-ratio:16/9; }
-.plate--tall{ aspect-ratio:3/4; }
-.plate--hero{ aspect-ratio:21/9; }
-.plate--anchor{ aspect-ratio:2/1; }
-
-/* rail item sizing */
-.studioRail .plate{
-  flex:0 0 auto;
-  width:min(520px, 78vw);
-  scroll-snap-align:start;
-}
-
-/* Drift layer (JS moves this subtly) */
-.plate__drift{
-  will-change:transform;
-  transform:translate3d(0,0,0);
-}
-
 /* ================= Bio ================= */
-.bio{ display:grid; grid-template-columns:220px 1fr; gap:36px; align-items:start; }
+.bio{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:36px;
+  align-items:start;
+}
 .bioImg{
   width:100%;
   aspect-ratio:3/4;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(120% 120% at 20% 10%, rgba(255,255,255,.10), rgba(0,0,0,0) 55%),
-    rgba(255,255,255,.03);
+  background:rgba(255,255,255,.03);
   background-size:cover;
   background-position:center;
 }
@@ -467,13 +400,32 @@ a:hover{ opacity:.92; }
 .bioText p{
   margin:0 0 18px 0;
   color:rgba(255,255,255,.82);
-  line-height:var(--lh-body);
+  line-height:1.72;
   font-size:15.5px;
   letter-spacing:.01em;
 }
+.rep{
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.10);
+}
+.rep__kicker{
+  font-size:11px;
+  color:rgba(255,255,255,.54);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.rep__body{
+  color:rgba(255,255,255,.82);
+  line-height:1.7;
+  font-size:14px;
+  letter-spacing:.01em;
+}
+.rep__body a{ border-bottom:1px solid rgba(255,255,255,.18); }
 
 /* ================= Footer ================= */
-.footer{ margin-top:110px; padding:26px 0 0; border-top:1px solid rgba(255,255,255,.08); }
+.footer{ margin-top:76px; padding:26px 0 0; border-top:1px solid rgba(255,255,255,.08); }
 .footer__inner{
   display:flex;
   justify-content:space-between;
@@ -490,7 +442,7 @@ a:hover{ opacity:.92; }
 .lb__bg{ position:absolute; inset:0; background:rgba(0,0,0,.74); }
 .lb__panel{
   position:relative;
-  width:min(980px, calc(100% - 26px));
+  width:min(860px, calc(100% - 26px));
   border-radius:22px;
   overflow:hidden;
   border:1px solid rgba(255,255,255,.12);
@@ -498,8 +450,7 @@ a:hover{ opacity:.92; }
   box-shadow:0 28px 90px rgba(0,0,0,.58);
 }
 .lb__close{
-  position:absolute;
-  top:10px; right:10px;
+  position:absolute; top:10px; right:10px;
   width:42px; height:42px;
   border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
@@ -512,20 +463,13 @@ a:hover{ opacity:.92; }
   display:block;
   width:100%;
   height:auto;
-  max-height:80vh;
+  max-height:78vh;
   object-fit:contain;
   background:#0b0b0b;
 }
 
 /* ================= Dock ================= */
-.dock{
-  position:fixed;
-  left:0; right:0; bottom:12px;
-  z-index:9998;
-  display:flex;
-  justify-content:center;
-  pointer-events:none;
-}
+.dock{ position:fixed; left:0; right:0; bottom:12px; z-index:9998; display:flex; justify-content:center; pointer-events:none; }
 .dock[aria-hidden="true"]{ display:none; }
 .dock__inner{
   pointer-events:auto;
@@ -583,14 +527,17 @@ a:hover{ opacity:.92; }
 }
 .dock__wave canvas{ width:100%; height:100%; display:block; }
 
-/* ================= Mobile ================= */
-@media (max-width: 900px){
+/* Mobile */
+@media (max-width:900px){
   .hdr__social{ display:none; }
   .posters{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
   .bio{ grid-template-columns:1fr; }
-  .bioText{ max-width:100%; }
   .dock__wave{ width:52%; }
 
-  .studioDiptych{ grid-template-columns:1fr; }
-  .studioRail .plate{ width:min(480px, 86vw); }
+  .studioGrid{ grid-template-columns:repeat(6, minmax(0, 1fr)); }
+  .s--wide,.s--med,.s--tall,.s--small{ grid-column:span 6; }
+}
+@media (max-width:520px){
+  .page{ padding:calc(var(--pad) + 44px) var(--pad) 132px; }
+  .dock__title{ max-width:24ch; }
 }
