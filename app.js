@@ -1,8 +1,8 @@
 /* =========================================================
    AF SITE — app.js (Full, smoother player)
-   - Random jewel-tone hover outlines + fills
-   - Track rows (.row) get randomized SOLID jewel fill on hover
-   - Posters: title overlay on hover via data-title
+   - Smoother seek (RAF + target, uses fastSeek when available)
+   - Less jumpy UI (diffed text updates, throttled waveform draw)
+   - Dock behaves like control surface (ReelCrafter-ish)
    ========================================================= */
 
 (() => {
@@ -32,7 +32,9 @@
   const FEATURED_TRACKS = [
     { title: "Charlie Horse", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/9b1a0c45-e055-4c88-b7b3-5f68e21c868e/Charlie%20Horse.mp3" },
     { title: "Beneath The City", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7a797f68-c4b0-48a2-bd22-2e4d0d42cb3f/Beneath%20The%20City.mp3" },
-    { title: "Stars To Guide Us", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e08b2007-7b7a-45b5-9bc2-5e16f7c663f1/Stars%20To%20Guide%20Us.mp3" },
+    { 
+  title: "Stars To Guide Us",
+  src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e08b2007-7b7a-45b5-9bc2-5e16f7c663f1/Stars%20To%20Guide%20Us.mp3"},
     { title: "Drive To Isleworth", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e021b12d-70ad-45ad-8372-54e5bad51945/Drive%20To%20Isleworth.mp3" },
     { title: "The Summit", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/5731e845-e98a-4ae5-b843-cc3280fa8236/The%20Summit.mp3" },
     { title: "Travelers", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/4c0e765b-129e-4146-ac5e-b09678d0d208/Travelers.mp3" },
@@ -44,38 +46,6 @@
     { title: "Bonded For Life", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/fbfcad1d-0ad1-45e5-b266-058e629d5468/Bonded%20For%20Life.mp3" }
   ];
 
-  /* ---------------- Jewel tone hover (random each time) ---------------- */
-  const JEWELS = ["#7a5cff","#5c7cff","#22d3ee","#34d98a","#a3e635","#ffd166","#ff9f1c","#ff4d6d","#c13584"];
-
-  const hexToRgba = (hex, a) => {
-    const h = String(hex || "").replace("#", "").trim();
-    if (h.length !== 6) return `rgba(122,92,255,${a})`;
-    const r = parseInt(h.slice(0, 2), 16);
-    const g = parseInt(h.slice(2, 4), 16);
-    const b = parseInt(h.slice(4, 6), 16);
-    return `rgba(${r},${g},${b},${a})`;
-  };
-
-  const applyJewel = (el) => {
-    if (!el) return;
-    const c = JEWELS[Math.floor(Math.random() * JEWELS.length)];
-    el.style.setProperty("--jt", c);
-    el.style.setProperty("--jtFill", hexToRgba(c, 0.18));  // solid-ish fill
-    el.style.setProperty("--jtGlow", hexToRgba(c, 0.55));
-    el.style.setProperty("--jtGlow2", hexToRgba(c, 0.35));
-  };
-
-  const wireJewelHover = (root = document) => {
-    const targets = [".poster",".row",".playBtn",".wave",".dock__inner",".menuBtn"].join(",");
-    $$(targets, root).forEach((el) => {
-      applyJewel(el);
-      el.addEventListener("mouseenter", () => applyJewel(el), { passive: true });
-      el.addEventListener("focus", () => applyJewel(el), { passive: true });
-      el.addEventListener("touchstart", () => applyJewel(el), { passive: true });
-    });
-  };
-
-  /* ---------------- Utility ---------------- */
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
   const fmtTime = (s) => {
     if (!isFinite(s) || s < 0) return "0:00";
@@ -295,14 +265,28 @@
     const sApple = $("#social-apple");
     const sSpotify = $("#social-spotify");
     const sIg = $("#social-instagram");
-    if (sImdb) { sImdb.href = SOCIALS.imdb; sImdb.classList.add("imdb"); }
-    if (sApple) { sApple.href = SOCIALS.apple; sApple.classList.add("apple"); }
-    if (sSpotify) { sSpotify.href = SOCIALS.spotify; sSpotify.classList.add("spotify"); }
-    if (sIg) { sIg.href = SOCIALS.instagram; sIg.classList.add("instagram"); }
+    if (sImdb) sImdb.href = SOCIALS.imdb;
+    if (sApple) sApple.href = SOCIALS.apple;
+    if (sSpotify) sSpotify.href = SOCIALS.spotify;
+    if (sIg) sIg.href = SOCIALS.instagram;
 
     /* ---------------- Bio image ---------------- */
     const bioImg = $(".bioImg");
     if (bioImg && PROFILE_IMG_URL) bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
+
+    /* ---------------- Reveal ---------------- */
+    const revealEls = $$("[data-reveal]");
+    if (revealEls.length) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-in");
+            io.unobserve(e.target);
+          }
+        }
+      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+      revealEls.forEach(el => io.observe(el));
+    }
 
     /* ---------------- Posters ---------------- */
     const postersEl = $(".posters");
@@ -311,15 +295,13 @@
         const safeTitle = (p.title || "Project").replace(/"/g, "&quot;");
         const img = p.img || "";
         return `
-          <div class="poster" data-idx="${i}" data-title="${safeTitle}" role="button" aria-label="Open ${safeTitle}">
+          <div class="poster" data-idx="${i}" role="button" aria-label="Open ${safeTitle}">
             <div class="poster__img" style="background-image:url('${img}')"></div>
+            <div class="poster__name">${safeTitle}</div>
           </div>
         `;
       }).join("");
     }
-
-    /* Wire jewel hover for initial DOM */
-    wireJewelHover(document);
 
     /* ---------------- Lightbox ---------------- */
     const lb = $(".lb");
@@ -379,17 +361,20 @@
     let tIdx = 0;
     let peaksObj = null;
 
+    // Seek smoothing
     let draggingMain = false;
     let draggingDock = false;
-    let seekTarget = null;
+    let seekTarget = null;          // seconds
     let wasPlayingBeforeDrag = false;
 
+    // UI loop
     let uiRaf = null;
     let lastDrawTs = 0;
-    const DRAW_EVERY_MS = 33;
-    const SEEK_APPLY_EVERY_MS = 33;
+    const DRAW_EVERY_MS = 33;       // ~30fps waveform draw
+    const SEEK_APPLY_EVERY_MS = 33; // ~30fps seek apply
     let lastSeekApplyTs = 0;
 
+    // Diffed DOM writes
     const lastText = new Map();
     const setText = (el, v) => {
       if (!el) return;
@@ -428,9 +413,6 @@
           </div>
         `;
       }).join("");
-
-      // ✅ Ensure newly-created .row elements get jewel randomization
-      wireJewelHover(tracklist);
     }
 
     async function loadWaveForCurrent() {
@@ -438,6 +420,7 @@
       const tr = currentTrack();
       if (!tr || !tr.src) return;
       try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
+      // Prewarm next track peaks quietly (makes next-click feel instant)
       const next = FEATURED_TRACKS[(tIdx + 1) % FEATURED_TRACKS.length];
       if (next?.src) getPeaks(next.src).catch(() => {});
     }
@@ -447,6 +430,7 @@
     }
 
     function getCurForUI() {
+      // While dragging, show the seek target (feels “snappy”)
       if ((draggingMain || draggingDock) && typeof seekTarget === "number") return seekTarget;
       return isFinite(audio.currentTime) ? audio.currentTime : 0;
     }
@@ -466,6 +450,7 @@
 
       setPlayIcon(audio.paused);
 
+      // Active row highlight (cheap)
       if (tracklist) {
         $$(".row", tracklist).forEach((r) => {
           const i = Number(r.dataset.i);
@@ -474,6 +459,7 @@
         });
       }
 
+      // Throttled draw
       if (peaksObj?.peaks && nowTs - lastDrawTs >= DRAW_EVERY_MS) {
         lastDrawTs = nowTs;
         if (waveCanvas) { ensureCanvasSized(); drawWave(waveCanvas, peaksObj.peaks, pct); }
@@ -490,6 +476,7 @@
       if (!dur) return;
 
       const t = Math.max(0, Math.min(dur, seekTarget));
+      // fastSeek is smoother in some browsers
       try {
         if (typeof audio.fastSeek === "function") audio.fastSeek(t);
         else audio.currentTime = t;
@@ -499,9 +486,12 @@
     function startUILoop() {
       if (uiRaf) cancelAnimationFrame(uiRaf);
       const tick = (ts) => {
+        // If dragging, apply seek gently
         if (draggingMain || draggingDock) applySeekTarget(ts);
+
         syncUI(ts);
 
+        // Keep loop running while audio is playing OR while dragging OR dock visible
         const keepAlive = (!audio.paused) || draggingMain || draggingDock || (dock && dock.getAttribute("aria-hidden") === "false");
         if (keepAlive) uiRaf = requestAnimationFrame(tick);
         else uiRaf = null;
@@ -516,6 +506,7 @@
       const tr = currentTrack();
       if (!tr || !tr.src) return;
 
+      // Reset drag state
       draggingMain = false;
       draggingDock = false;
       seekTarget = null;
@@ -525,8 +516,8 @@
 
       await loadWaveForCurrent();
 
-      showDock(false);
-      startUILoop();
+      showDock(false);       // dock appears on first play
+      startUILoop();         // render cleanly
 
       if (autoplay) {
         try { await audio.play(); } catch {}
@@ -554,6 +545,7 @@
       seekTarget = pct * dur;
     }
 
+    // Main + Dock pointer behavior (ReelCrafter-ish: scrub previews, then apply smoothly)
     function onPointerDown(which, e) {
       if (!peaksObj) return;
       wasPlayingBeforeDrag = !audio.paused;
@@ -561,6 +553,8 @@
       if (which === "main") draggingMain = true;
       else draggingDock = true;
 
+      // Optional: pause while scrubbing for “control surface” feel
+      // (If you want it to keep playing while scrubbing, delete these 2 lines.)
       if (!audio.paused) audio.pause();
 
       seekTargetFromEvent(e, which);
@@ -577,6 +571,7 @@
       if (which === "main") draggingMain = false;
       else draggingDock = false;
 
+      // Commit one final seek immediately
       if (typeof seekTarget === "number") {
         const dur = getDur();
         const t = Math.max(0, Math.min(dur || 0, seekTarget));
@@ -586,13 +581,14 @@
         } catch {}
       }
 
+      // Resume if it was playing before
       if (wasPlayingBeforeDrag) audio.play().catch(() => {});
       startUILoop();
     }
 
     if (player && FEATURED_TRACKS.length) {
       renderTracklist();
-      setTrack(0, false);
+      setTrack(0, false); // no autoplay
 
       if (playBtn) playBtn.addEventListener("click", togglePlay);
       if (dockPlay) dockPlay.addEventListener("click", togglePlay);
@@ -632,6 +628,7 @@
         startUILoop();
       });
       audio.addEventListener("pause", () => {
+        // Keep dock visible once engaged (ReelCrafter style)
         showDock(true);
         startUILoop();
       });
@@ -642,6 +639,10 @@
       showDock(false);
     }
 
+    // Start with dock hidden until first interaction
     showDock(false);
   });
 })();
+
+
+
