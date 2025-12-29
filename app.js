@@ -1,37 +1,14 @@
 /* =========================================================
-   AF SITE — app.js (2.0 baseline + Random Jewel System)
-   - Randomizes a rich jewel tone on hover (NO glow, NO pastel)
-   - Uses that jewel tone for the "played" waveform color
-   - Keeps your existing player logic/spacing intact
+   AF SITE — app.js (2.0+)
+   - Studio photos inserted into posters grid as "plates" (no captions)
+   - Random jewel tone hover per-element (solid fill + outline)
+   - Social buttons get proper classes so hover colors work
+   - Player stays smooth
    ========================================================= */
 
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-
-  /* =========================================================
-     Random Jewel Tone Engine (2.0)
-     - Sets CSS var --jt to a random jewel on hover
-     ========================================================= */
-  const JEWELS = [
-    "#7a5cff", // violet
-    "#5c7cff", // indigo
-    "#22d3ee", // cyan
-    "#34d98a", // emerald
-    "#a3e635", // lime (still jewel-y when deepened in CSS)
-    "#ffd166", // gold
-    "#ff9f1c", // amber
-    "#ff4d6d", // rose
-    "#c13584"  // magenta
-  ];
-
-  function randomJewel(){
-    return JEWELS[Math.floor(Math.random() * JEWELS.length)];
-  }
-
-  function applyRandomJewel(){
-    document.documentElement.style.setProperty("--jt", randomJewel());
-  }
 
   const PROFILE_IMG_URL = ""; // optional headshot url
 
@@ -42,6 +19,50 @@
     instagram: "https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr"
   };
 
+  /* ---------------- Jewel tone palette (no pastels) ---------------- */
+  const JEWELS = [
+    "#7a5cff", // amethyst
+    "#5c7cff", // sapphire
+    "#22d3ee", // cyan (jewel)
+    "#34d98a", // emerald
+    "#a3e635", // chartreuse (bright but not pastel)
+    "#ffd166", // gold
+    "#ff9f1c", // amber
+    "#ff4d6d", // ruby
+    "#c13584"  // magenta
+  ];
+
+  function hexToRgb(hex) {
+    const h = String(hex).replace("#", "").trim();
+    if (h.length !== 6) return { r: 122, g: 92, b: 255 };
+    const n = parseInt(h, 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  }
+
+  function pickJewel(exceptHex) {
+    if (!JEWELS.length) return "#7a5cff";
+    if (JEWELS.length === 1) return JEWELS[0];
+    let c = JEWELS[Math.floor(Math.random() * JEWELS.length)];
+    if (exceptHex && JEWELS.length > 2) {
+      let guard = 0;
+      while (c === exceptHex && guard++ < 10) c = JEWELS[Math.floor(Math.random() * JEWELS.length)];
+    }
+    return c;
+  }
+
+  function applyJewelVars(el) {
+    if (!el) return;
+    const prev = el.__jt || null;
+    const jt = pickJewel(prev);
+    el.__jt = jt;
+
+    const { r, g, b } = hexToRgb(jt);
+    el.style.setProperty("--jt", jt);
+    el.style.setProperty("--jtFill", `rgba(${r},${g},${b},.18)`);
+    el.style.setProperty("--jtGlow2", `rgba(${r},${g},${b},.35)`);
+  }
+
+  /* ---------------- Content ---------------- */
   const PROJECTS = [
     { title: "Hilinski's Hope", img: "https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&raw=1" },
     { title: "The Secret Lives of Animals", img: "https://www.dropbox.com/scl/fi/9g8f8xyggs3dqlg1hmbao/The-Secret-Lives-of-Animals.webp?rlkey=s6yz5mrdz88uc9djbscr48urp&raw=1" },
@@ -52,6 +73,46 @@
     { title: "Thirst", img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/98561fee-a1fe-4c77-a6a9-4ec0537a73a1/Thirst.webp?content-type=image%2Fwebp" },
     { title: "Whistle", img: "https://www.dropbox.com/scl/fi/6sp81uysuvokjyt2j3rac/Whistle.jpg?rlkey=58x5sqlr9u1ic77fb25nkfk3q&raw=1" }
   ];
+
+  const STUDIO = [
+    { img: "https://www.dropbox.com/scl/fi/xt5oi8nnc5rnwpjryivh3/Studio-Website-1.jpg?rlkey=23euuj9l2dr6xm14o177gms3u&raw=1" },
+    { img: "https://www.dropbox.com/scl/fi/rphhjgqjehuwjt4mkj35r/Studio-Website-4.jpg?rlkey=nlux8i541g627rx7e4zbrssge&raw=1" },
+    { img: "https://www.dropbox.com/scl/fi/2ofmv0l2u6mezzmk3mq3u/Studio-Website-14.jpg?rlkey=km8kcveprykqpantxl5jhf2w0&raw=1" },
+    { img: "https://www.dropbox.com/scl/fi/oyqeszrslesy3mzqx39py/Studio-Website-17.jpg?rlkey=cg41dzy78a3i4ztskargig6qo&raw=1" },
+    { img: "https://www.dropbox.com/scl/fi/3f3nihn5g455tvfdfwg63/Studio-Website-22.jpg?rlkey=gbujpgv7k1mvyptgn4r0h41ef&raw=1" },
+    { img: "https://www.dropbox.com/scl/fi/mptf3sr34x0kg4vvgwcwd/Studio-Website-24.jpg?rlkey=ated18wblqch5ksl1m4bqck68&raw=1" },
+    { img: "https://www.dropbox.com/scl/fi/xm7obyp24uik0jm78d6yf/Studio-Website-27.jpg?rlkey=jnxf40i7a9vsqimx19rw8zjjo&raw=1" }
+  ];
+
+  function buildGridItems() {
+    // A + 1 = studio plates are equal citizens in the same grid.
+    // We’ll interleave them in a pleasing rhythm (editorial “beats”).
+    const items = [];
+    const p = PROJECTS.slice();
+    const s = STUDIO.slice();
+
+    // Pattern: after every 1–2 projects, drop a studio plate until we run out.
+    let pi = 0, si = 0;
+    const beats = [1, 2, 1, 2, 1, 2, 1, 2]; // repeats nicely
+    let b = 0;
+
+    while (pi < p.length || si < s.length) {
+      const take = beats[b++ % beats.length];
+      for (let k = 0; k < take && pi < p.length; k++) {
+        items.push({ kind: "project", title: p[pi].title, img: p[pi].img });
+        pi++;
+      }
+      if (si < s.length) {
+        items.push({ kind: "studio", img: s[si].img });
+        si++;
+      }
+      if (pi >= p.length && si < s.length) {
+        // if projects end first, just append remaining studio plates
+        while (si < s.length) items.push({ kind: "studio", img: s[si++].img });
+      }
+    }
+    return items;
+  }
 
   const FEATURED_TRACKS = [
     { title: "Charlie Horse", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/9b1a0c45-e055-4c88-b7b3-5f68e21c868e/Charlie%20Horse.mp3" },
@@ -175,7 +236,7 @@
     return out;
   }
 
-  /* ---------------- Waveform draw (solid pill bars) ---------------- */
+  /* ---------------- Waveform draw ---------------- */
   function drawWave(canvas, peaks, progress01) {
     if (!canvas || !peaks || !peaks.length) return;
 
@@ -194,10 +255,7 @@
     const n = peaks.length;
 
     const base = "rgba(255,255,255,0.12)";
-
-    // Played color uses current jewel tone (set by hover)
-    const jt = getComputedStyle(document.documentElement).getPropertyValue("--jt").trim();
-    const done = jt || "rgba(255,255,255,0.92)";
+    const done = "rgba(255,255,255,0.92)";
 
     const p = clamp01(progress01 || 0);
     const progX = p * w;
@@ -214,7 +272,6 @@
       const frac = f - i0;
 
       const p0 = getPeak(i0) * (1 - frac) + getPeak(i1) * frac;
-
       const pPrev = getPeak(i0 - 2) * (1 - frac) + getPeak(i1 - 2) * frac;
       const pNext = getPeak(i0 + 2) * (1 - frac) + getPeak(i1 + 2) * frac;
       const smooth = pPrev * 0.20 + p0 * 0.60 + pNext * 0.20;
@@ -251,33 +308,22 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Seed a jewel once on load so waveform/play hover looks intentional immediately
-    applyRandomJewel();
-
-    /* ---------------- Random jewel on hover ---------------- */
-    // Uses mouseover + closest() so it also works for dynamically rendered rows/posters
-    const hoverSelectors = [
-      ".row",
-      ".poster",
-      ".playBtn",
-      ".dock__play",
-      ".wave",
-      ".dock__wave",
-      ".sbtn",
-      ".menuBtn",
-      ".menu__link"
-    ];
-    document.addEventListener("mouseover", (e) => {
-      for (const sel of hoverSelectors) {
-        if (e.target.closest(sel)) { applyRandomJewel(); break; }
-      }
-    }, { passive: true });
-
     /* ---------------- Header scroll state ---------------- */
     const hdr = $(".hdr");
     const onScroll = () => hdr && hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
+
+    /* ---------------- Random jewel tone on hover (delegated) ---------------- */
+    const hoverTargets = (el) => {
+      if (!el) return null;
+      return el.closest(".poster, .row, .wave, .playBtn, .menuBtn, .dock__inner");
+    };
+
+    document.addEventListener("pointerenter", (e) => {
+      const t = hoverTargets(e.target);
+      if (t) applyJewelVars(t);
+    }, true);
 
     /* ---------------- Hamburger menu ---------------- */
     const menu = $(".menu");
@@ -307,44 +353,41 @@
       window.addEventListener("keydown", (e) => e.key === "Escape" && closeMenu());
     }
 
-    /* ---------------- Social links ---------------- */
+    /* ---------------- Social links + ensure classes for hover styling ---------------- */
     const sImdb = $("#social-imdb");
     const sApple = $("#social-apple");
     const sSpotify = $("#social-spotify");
     const sIg = $("#social-instagram");
-    if (sImdb) sImdb.href = SOCIALS.imdb;
-    if (sApple) sApple.href = SOCIALS.apple;
-    if (sSpotify) sSpotify.href = SOCIALS.spotify;
-    if (sIg) sIg.href = SOCIALS.instagram;
+
+    if (sImdb) { sImdb.href = SOCIALS.imdb; sImdb.classList.add("imdb"); }
+    if (sSpotify) { sSpotify.href = SOCIALS.spotify; sSpotify.classList.add("spotify"); }
+    if (sApple) { sApple.href = SOCIALS.apple; sApple.classList.add("apple"); }
+    if (sIg) { sIg.href = SOCIALS.instagram; sIg.classList.add("instagram"); }
 
     /* ---------------- Bio image ---------------- */
     const bioImg = $(".bioImg");
     if (bioImg && PROFILE_IMG_URL) bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
 
-    /* ---------------- Reveal ---------------- */
-    const revealEls = $$("[data-reveal]");
-    if (revealEls.length) {
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-in");
-            io.unobserve(e.target);
-          }
-        }
-      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-      revealEls.forEach(el => io.observe(el));
-    }
-
-    /* ---------------- Posters ---------------- */
+    /* ---------------- Posters (Projects + Studio plates) ---------------- */
     const postersEl = $(".posters");
-    if (postersEl && PROJECTS.length) {
-      postersEl.innerHTML = PROJECTS.map((p, i) => {
-        const safeTitle = (p.title || "Project").replace(/"/g, "&quot;");
-        const img = p.img || "";
+    const GRID = buildGridItems();
+
+    if (postersEl && GRID.length) {
+      postersEl.innerHTML = GRID.map((item, i) => {
+        const img = item.img || "";
+        if (item.kind === "project") {
+          const safeTitle = (item.title || "Project").replace(/"/g, "&quot;");
+          return `
+            <div class="poster" data-kind="project" data-idx="${i}" data-title="${safeTitle}" role="button" aria-label="Open ${safeTitle}">
+              <div class="poster__img" style="background-image:url('${img}')"></div>
+              <div class="poster__name">${safeTitle}</div>
+            </div>
+          `;
+        }
+        // Studio plate: no data-title, no label, has grain via CSS class
         return `
-          <div class="poster" data-idx="${i}" data-title="${safeTitle}" role="button" aria-label="Open ${safeTitle}">
+          <div class="poster poster--studio" data-kind="studio" data-idx="${i}" role="button" aria-label="Open studio image">
             <div class="poster__img" style="background-image:url('${img}')"></div>
-            <div class="poster__name">${safeTitle}</div>
           </div>
         `;
       }).join("");
@@ -378,13 +421,13 @@
         const p = e.target.closest(".poster");
         if (!p) return;
         const idx = Number(p.dataset.idx);
-        const item = PROJECTS[idx];
-        if (item && item.img) openLB(item.img);
+        const item = GRID[idx];
+        if (item?.img) openLB(item.img);
       });
     }
 
     /* =========================================================
-       PLAYER (ReelCrafter-ish smoothness)
+       PLAYER (smooth)
        ========================================================= */
     const player = $(".player");
     const playBtn = $(".playBtn");
@@ -411,14 +454,14 @@
     // Seek smoothing
     let draggingMain = false;
     let draggingDock = false;
-    let seekTarget = null;          // seconds
+    let seekTarget = null;
     let wasPlayingBeforeDrag = false;
 
     // UI loop
     let uiRaf = null;
     let lastDrawTs = 0;
-    const DRAW_EVERY_MS = 33;       // ~30fps waveform draw
-    const SEEK_APPLY_EVERY_MS = 33; // ~30fps seek apply
+    const DRAW_EVERY_MS = 33;
+    const SEEK_APPLY_EVERY_MS = 33;
     let lastSeekApplyTs = 0;
 
     // Diffed DOM writes
@@ -467,7 +510,6 @@
       const tr = currentTrack();
       if (!tr || !tr.src) return;
       try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
-      // Prewarm next track peaks quietly (makes next-click feel instant)
       const next = FEATURED_TRACKS[(tIdx + 1) % FEATURED_TRACKS.length];
       if (next?.src) getPeaks(next.src).catch(() => {});
     }
@@ -477,7 +519,6 @@
     }
 
     function getCurForUI() {
-      // While dragging, show the seek target (feels “snappy”)
       if ((draggingMain || draggingDock) && typeof seekTarget === "number") return seekTarget;
       return isFinite(audio.currentTime) ? audio.currentTime : 0;
     }
@@ -497,7 +538,6 @@
 
       setPlayIcon(audio.paused);
 
-      // Active row highlight (cheap)
       if (tracklist) {
         $$(".row", tracklist).forEach((r) => {
           const i = Number(r.dataset.i);
@@ -506,7 +546,6 @@
         });
       }
 
-      // Throttled draw
       if (peaksObj?.peaks && nowTs - lastDrawTs >= DRAW_EVERY_MS) {
         lastDrawTs = nowTs;
         if (waveCanvas) { ensureCanvasSized(); drawWave(waveCanvas, peaksObj.peaks, pct); }
@@ -665,14 +704,8 @@
         dockWaveBtn.addEventListener("pointercancel", () => onPointerUp("dock"));
       }
 
-      audio.addEventListener("play", () => {
-        showDock(true);
-        startUILoop();
-      });
-      audio.addEventListener("pause", () => {
-        showDock(true);
-        startUILoop();
-      });
+      audio.addEventListener("play", () => { showDock(true); startUILoop(); });
+      audio.addEventListener("pause", () => { showDock(true); startUILoop(); });
       audio.addEventListener("ended", () => { setTrack(tIdx + 1, true); });
       audio.addEventListener("loadedmetadata", () => startUILoop());
       audio.addEventListener("timeupdate", () => startUILoop());
