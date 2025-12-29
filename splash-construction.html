@@ -1,10 +1,8 @@
 <!-- =========================================================
      FILE: index.html  (SPLASH)
-     VERSION: 2.2
-     NOTES:
-     - Randomized jewel-tone social hover (same palette)
-     - No neon glow, solid cinematic fills
-     - Name animation unchanged
+     VERSION: 2.3
+     CHANGE:
+     - Jewel-tone social hover now re-rolls reliably (pointerenter + throttled mousemove)
      ========================================================= -->
 <!doctype html>
 <html lang="en">
@@ -103,7 +101,6 @@
       background:linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
 
-    /* === Socials === */
     .socials{
       display:flex;
       gap:12px;
@@ -152,15 +149,14 @@
       <div class="rule"></div>
 
       <div class="socials">
-        <a class="sbtn" href="https://www.imdb.com/name/nm4586039/" target="_blank">IMDb</a>
-        <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank">Spotify</a>
-        <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank">Apple Music</a>
-        <a class="sbtn" href="https://www.instagram.com/aforsbergmusic" target="_blank">Instagram</a>
+        <a class="sbtn" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
+        <a class="sbtn" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
+        <a class="sbtn" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+        <a class="sbtn" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
       </div>
     </div>
   </div>
 
-  <!-- === Jewel-tone randomizer (social hover only) === -->
   <script>
     const JEWELS = [
       "#7a5cff","#5c7cff","#22d3ee",
@@ -168,18 +164,54 @@
       "#ff9f1c","#ff4d6d","#c13584"
     ];
 
-    document.querySelectorAll(".sbtn").forEach(btn=>{
-      btn.addEventListener("mouseenter",()=>{
-        const c = JEWELS[Math.floor(Math.random()*JEWELS.length)];
-        btn.style.borderColor = c;
-        btn.style.background = c + "2e";
-        btn.style.color = "#fff";
+    const base = {
+      borderColor: "rgba(255,255,255,.14)",
+      background: "rgba(255,255,255,.03)",
+      color: "rgba(255,255,255,.70)"
+    };
+
+    const pickJewel = (prev) => {
+      if (JEWELS.length <= 1) return JEWELS[0];
+      let c = prev;
+      while (c === prev) c = JEWELS[Math.floor(Math.random() * JEWELS.length)];
+      return c;
+    };
+
+    const applyJewel = (btn) => {
+      const prev = btn.dataset.jewel || "";
+      const c = pickJewel(prev);
+      btn.dataset.jewel = c;
+
+      btn.style.borderColor = c;
+      btn.style.background = c + "2e";  // solid-ish fill, no glow
+      btn.style.color = "#fff";
+    };
+
+    const resetBtn = (btn) => {
+      btn.dataset.jewel = "";
+      btn.style.borderColor = base.borderColor;
+      btn.style.background = base.background;
+      btn.style.color = base.color;
+    };
+
+    document.querySelectorAll(".sbtn").forEach((btn) => {
+      // Always fires when you enter the element
+      btn.addEventListener("pointerenter", () => applyJewel(btn));
+
+      // Re-roll while moving inside (throttled so it doesn’t freak out)
+      let t = 0;
+      btn.addEventListener("mousemove", () => {
+        const now = performance.now();
+        if (now - t < 120) return; // reroll at most ~8x/sec
+        t = now;
+        applyJewel(btn);
       });
-      btn.addEventListener("mouseleave",()=>{
-        btn.style.borderColor = "rgba(255,255,255,.14)";
-        btn.style.background = "rgba(255,255,255,.03)";
-        btn.style.color = "rgba(255,255,255,.70)";
-      });
+
+      // Keyboard accessibility (tabbing)
+      btn.addEventListener("focus", () => applyJewel(btn));
+
+      btn.addEventListener("pointerleave", () => resetBtn(btn));
+      btn.addEventListener("blur", () => resetBtn(btn));
     });
   </script>
 </body>
