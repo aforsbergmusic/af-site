@@ -1,6 +1,6 @@
 <!-- ========================
-FILE: site.html (MAIN SITE)
-Version: 2.2 (Full-screen panels)
+FILE: site.html
+Version: 2.3 (Full-bleed, fixes layout + restores working hooks)
 ======================== -->
 <!doctype html>
 <html lang="en">
@@ -13,23 +13,21 @@ Version: 2.2 (Full-screen panels)
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=2.2" />
+  <link rel="stylesheet" href="styles.css?v=2.3" />
 </head>
 
 <body>
-  <!-- Sticky minimal header -->
+  <!-- Sticky header -->
   <header class="hdr" role="banner">
     <div class="hdr__inner">
       <a class="brand" href="#top" aria-label="Go to top">
-        <span class="brand__name" data-jewel="hover">Andy Forsberg</span>
+        <span class="brand__name" id="brandName">Andy Forsberg</span>
         <span class="brand__role">Composer + Producer</span>
       </a>
 
-      <div class="hdr__right">
-        <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
-          <span class="menuBtn__lines" aria-hidden="true"></span>
-        </button>
-      </div>
+      <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+        <span class="menuBtn__lines" aria-hidden="true"></span>
+      </button>
     </div>
   </header>
 
@@ -41,83 +39,73 @@ Version: 2.2 (Full-screen panels)
       <a class="menu__link" href="#about">About</a>
 
       <div class="menu__social" aria-label="Social links">
-        <a id="social-imdb" class="sbtn imdb" target="_blank" rel="noreferrer">IMDb</a>
-        <a id="social-spotify" class="sbtn spotify" target="_blank" rel="noreferrer">Spotify</a>
-        <a id="social-apple" class="sbtn apple" target="_blank" rel="noreferrer">Apple Music</a>
-        <a id="social-instagram" class="sbtn instagram" target="_blank" rel="noreferrer">Instagram</a>
+        <a class="sbtn imdb" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
+        <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer">Spotify</a>
+        <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+        <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a>
       </div>
     </div>
   </div>
 
-  <!-- Full-screen panels -->
-  <main class="panels" id="top">
-    <!-- PANEL 1: Listening Room (above fold) -->
-    <section class="panel panel--hero" id="listening" aria-label="Listening Room">
-      <div class="panel__bg" aria-hidden="true"></div>
+  <main id="top" class="page">
+    <!-- FULLSCREEN HERO -->
+    <section id="listening" class="hero" aria-label="Listening Room">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="hero__grain" aria-hidden="true"></div>
 
-      <div class="panel__inner">
-        <div class="panel__topline">
-          <span class="kicker">Listening Room</span>
-          <span class="hint">Scroll</span>
+      <div class="hero__inner">
+        <div class="hero__rail">
+          <div class="kicker">Listening Room</div>
+          <div class="subhint">Scroll</div>
         </div>
 
-        <div class="player" aria-label="Audio player">
-          <div class="np">
-            <div class="np__left">
+        <!-- Player bay (FULL, not tiny centered) -->
+        <div class="playerBay">
+          <div class="player" aria-label="Audio player">
+            <div class="np">
               <button class="playBtn" type="button" aria-label="Play">▶</button>
               <div class="np__meta">
                 <div class="npTitle">—</div>
                 <div class="npTime">0:00 / 0:00</div>
               </div>
             </div>
-          </div>
 
-          <div class="wave" role="button" aria-label="Waveform seek">
-            <canvas></canvas>
-          </div>
+            <div class="wave" role="button" aria-label="Waveform seek">
+              <canvas></canvas>
+            </div>
 
-          <div class="tracklist" aria-label="Track list"></div>
+            <div class="tracklist" aria-label="Track list"></div>
+          </div>
         </div>
-      </div>
 
-      <a class="scrollCue" href="#works" aria-label="Scroll to Works">
-        <span class="scrollCue__dot" aria-hidden="true"></span>
-        <span class="scrollCue__txt">Scroll or drag</span>
-      </a>
+        <a class="scrollCue" href="#works" aria-label="Scroll to Works">
+          <span class="scrollCue__dot" aria-hidden="true"></span>
+          <span class="scrollCue__txt">Scroll</span>
+        </a>
+      </div>
     </section>
 
-    <!-- PANEL 2: Works (posters stay movie-poster size, full image, no black bars) -->
-    <section class="panel panel--works" id="works" aria-label="Works">
-      <div class="panel__inner">
+    <!-- WORKS -->
+    <section id="works" class="works" aria-label="Works">
+      <div class="works__inner">
         <div class="posters" aria-label="Project posters"></div>
       </div>
     </section>
 
-    <!-- PANEL 3: About (no extra copy added; paste YOUR bio text into the <p> blocks exactly as you want) -->
-    <section class="panel panel--about" id="about" aria-label="About">
-      <div class="panel__inner">
-        <div class="aboutGrid">
-          <figure class="aboutImg" aria-label="Portrait"></figure>
-
-          <div class="aboutCopy">
-            <!-- Do NOT add copy here unless YOU paste it. -->
-            <div class="aboutCopy__body">
-              <!-- Paste your exact bio paragraphs here (replace these empty <p> tags) -->
-              <p></p>
-              <p></p>
-              <p></p>
-              <p></p>
-            </div>
-
-            <!-- Optional: keep your accordion block if you want it on this panel later.
-                 For now it's omitted to keep the layout clean + magazine-like. -->
+    <!-- ABOUT (NO COPY ADDED) -->
+    <section id="about" class="about" aria-label="About">
+      <div class="about__inner">
+        <div class="about__card">
+          <!-- Paste YOUR bio only if you want. Leaving empty by default -->
+          <div class="about__body">
+            <p></p>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Dock (control surface) -->
+  <!-- Dock mini player -->
   <div class="dock" aria-hidden="true">
     <div class="dock__inner" aria-label="Mini player dock">
       <button class="dock__play" type="button" aria-label="Play">▶</button>
@@ -131,6 +119,6 @@ Version: 2.2 (Full-screen panels)
     </div>
   </div>
 
-  <script src="app.js?v=2.2"></script>
+  <script src="app.js?v=2.3"></script>
 </body>
 </html>
