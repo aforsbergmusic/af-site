@@ -1,12 +1,11 @@
-/* =========================================================
-   FILE: app.js (FULL BLOCK) — v2.2-editorial-01
-   - Same playback + waveform behavior (don’t break)
-   - Studio filmstrip injection (fast first 2)
-   - Posters injection
-   - Bio contact sheet injection
-   - Menu + lightbox
-   - Jewel-tone randomizer for “alive” polish
-   ========================================================= */
+/* =========================
+FILE: app.js
+Version: 2.2
+- Full-screen panels compatible
+- Random jewel tone on hover targets
+- Waveform color follows jewel tone
+- Keeps your smoother player + dock
+========================= */
 
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
@@ -19,6 +18,7 @@
     instagram: "https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr"
   };
 
+  // Posters stay movie-poster ratio (2:3). Keep your originals.
   const PROJECTS = [
     { title: "Hilinski's Hope", img: "https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&raw=1" },
     { title: "The Secret Lives of Animals", img: "https://www.dropbox.com/scl/fi/9g8f8xyggs3dqlg1hmbao/The-Secret-Lives-of-Animals.webp?rlkey=s6yz5mrdz88uc9djbscr48urp&raw=1" },
@@ -29,6 +29,10 @@
     { title: "Thirst", img: "https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/98561fee-a1fe-4c77-a6a9-4ec0537a73a1/Thirst.webp?content-type=image%2Fwebp" },
     { title: "Whistle", img: "https://www.dropbox.com/scl/fi/6sp81uysuvokjyt2j3rac/Whistle.jpg?rlkey=58x5sqlr9u1ic77fb25nkfk3q&raw=1" }
   ];
+
+  // About image (portrait) — set to your Dropbox bio image.
+  // If you want a different one later, replace this URL.
+  const ABOUT_IMG_URL = "https://www.dropbox.com/scl/fi/dxyvbz5xbpi8a5js0n6gk/Studio-Website-13.jpg?rlkey=knn294prc63qxhw7xujdkdmox&raw=1";
 
   const FEATURED_TRACKS = [
     { title: "Charlie Horse", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/9b1a0c45-e055-4c88-b7b3-5f68e21c868e/Charlie%20Horse.mp3" },
@@ -45,26 +49,30 @@
     { title: "Bonded For Life", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/fbfcad1d-0ad1-45e5-b266-058e629d5468/Bonded%20For%20Life.mp3" }
   ];
 
-  /* Studio photos for filmstrip */
-  const STUDIO = [
-    "https://www.dropbox.com/scl/fi/rphhjgqjehuwjt4mkj35r/Studio-Website-4.jpg?rlkey=nlux8i541g627rx7e4zbrssge&raw=1",
-    "https://www.dropbox.com/scl/fi/2ofmv0l2u6mezzmk3mq3u/Studio-Website-14.jpg?rlkey=km8kcveprykqpantxl5jhf2w0&raw=1",
-    "https://www.dropbox.com/scl/fi/oyqeszrslesy3mzqx39py/Studio-Website-17.jpg?rlkey=cg41dzy78a3i4ztskargig6qo&raw=1",
-    "https://www.dropbox.com/scl/fi/3f3nihn5g455tvfdfwg63/Studio-Website-22.jpg?rlkey=gbujpgv7k1mvyptgn4r0h41ef&raw=1",
-    "https://www.dropbox.com/scl/fi/mptf3sr34x0kg4vvgwcwd/Studio-Website-24.jpg?rlkey=ated18wblqch5ksl1m4bqck68&raw=1",
-    "https://www.dropbox.com/scl/fi/xm7obyp24uik0jm78d6yf/Studio-Website-27.jpg?rlkey=jnxf40i7a9vsqimx19rw8zjjo&raw=1"
+  /* ========= Jewel tones (no pastels) ========= */
+  const JEWELS = [
+    { jt:"#7a5cff", fill:"rgba(122,92,255,.18)", glow:"rgba(122,92,255,.48)", glow2:"rgba(122,92,255,.26)" }, // amethyst
+    { jt:"#22d3ee", fill:"rgba(34,211,238,.16)", glow:"rgba(34,211,238,.44)", glow2:"rgba(34,211,238,.24)" }, // cyan
+    { jt:"#34d98a", fill:"rgba(52,217,138,.16)", glow:"rgba(52,217,138,.40)", glow2:"rgba(52,217,138,.22)" }, // emerald
+    { jt:"#ffd166", fill:"rgba(255,209,102,.18)", glow:"rgba(255,209,102,.42)", glow2:"rgba(255,209,102,.24)" }, // amber
+    { jt:"#ff9f1c", fill:"rgba(255,159,28,.18)", glow:"rgba(255,159,28,.42)", glow2:"rgba(255,159,28,.24)" }, // orange
+    { jt:"#ff4d6d", fill:"rgba(255,77,109,.18)", glow:"rgba(255,77,109,.42)", glow2:"rgba(255,77,109,.24)" }, // ruby
+    { jt:"#c13584", fill:"rgba(193,53,132,.18)", glow:"rgba(193,53,132,.42)", glow2:"rgba(193,53,132,.24)" }, // magenta
+    { jt:"#5c7cff", fill:"rgba(92,124,255,.18)", glow:"rgba(92,124,255,.42)", glow2:"rgba(92,124,255,.24)" }  // sapphire
   ];
 
-  /* Contact sheet */
-  const SHEET = [
-    "https://www.dropbox.com/scl/fi/xt5oi8nnc5rnwpjryivh3/Studio-Website-1.jpg?rlkey=23euuj9l2dr6xm14o177gms3u&raw=1",
-    "https://www.dropbox.com/scl/fi/rphhjgqjehuwjt4mkj35r/Studio-Website-4.jpg?rlkey=nlux8i541g627rx7e4zbrssge&raw=1",
-    "https://www.dropbox.com/scl/fi/2ofmv0l2u6mezzmk3mq3u/Studio-Website-14.jpg?rlkey=km8kcveprykqpantxl5jhf2w0&raw=1",
-    "https://www.dropbox.com/scl/fi/oyqeszrslesy3mzqx39py/Studio-Website-17.jpg?rlkey=cg41dzy78a3i4ztskargig6qo&raw=1",
-    "https://www.dropbox.com/scl/fi/3f3nihn5g455tvfdfwg63/Studio-Website-22.jpg?rlkey=gbujpgv7k1mvyptgn4r0h41ef&raw=1",
-    "https://www.dropbox.com/scl/fi/mptf3sr34x0kg4vvgwcwd/Studio-Website-24.jpg?rlkey=ated18wblqch5ksl1m4bqck68&raw=1",
-    "https://www.dropbox.com/scl/fi/xm7obyp24uik0jm78d6yf/Studio-Website-27.jpg?rlkey=jnxf40i7a9vsqimx19rw8zjjo&raw=1"
-  ];
+  const pickJewel = () => JEWELS[Math.floor(Math.random() * JEWELS.length)];
+  const setJewelVars = (el, j) => {
+    const target = el?.style ? el : document.documentElement;
+    target.setProperty("--jt", j.jt);
+    target.setProperty("--jtFill", j.fill);
+    target.setProperty("--jtGlow", j.glow);
+    target.setProperty("--jtGlow2", j.glow2);
+
+    // Wave: keep base white, done can tint slightly via jt for “pro” feel
+    target.setProperty("--waveDone", "rgba(255,255,255,.92)");
+    target.setProperty("--waveBase", "rgba(255,255,255,.12)");
+  };
 
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
   const fmtTime = (s) => {
@@ -85,7 +93,7 @@
     }
   }
 
-  /* ================= Peaks cache ================= */
+  /* ---------------- Peaks cache ---------------- */
   const PEAKS_VERSION = "v1";
   const PEAKS_N = 220;
   const waveCache = new Map();
@@ -104,7 +112,9 @@
     return (h >>> 0).toString(16);
   }
 
-  function lsKey(src) { return `af_peaks_${PEAKS_VERSION}_${hashStr(src)}`; }
+  function lsKey(src) {
+    return `af_peaks_${PEAKS_VERSION}_${hashStr(src)}`;
+  }
 
   function loadPeaksLS(src) {
     try {
@@ -113,11 +123,15 @@
       const obj = JSON.parse(raw);
       if (!obj || !Array.isArray(obj.p) || typeof obj.d !== "number") return null;
       return { peaks: obj.p, duration: obj.d };
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   }
 
   function savePeaksLS(src, peaks, duration) {
-    try { localStorage.setItem(lsKey(src), JSON.stringify({ p: peaks, d: duration })); } catch {}
+    try {
+      localStorage.setItem(lsKey(src), JSON.stringify({ p: peaks, d: duration }));
+    } catch {}
   }
 
   function computePeaks(audioBuffer, n) {
@@ -151,7 +165,10 @@
     if (waveCache.has(src)) return waveCache.get(src);
 
     const fromLS = loadPeaksLS(src);
-    if (fromLS) { waveCache.set(src, fromLS); return fromLS; }
+    if (fromLS) {
+      waveCache.set(src, fromLS);
+      return fromLS;
+    }
 
     const ctx = getAudioCtx();
     const res = await fetch(src, { mode: "cors", cache: "force-cache" });
@@ -164,10 +181,9 @@
     return out;
   }
 
-  /* ================= Waveform draw ================= */
+  /* ---------------- Wave draw (reads CSS vars) ---------------- */
   function drawWave(canvas, peaks, progress01) {
     if (!canvas || !peaks || !peaks.length) return;
-
     const ctx = canvas.getContext("2d");
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0, 0, w, h);
@@ -182,8 +198,9 @@
     const cols = Math.max(1, Math.floor(w / stride));
     const n = peaks.length;
 
-    const base = "rgba(255,255,255,0.12)";
-    const done = "rgba(255,255,255,0.92)";
+    const cs = getComputedStyle(document.documentElement);
+    const base = cs.getPropertyValue("--waveBase").trim() || "rgba(255,255,255,0.12)";
+    const done = cs.getPropertyValue("--waveDone").trim() || "rgba(255,255,255,0.92)";
 
     const p = clamp01(progress01 || 0);
     const progX = p * w;
@@ -236,49 +253,14 @@
     }
   }
 
-  /* ================= Jewel randomizer ================= */
-  const JEWELS = [
-    ["#7a5cff","rgba(122,92,255,.18)","rgba(122,92,255,.55)","rgba(122,92,255,.35)"],
-    ["#5c7cff","rgba(92,124,255,.18)","rgba(92,124,255,.55)","rgba(92,124,255,.35)"],
-    ["#22d3ee","rgba(34,211,238,.16)","rgba(34,211,238,.45)","rgba(34,211,238,.30)"],
-    ["#34d98a","rgba(52,217,138,.16)","rgba(52,217,138,.45)","rgba(52,217,138,.30)"],
-    ["#ffd166","rgba(255,209,102,.16)","rgba(255,209,102,.45)","rgba(255,209,102,.30)"],
-    ["#ff9f1c","rgba(255,159,28,.16)","rgba(255,159,28,.45)","rgba(255,159,28,.30)"],
-    ["#ff4d6d","rgba(255,77,109,.16)","rgba(255,77,109,.45)","rgba(255,77,109,.30)"],
-    ["#c13584","rgba(193,53,132,.16)","rgba(193,53,132,.45)","rgba(193,53,132,.30)"]
-  ];
-  let lastJ = -1;
-  function pickJewel() {
-    let i = Math.floor(Math.random() * JEWELS.length);
-    if (i === lastJ) i = (i + 1) % JEWELS.length;
-    lastJ = i;
-    return JEWELS[i];
-  }
-  function applyJewel() {
-    const [jt, jtFill, jtGlow, jtGlow2] = pickJewel();
-    document.documentElement.style.setProperty("--jt", jt);
-    document.documentElement.style.setProperty("--jtFill", jtFill);
-    document.documentElement.style.setProperty("--jtGlow", jtGlow);
-    document.documentElement.style.setProperty("--jtGlow2", jtGlow2);
-  }
-
-  document.addEventListener("pointerover", (e) => {
-    const hit = e.target.closest(".row, .poster, .wave, .dock__inner, .sCard, .menuBtn, .mast__brand");
-    if (hit) applyJewel();
-  }, { passive:true });
-
   document.addEventListener("DOMContentLoaded", () => {
-    /* Social links */
-    const sImdb = $("#social-imdb");
-    const sApple = $("#social-apple");
-    const sSpotify = $("#social-spotify");
-    const sIg = $("#social-instagram");
-    if (sImdb) sImdb.href = SOCIALS.imdb;
-    if (sApple) sApple.href = SOCIALS.apple;
-    if (sSpotify) sSpotify.href = SOCIALS.spotify;
-    if (sIg) sIg.href = SOCIALS.instagram;
+    /* ---------------- Header scroll state ---------------- */
+    const hdr = $(".hdr");
+    const onScroll = () => hdr && hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
 
-    /* Menu */
+    /* ---------------- Hamburger menu ---------------- */
     const menu = $(".menu");
     const menuBtn = $(".menuBtn");
     const closeMenu = () => {
@@ -291,6 +273,7 @@
       menu.setAttribute("aria-hidden", "false");
       menuBtn.setAttribute("aria-expanded", "true");
     };
+
     if (menuBtn && menu) {
       menuBtn.addEventListener("click", () => {
         const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
@@ -303,227 +286,47 @@
       window.addEventListener("keydown", (e) => e.key === "Escape" && closeMenu());
     }
 
-    /* Reveal */
-    const revealEls = $$("[data-reveal]");
-    if (revealEls.length) {
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-in");
-            io.unobserve(e.target);
-          }
-        }
-      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-      revealEls.forEach(el => io.observe(el));
-    }
+    /* ---------------- Social links ---------------- */
+    const sImdb = $("#social-imdb");
+    const sApple = $("#social-apple");
+    const sSpotify = $("#social-spotify");
+    const sIg = $("#social-instagram");
+    if (sImdb) sImdb.href = SOCIALS.imdb;
+    if (sApple) sApple.href = SOCIALS.apple;
+    if (sSpotify) sSpotify.href = SOCIALS.spotify;
+    if (sIg) sIg.href = SOCIALS.instagram;
 
-    /* Studio filmstrip injection */
-    const studioRail = $("#studioGrid");
-    if (studioRail && STUDIO.length) {
-      studioRail.innerHTML = STUDIO.map((src, idx) => {
-        const eager = idx < 2;
-        return `
-          <div class="sCard">
-            <img class="sImg" src="${src}" alt="Studio photo"
-              ${eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'}
-              decoding="async"/>
-          </div>
-        `;
-      }).join("");
-    }
+    /* ---------------- About image ---------------- */
+    const aboutImg = $(".aboutImg");
+    if (aboutImg && ABOUT_IMG_URL) aboutImg.style.backgroundImage = `url('${ABOUT_IMG_URL}')`;
 
-    /* Posters */
+    /* ---------------- Works posters ---------------- */
     const postersEl = $(".posters");
     if (postersEl && PROJECTS.length) {
-      postersEl.innerHTML = PROJECTS.map((p, i) => `
-        <div class="poster" data-idx="${i}" role="button" aria-label="Open project image">
-          <div class="poster__img" style="background-image:url('${p.img || ""}')"></div>
-          <div class="poster__name"></div>
-        </div>
-      `).join("");
-    }
-
-    /* Lightbox */
-    const lb = $(".lb");
-    const lbImg = $(".lb__img");
-    const lbBg = $(".lb__bg");
-    const lbClose = $(".lb__close");
-    const openLB = (imgUrl) => {
-      if (!lb || !lbImg) return;
-      lbImg.src = imgUrl;
-      lb.setAttribute("aria-hidden", "false");
-    };
-    const closeLB = () => {
-      if (!lb) return;
-      lb.setAttribute("aria-hidden", "true");
-      if (lbImg) lbImg.src = "";
-    };
-    if (lbBg) lbBg.addEventListener("click", closeLB);
-    if (lbClose) lbClose.addEventListener("click", closeLB);
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && lb && lb.getAttribute("aria-hidden") === "false") closeLB();
-    });
-    if (postersEl) {
-      postersEl.addEventListener("click", (e) => {
-        const p = e.target.closest(".poster");
-        if (!p) return;
-        const idx = Number(p.dataset.idx);
-        const item = PROJECTS[idx];
-        if (item && item.img) openLB(item.img);
-      });
-    }
-
-    /* Bio contact sheet injection */
-    const sheetGrid = $("#afSheetGrid");
-    if (sheetGrid) {
-      sheetGrid.innerHTML = SHEET.map((src, i) => {
-        const eager = i < 2;
+      postersEl.innerHTML = PROJECTS.map((p, i) => {
+        const safeTitle = (p.title || "Project").replace(/"/g, "&quot;");
+        const img = p.img || "";
         return `
-          <div class="af-shot">
-            <img src="${src}" alt="Studio photo"
-              ${eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'}
-              decoding="async"/>
+          <div class="poster" data-idx="${i}" role="button" aria-label="${safeTitle}" data-jewel="hover">
+            <div class="poster__img" style="background-image:url('${img}')"></div>
           </div>
         `;
       }).join("");
     }
 
-    /* Bio portrait tile + accordion behavior */
-    (function () {
-      const root = $(".af-bio");
-      if (!root) return;
+    /* ---------------- Jewel hover randomizer ---------------- */
+    const attachJewelHover = (el) => {
+      if (!el) return;
+      el.addEventListener("mouseenter", () => setJewelVars(document.documentElement, pickJewel()));
+      el.addEventListener("focus", () => setJewelVars(document.documentElement, pickJewel()));
+    };
 
-      const mask = root.querySelector(".af-bio__mask");
-      const tilesWrap = root.querySelector(".af-bio__tiles");
-      const sheen = root.querySelector(".af-bio__sheen");
-      const imgA = root.querySelector(".af-bio__img--a");
-      const imgB = root.querySelector(".af-bio__img--b");
-      if (!mask || !tilesWrap || !imgA || !imgB) return;
+    $$("[data-jewel='hover']").forEach(attachJewelHover);
 
-      const RAINBOW = ["#FF3B30","#FF9500","#FFCC00","#34C759","#00C7BE","#007AFF","#5856D6","#AF52DE"];
-      const perStep = 55;
-      const flipDur = 1050;
-      let cols = 8, rows = 8;
-      let timers = [];
-
-      const clearTimers = () => { timers.forEach(t => clearTimeout(t)); timers = []; };
-
-      const buildTiles = () => {
-        tilesWrap.innerHTML = "";
-        const w = mask.clientWidth || 320;
-        cols = w < 520 ? 6 : 8;
-        rows = w < 520 ? 6 : 8;
-
-        tilesWrap.style.setProperty("--af-cols", cols);
-        tilesWrap.style.setProperty("--af-rows", rows);
-
-        for (let r = 0; r < rows; r++) {
-          for (let c = 0; c < cols; c++) {
-            const tile = document.createElement("div");
-            tile.className = "af-tile";
-
-            const d = (r + c) * perStep;
-            tile.style.setProperty("--af-in", `${d}ms`);
-            tile.style.setProperty("--af-out", `${d}ms`);
-
-            const t = (r + c) / ((rows - 1) + (cols - 1));
-            const idx = Math.round(t * (RAINBOW.length - 1));
-            tile.style.setProperty("--af-solid", RAINBOW[idx]);
-
-            tilesWrap.appendChild(tile);
-          }
-        }
-      };
-
-      buildTiles();
-      window.addEventListener("resize", buildTiles, { passive: true });
-
-      const resetMask = () => {
-        clearTimers();
-        mask.classList.remove("af-in","af-out","af-clean","af-revealed");
-        if (sheen) sheen.style.transform = "translate3d(0,0,0)";
-        imgA.style.transform = "scale(1.02)";
-        imgB.style.transform = "scale(1.02)";
-      };
-
-      const startTiles = () => {
-        resetMask();
-        const maxDelay = (rows - 1 + cols - 1) * perStep;
-        const inEnd = maxDelay + flipDur;
-
-        mask.classList.add("af-in");
-
-        timers.push(setTimeout(() => {
-          mask.classList.add("af-revealed");
-          mask.classList.add("af-out");
-        }, inEnd));
-
-        const outEnd = maxDelay + flipDur;
-        timers.push(setTimeout(() => {
-          mask.classList.add("af-clean");
-          mask.classList.remove("af-in","af-out");
-        }, inEnd + outEnd + 40));
-      };
-
-      mask.addEventListener("mouseenter", startTiles);
-      mask.addEventListener("mouseleave", resetMask);
-
-      mask.addEventListener("mousemove", (e) => {
-        const r = mask.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width;
-        const y = (e.clientY - r.top) / r.height;
-
-        if (sheen) {
-          const tx = (x - 0.5) * 14;
-          const ty = (y - 0.5) * 14;
-          sheen.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-        }
-
-        const ix = (x - 0.5) * 5;
-        const iy = (y - 0.5) * 5;
-        imgA.style.transform = `translate3d(${ix}px, ${iy}px, 0) scale(1.02)`;
-        imgB.style.transform = `translate3d(${ix}px, ${iy}px, 0) scale(1.02)`;
-      }, { passive: true });
-
-      const details = Array.from(root.querySelectorAll("[data-af-accordion] details"));
-
-      const closeAll = () => {
-        details.forEach(d => {
-          d.removeAttribute("open");
-          d.classList.remove("af-open-soft","af-glow-on");
-        });
-      };
-
-      details.forEach(d => {
-        d.addEventListener("toggle", () => {
-          if (d.open) {
-            details.forEach(o => {
-              if (o !== d) {
-                o.removeAttribute("open");
-                o.classList.remove("af-open-soft","af-glow-on");
-              }
-            });
-            d.classList.add("af-open-soft");
-            d.classList.remove("af-glow-on");
-            requestAnimationFrame(() => requestAnimationFrame(() => d.classList.add("af-glow-on")));
-          } else {
-            d.classList.remove("af-open-soft","af-glow-on");
-          }
-        });
-      });
-
-      document.addEventListener("pointerdown", (e) => {
-        if (!root.contains(e.target)) closeAll();
-      }, { passive: true });
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key !== "Escape") return;
-        const active = document.activeElement;
-        if (root.contains(active) || root.matches(":hover")) closeAll();
-      });
-    })();
-
-    /* ================= Player (same behavior) ================= */
+    /* =========================================================
+       PLAYER (smooth)
+       ========================================================= */
+    const player = $(".player");
     const playBtn = $(".playBtn");
     const npTitle = $(".npTitle");
     const npTime = $(".npTime");
@@ -531,6 +334,7 @@
     const waveCanvas = waveBtn ? $("canvas", waveBtn) : null;
     const tracklist = $(".tracklist");
 
+    // Dock
     const dock = $(".dock");
     const dockPlay = $(".dock__play");
     const dockTitle = $(".dock__title");
@@ -544,17 +348,20 @@
     let tIdx = 0;
     let peaksObj = null;
 
+    // Seek smoothing
     let draggingMain = false;
     let draggingDock = false;
     let seekTarget = null;
     let wasPlayingBeforeDrag = false;
 
+    // UI loop
     let uiRaf = null;
     let lastDrawTs = 0;
     const DRAW_EVERY_MS = 33;
     const SEEK_APPLY_EVERY_MS = 33;
     let lastSeekApplyTs = 0;
 
+    // Diffed DOM writes
     const lastText = new Map();
     const setText = (el, v) => {
       if (!el) return;
@@ -587,12 +394,15 @@
       tracklist.innerHTML = FEATURED_TRACKS.map((t, i) => {
         const active = i === tIdx ? " is-active" : "";
         return `
-          <div class="row${active}" data-i="${i}" role="button" aria-label="Play ${t.title || "Track"}">
+          <div class="row${active}" data-i="${i}" role="button" aria-label="Play ${t.title || "Track"}" data-jewel="hover">
             <div class="row__t">${t.title || "Untitled"}</div>
             <div class="row__d"></div>
           </div>
         `;
       }).join("");
+
+      // hook jewel hover on the new rows
+      $$("[data-jewel='hover']", tracklist).forEach(attachJewelHover);
     }
 
     async function loadWaveForCurrent() {
@@ -663,7 +473,12 @@
       const tick = (ts) => {
         if (draggingMain || draggingDock) applySeekTarget(ts);
         syncUI(ts);
-        const keepAlive = (!audio.paused) || draggingMain || draggingDock || (dock && dock.getAttribute("aria-hidden") === "false");
+
+        const keepAlive =
+          (!audio.paused) ||
+          draggingMain || draggingDock ||
+          (dock && dock.getAttribute("aria-hidden") === "false");
+
         if (keepAlive) uiRaf = requestAnimationFrame(tick);
         else uiRaf = null;
       };
@@ -686,7 +501,6 @@
 
       await loadWaveForCurrent();
 
-      showDock(false);
       startUILoop();
 
       if (autoplay) {
@@ -751,7 +565,10 @@
       startUILoop();
     }
 
-    if (FEATURED_TRACKS.length) {
+    if (player && FEATURED_TRACKS.length) {
+      // pick an initial jewel so it doesn't feel flat on first load
+      setJewelVars(document.documentElement, pickJewel());
+
       renderTracklist();
       setTrack(0, false);
 
