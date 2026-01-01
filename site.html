@@ -1,3 +1,12 @@
+<!-- =========================================================
+     FILE: site.html (FULL BLOCK) — v2.2-editorial-01
+     Goal: pro + artsy + polished (single visual system)
+     - A real “masthead” (not a hero blob)
+     - Studio becomes a cinematic “filmstrip” + featured still
+     - Player becomes a “Listening Room” spread (integrated, not a card)
+     - Work posters sit on a clean gallery wall grid (movie-poster aspect preserved)
+     - Bio becomes a designed editorial spread (your copy preserved)
+     ========================================================= -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,163 +14,288 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Andy Forsberg — Composer + Producer</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.squarespace-cdn.com" crossorigin>
+  <link rel="dns-prefetch" href="https://images.squarespace-cdn.com">
 
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
-  <header class="hdr">
-    <div class="hdr__inner">
-      <a class="brand" href="#top" aria-label="Home">
-        <span class="brand__name">Andy Forsberg</span>
-        <span class="brand__role">Composer + Producer</span>
-      </a>
+  <!-- ================= Masthead ================= -->
+  <header class="mast">
+    <div class="mast__inner">
+      <div class="mast__left">
+        <a class="mast__brand" href="#top" aria-label="Back to top">
+          <span class="mast__name">Andy Forsberg</span>
+          <span class="mast__sep" aria-hidden="true">—</span>
+          <span class="mast__role">Composer + Producer</span>
+        </a>
 
-      <div class="hdr__right">
-        <nav class="hdr__social" aria-label="Social links">
-          <a id="social-imdb" class="sbtn imdb" href="#" target="_blank" rel="noreferrer">IMDb</a>
-          <a id="social-spotify" class="sbtn spotify" href="#" target="_blank" rel="noreferrer">Spotify</a>
-          <a id="social-apple" class="sbtn apple" href="#" target="_blank" rel="noreferrer">Apple</a>
-          <a id="social-instagram" class="sbtn instagram" href="#" target="_blank" rel="noreferrer">IG</a>
+        <div class="mast__meta" aria-label="Location and focus">
+          <span class="chip">Los Angeles</span>
+          <span class="chip chip--soft">Film · TV · Interactive</span>
+          <span class="chip chip--soft">Neoclassical · Electronic · Orchestral</span>
+        </div>
+      </div>
+
+      <div class="mast__right">
+        <nav class="mast__social" aria-label="Social links">
+          <a class="sbtn imdb" id="social-imdb" href="#" target="_blank" rel="noreferrer">IMDb</a>
+          <a class="sbtn spotify" id="social-spotify" href="#" target="_blank" rel="noreferrer">Spotify</a>
+          <a class="sbtn apple" id="social-apple" href="#" target="_blank" rel="noreferrer">Apple Music</a>
+          <a class="sbtn instagram" id="social-instagram" href="#" target="_blank" rel="noreferrer">Instagram</a>
         </nav>
 
-        <button class="menuBtn" type="button" aria-label="Menu" aria-expanded="false">
+        <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
           <span class="menuBtn__lines" aria-hidden="true"></span>
         </button>
       </div>
     </div>
+
+    <div class="mast__rule" aria-hidden="true"></div>
   </header>
 
+  <!-- ================= Menu Overlay ================= -->
   <div class="menu" aria-hidden="true">
-    <div class="menu__panel">
-      <a class="menu__link" href="#listen">Listen</a>
+    <div class="menu__panel" role="dialog" aria-label="Menu">
       <a class="menu__link" href="#studio">Studio</a>
-      <a class="menu__link" href="#work">Work</a>
-      <a class="menu__link" href="#bio">Bio + Contact</a>
+      <a class="menu__link" href="#listen">Listen</a>
+      <a class="menu__link" href="#work">Selected Work</a>
+      <a class="menu__link" href="#bio">About</a>
     </div>
   </div>
 
+  <!-- ================= Page ================= -->
   <main id="top" class="page">
 
-    <!-- Listen -->
-    <section id="listen" class="section" data-reveal>
-      <div class="sep" aria-hidden="true"></div>
+    <!-- ================= Studio Spread ================= -->
+    <section id="studio" class="spread" data-reveal aria-label="Studio">
+      <div class="spread__grid">
+        <div class="spread__kicker">
+          <span class="k">STUDIO</span>
+          <span class="k__line" aria-hidden="true"></span>
+        </div>
 
-      <div class="player">
-        <div class="np">
-          <div class="np__left">
-            <button class="playBtn" type="button" aria-label="Play/Pause">▶</button>
-            <div class="np__meta">
-              <div class="npTitle">—</div>
-              <div class="npTime">0:00 / 0:00</div>
-            </div>
+        <div class="studioHero">
+          <div class="studioHero__frame">
+            <img
+              src="https://www.dropbox.com/scl/fi/xt5oi8nnc5rnwpjryivh3/Studio-Website-1.jpg?rlkey=23euuj9l2dr6xm14o177gms3u&raw=1"
+              alt="Studio featured still"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </div>
+          <div class="studioHero__caption">
+            <div class="smallcaps">A working room, not a showroom.</div>
+            <div class="muted">Scores, sound design, and production — built with restraint and detail.</div>
           </div>
         </div>
 
-        <button class="wave" type="button" aria-label="Waveform seek">
-          <canvas></canvas>
-        </button>
-
-        <div class="tracklist" aria-label="Track list"></div>
+        <div class="filmstrip" aria-label="Studio filmstrip">
+          <div class="filmstrip__rail" id="studioGrid"></div>
+        </div>
       </div>
     </section>
 
-    <!-- Studio -->
-    <section id="studio" class="section" data-reveal>
-      <div class="sep" aria-hidden="true"></div>
-      <div class="studioGrid" id="studioGrid" aria-label="Studio gallery"></div>
-    </section>
+    <!-- ================= Listening Room Spread ================= -->
+    <section id="listen" class="spread" data-reveal aria-label="Listen">
+      <div class="spread__grid">
+        <div class="spread__kicker">
+          <span class="k">LISTENING ROOM</span>
+          <span class="k__line" aria-hidden="true"></span>
+        </div>
 
-    <!-- Work -->
-    <section id="work" class="section" data-reveal>
-      <div class="sep" aria-hidden="true"></div>
-      <div class="posters" aria-label="Project posters"></div>
-    </section>
-
-    <!-- Bio -->
-    <section id="bio" class="section" data-reveal>
-      <div class="sep" aria-hidden="true"></div>
-
-      <div class="bio">
-        <div class="bioImg" aria-label="Portrait"></div>
-
-        <div class="bioText">
-          <p>
-            Andy Forsberg is a media composer and producer based in Los Angeles.
-            After studying at the Berklee College of Music, Andy’s journey began working for
-            acclaimed composer/arranger William Ross (Harry Potter and The Chamber of Secrets, Barbara Streisand).
-            Shortly after, he co-founded video game music and sound design house Hexany Audio, where he served
-            as its lead composer until 2016.
-          </p>
-          <p>
-            Andy has since carved out his own path through his unique patchwork of styles, combining Neoclassical,
-            electronic, and sweeping orchestral palettes. He has composed and contributed music for several of
-            Nat Geo/Disney, BBC/Apple, and Discovery Channel’s high profile projects, including Born Wild: The Next Generation
-            narrated by Robin Roberts, The Secret Lives of Animals, The Last Alaskans, Europe from Above, and Magic of Disney’s Animal Kingdom.
-          </p>
-          <p>
-            Among his documentary work, Andy has made a quick name for himself in many genres, scoring several of Lifetime Network’s
-            lauded list of TV movie thrillers, Thirst for Hulu’s bite sized Halloween directed by Stefan Dezil, and the award-winning film Whistle
-            created by director Jen Araki, starring Dylan Playfair (Letterkenny, The Mighty Ducks: Game Changers).
-          </p>
-          <p>
-            An avid conductor, Andy has led the Hollywood Chamber Orchestra at the Ricardo Montalbán Theatre for the world premiere of his concert work
-            “Beyond Us”, recorded and conducted his own music at multiple historic scoring stages, and was one of Broadcast Music Inc.’s (BMI) selected fellows
-            for their 2018 intensive conducting workshop, led by acclaimed conductor/composer Lucas Richman.
-          </p>
-          <p>
-            Through his work in documentaries, thrillers, and dramas, Andy has found an intense passion for real-life storytelling,
-            and finding light in the darker elements of human nature.
-          </p>
-
-          <div class="rep">
-            <div class="rep__kicker">Representation</div>
-            <div class="rep__body">
-              Arbel Bedak, Spectra Creative Agency<br />
-              <a href="mailto:arbel@spectracreativeagency.com">arbel@spectracreativeagency.com</a><br />
-              323-546-8120
+        <aside class="notes">
+          <div class="notes__card">
+            <div class="notes__title">Approach</div>
+            <p class="notes__p">
+              Story-first music: emotional clarity, modern texture, and orchestral discipline —
+              with the mix and performance treated as part of the composition.
+            </p>
+            <div class="notes__rule" aria-hidden="true"></div>
+            <div class="notes__list">
+              <div class="noteItem"><span class="dot" aria-hidden="true"></span><span>Neoclassical + synthesis</span></div>
+              <div class="noteItem"><span class="dot" aria-hidden="true"></span><span>Hybrid orchestration</span></div>
+              <div class="noteItem"><span class="dot" aria-hidden="true"></span><span>Focused, film-ready mixes</span></div>
             </div>
+          </div>
+        </aside>
+
+        <div class="playerWrap">
+          <div class="player" aria-label="Featured tracks player">
+            <div class="np">
+              <div class="np__left">
+                <button class="playBtn" type="button" aria-label="Play/Pause">▶</button>
+                <div class="np__meta">
+                  <div class="npTitle">—</div>
+                  <div class="npTime">0:00 / 0:00</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wave" role="button" aria-label="Waveform seek"><canvas></canvas></div>
+
+            <div class="tracklist" aria-label="Track list"></div>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- ================= Work Spread ================= -->
+    <section id="work" class="spread" data-reveal aria-label="Selected work">
+      <div class="spread__grid">
+        <div class="spread__kicker">
+          <span class="k">SELECTED WORK</span>
+          <span class="k__line" aria-hidden="true"></span>
+        </div>
+
+        <div class="galleryWall" aria-label="Poster gallery wall">
+          <div class="posters"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Bio Spread ================= -->
+    <section id="bio" class="spread" data-reveal aria-label="About">
+      <div class="spread__grid">
+        <div class="spread__kicker">
+          <span class="k">ABOUT</span>
+          <span class="k__line" aria-hidden="true"></span>
+        </div>
+
+        <section class="af-bio" aria-label="About Andy Forsberg">
+          <div class="af-bio__wrap">
+
+            <!-- Left column -->
+            <div class="af-bio__left">
+              <figure class="af-bio__portrait" aria-hidden="true">
+                <svg class="af-bio__defs" width="0" height="0" aria-hidden="true">
+                  <defs>
+                    <clipPath id="af-tv-mask-01" clipPathUnits="objectBoundingBox">
+                      <path d="M0.50,0.00
+                               C0.78,0.00,0.90,0.06,0.92,0.08
+                               C0.94,0.10,1.00,0.24,1.00,0.50
+                               C1.00,0.78,0.94,0.90,0.92,0.92
+                               C0.90,0.94,0.78,1.00,0.50,1.00
+                               C0.22,1.00,0.10,0.94,0.08,0.92
+                               C0.06,0.90,0.00,0.78,0.00,0.50
+                               C0.00,0.22,0.06,0.10,0.08,0.08
+                               C0.10,0.06,0.22,0.00,0.50,0.00"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+
+                <div class="af-bio__mask" data-mask="tv">
+                  <img class="af-bio__img af-bio__img--a"
+                    src="https://www.dropbox.com/scl/fi/dxyvbz5xbpi8a5js0n6gk/Studio-Website-13.jpg?rlkey=knn294prc63qxhw7xujdkdmox&raw=1"
+                    alt=""
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high"/>
+
+                  <img class="af-bio__img af-bio__img--b"
+                    src="https://images.squarespace-cdn.com/content/693fe31c2851f35786f384ab/fa2e34e2-5716-4294-882f-cd8d5316a33f/Studio+Website-14.jpg?content-type=image%2Fjpeg"
+                    alt="" loading="lazy" decoding="async"/>
+
+                  <div class="af-bio__tiles" aria-hidden="true"></div>
+                  <div class="af-bio__sheen" aria-hidden="true"></div>
+                </div>
+              </figure>
+
+              <div class="af-sheet" aria-label="Studio contact sheet">
+                <div class="af-sheet__grid" id="afSheetGrid"></div>
+              </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="af-bio__copy">
+              <header class="af-bio__header">
+                <p class="af-bio__name"><strong>Andy Forsberg</strong></p>
+                <h2 class="af-bio__headline">is a composer and producer based in Los Angeles.</h2>
+              </header>
+
+              <div class="af-bio__body">
+                <p>His work blends neoclassical textures, electronic sound design, and orchestral writing across film, television, and interactive media.</p>
+                <p>He has composed music for projects with <strong>Disney</strong>, <strong>National Geographic</strong>, <strong>BBC</strong>, <strong>Apple</strong>, <strong>History Channel</strong>, <strong>Discovery</strong>, <strong>Hulu</strong>, <strong>Lifetime</strong>, and <strong>Hallmark</strong>.</p>
+                <p>A percussionist and conductor, he is closely involved in the performance of his scores and productions, from the writing room to the podium.</p>
+                <p>His approach prioritizes emotional clarity, nuance, and attention to detail.</p>
+              </div>
+
+              <div class="af-acc" data-af-accordion>
+                <details class="af-acc__item">
+                  <summary class="af-acc__summary">
+                    <span class="af-acc__title">Film &amp; TV</span>
+                    <span class="af-acc__icon" aria-hidden="true"></span>
+                  </summary>
+                  <div class="af-acc__panel">
+                    <p>I approach scoring as an extension of story, not decoration.</p>
+                    <p>The creative work begins by understanding tone, character, nuance and emotional intent—then finding a musical language that supports it clearly and precisely.</p>
+                  </div>
+                </details>
+
+                <details class="af-acc__item">
+                  <summary class="af-acc__summary">
+                    <span class="af-acc__title">Production</span>
+                    <span class="af-acc__icon" aria-hidden="true"></span>
+                  </summary>
+                  <div class="af-acc__panel">
+                    <p>For me, production is all about helping artists sound like themselves—only more focused, more intentional.</p>
+                    <p>That might mean building something from the ground up, or stepping in to refine, mix, or finish what’s already there. The process is collaborative, detail-driven, and always in service of the artist’s true creative vision.</p>
+                  </div>
+                </details>
+
+                <details class="af-acc__item">
+                  <summary class="af-acc__summary">
+                    <span class="af-acc__title">Solo</span>
+                    <span class="af-acc__icon" aria-hidden="true"></span>
+                  </summary>
+                  <div class="af-acc__panel">
+                    <p>My independent artist work lives outside of assignment.</p>
+                    <p>It’s a sandbox for playing with ideas and approaches across a range of styles—a practice rooted in attunement and instinct, following ideas as they develop without the pressure of outcome. The result is music shaped by mood, space, and a touch of random chaos.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+    <!-- ================= Lightbox ================= -->
+    <div class="lb" aria-hidden="true">
+      <div class="lb__bg" aria-hidden="true"></div>
+      <div class="lb__panel" role="dialog" aria-label="Image viewer">
+        <button class="lb__close" type="button" aria-label="Close">✕</button>
+        <img class="lb__img" alt="" />
+      </div>
+    </div>
+
+    <!-- ================= Dock ================= -->
+    <div class="dock" aria-hidden="true">
+      <div class="dock__inner" aria-label="Player dock">
+        <button class="dock__play" type="button" aria-label="Play/Pause">▶</button>
+        <div class="dock__meta">
+          <div class="dock__title">—</div>
+          <div class="dock__time">0:00 / 0:00</div>
+        </div>
+        <div class="dock__wave" role="button" aria-label="Dock waveform seek"><canvas></canvas></div>
+      </div>
+    </div>
 
     <footer class="footer">
       <div class="footer__inner">
         <div>© <span id="y"></span> Andy Forsberg</div>
-        <div>Composer • Producer</div>
+        <div class="smallcaps">Los Angeles</div>
       </div>
     </footer>
-
   </main>
 
-  <!-- Lightbox -->
-  <div class="lb" aria-hidden="true">
-    <div class="lb__bg" aria-hidden="true"></div>
-    <div class="lb__panel" role="dialog" aria-modal="true">
-      <button class="lb__close" type="button" aria-label="Close">✕</button>
-      <img class="lb__img" alt="Image" />
-    </div>
-  </div>
-
-  <!-- Player Dock -->
-  <div class="dock" aria-hidden="true">
-    <div class="dock__inner">
-      <button class="dock__play" type="button" aria-label="Play/Pause">▶</button>
-      <div class="dock__meta">
-        <div class="dock__title">—</div>
-        <div class="dock__time">0:00 / 0:00</div>
-      </div>
-      <button class="dock__wave" type="button" aria-label="Seek">
-        <canvas></canvas>
-      </button>
-    </div>
-  </div>
-
-  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
-  <script src="app.js"></script>
+  <script src="./app.js"></script>
+  <script>document.getElementById("y").textContent = String(new Date().getFullYear());</script>
 </body>
 </html>
