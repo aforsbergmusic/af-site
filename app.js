@@ -176,8 +176,7 @@ FILE: app.js
     const p = clamp01(progress01 || 0);
     const progX = p * w;
 
-    const rootStyle = getComputedStyle(document.documentElement);
-    const jt = (rootStyle.getPropertyValue("--jt") || "#5c7cff").trim();
+    const jt = (getComputedStyle(document.documentElement).getPropertyValue("--jt") || "#5c7cff").trim();
 
     const base = "rgba(255,255,255,0.10)";
     const done = jt;
@@ -206,7 +205,6 @@ FILE: app.js
       ctx.fillStyle = (x <= progX) ? done : base;
       const rx = x + (stride - barW) * 0.5;
 
-      // pill bars
       if (ctx.roundRect) {
         ctx.beginPath();
         ctx.roundRect(rx, y0, barW, hh, 999);
@@ -291,7 +289,6 @@ FILE: app.js
       if (idx >= 0) scrollToIndex(idx);
     };
 
-    // intercept hash links for horizontal scroll
     const interceptLinks = (root) => {
       $$('a[href^="#"]', root).forEach(a => {
         a.addEventListener("click", (e) => {
@@ -307,17 +304,14 @@ FILE: app.js
     };
     interceptLinks(document);
 
-    // on load hash
     const initialHash = (location.hash || "").replace("#", "");
     if (initialHash) scrollToId(initialHash);
 
-    // next/back buttons
     const navPrev = $(".navPrev");
     const navNext = $(".navNext");
     if (navPrev) navPrev.addEventListener("click", () => scrollToIndex(Math.max(0, getActiveIndex() - 1)));
     if (navNext) navNext.addEventListener("click", () => scrollToIndex(Math.min(tiles.length - 1, getActiveIndex() + 1)));
 
-    // keyboard arrows
     window.addEventListener("keydown", (e) => {
       if (!rail) return;
       if (menu && menu.getAttribute("aria-hidden") === "false") return;
@@ -325,7 +319,6 @@ FILE: app.js
       if (e.key === "ArrowLeft") scrollToIndex(Math.max(0, getActiveIndex() - 1));
     });
 
-    // wheel -> horizontal (makes it feel intentional)
     if (rail) {
       rail.addEventListener("wheel", (e) => {
         if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
@@ -385,7 +378,6 @@ FILE: app.js
     const playBtn = $(".playBtn");
     const prevBtn = $(".prevBtn");
     const nextBtn = $(".nextBtn");
-    const loopBtn = $(".loopBtn");
     const muteBtn = $(".muteBtn");
     const volRange = $(".vol__range");
 
@@ -533,18 +525,9 @@ FILE: app.js
       } catch {}
     };
 
-    /* bind controls */
     if (playBtn) playBtn.addEventListener("click", togglePlay);
     if (prevBtn) prevBtn.addEventListener("click", () => stepTrack(-1));
     if (nextBtn) nextBtn.addEventListener("click", () => stepTrack(1));
-
-    if (loopBtn) {
-      loopBtn.addEventListener("click", () => {
-        audio.loop = !audio.loop;
-        loopBtn.setAttribute("aria-pressed", audio.loop ? "true" : "false");
-        loopBtn.setAttribute("aria-label", audio.loop ? "Loop on" : "Loop off");
-      });
-    }
 
     if (muteBtn) {
       muteBtn.addEventListener("click", () => {
@@ -575,7 +558,7 @@ FILE: app.js
         if (!peaksObj) return;
         waveBtn.setPointerCapture(e.pointerId);
         dragging = true;
-        if (!audio.paused) audio.pause(); // control-surface feel
+        if (!audio.paused) audio.pause();
         seekFromEvent(e);
         startUILoop();
       });
@@ -600,15 +583,13 @@ FILE: app.js
 
     audio.addEventListener("play", () => startUILoop());
     audio.addEventListener("pause", () => startUILoop());
-    audio.addEventListener("ended", () => { if (!audio.loop) stepTrack(1); });
+    audio.addEventListener("ended", () => stepTrack(1));
 
-    /* init */
     if (FEATURED_TRACKS.length) {
       renderTracklist();
       setTrack(0, false);
     }
 
-    /* ===== rep email placeholder ===== */
     const repEmail = $("#rep-email");
     if (repEmail) repEmail.href = "mailto:andy@andyforsbergmusic.com"; // change if needed
   });
