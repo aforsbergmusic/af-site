@@ -2,181 +2,128 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Andy Forsberg — Composer + Producer</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
-  <!-- Header -->
-  <header class="hdr" role="banner">
-    <div class="hdr__inner">
-      <a class="brand" href="#" data-nav="0" aria-label="Go to Home">
-        <span class="brand__name">Andy Forsberg</span>
+  <!-- Fixed top bar -->
+  <header class="topbar" role="banner">
+    <div class="topbar__left">
+      <a class="brand" href="#home" data-goto="0" aria-label="Go to Home">
+        <span class="brand__name" id="brandName">Andy Forsberg</span>
         <span class="brand__role">Composer + Producer</span>
       </a>
+    </div>
 
-      <div class="hdr__right">
-        <nav class="hdr__social" aria-label="Social links">
-          <a class="sbtn imdb" id="social-imdb" href="#" target="_blank" rel="noreferrer">IMDb</a>
-          <a class="sbtn spotify" id="social-spotify" href="#" target="_blank" rel="noreferrer">Spotify</a>
-          <a class="sbtn apple" id="social-apple" href="#" target="_blank" rel="noreferrer">Apple Music</a>
-          <a class="sbtn instagram" id="social-instagram" href="#" target="_blank" rel="noreferrer">Instagram</a>
-        </nav>
+    <nav class="topbar__nav" aria-label="Primary">
+      <button class="navBtn" type="button" data-nav="prev" aria-label="Previous section">‹</button>
+      <div class="navDots" aria-hidden="true"></div>
+      <button class="navBtn" type="button" data-nav="next" aria-label="Next section">›</button>
+    </nav>
 
-        <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
-          <span class="menuBtn__lines" aria-hidden="true"></span>
-        </button>
-      </div>
+    <div class="topbar__right">
+      <a class="sbtn imdb" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
+      <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
+      <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+      <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
     </div>
   </header>
 
-  <!-- Menu Overlay -->
-  <div class="menu" aria-hidden="true">
-    <div class="menu__panel" role="dialog" aria-label="Site Menu">
-      <a class="menu__link" href="#" data-nav="0">Home</a>
-      <a class="menu__link" href="#" data-nav="1">Featured Projects</a>
-      <a class="menu__link" href="#" data-nav="2">Listening Room</a>
-      <a class="menu__link" href="#" data-nav="3">About</a>
-    </div>
-  </div>
+  <!-- Horizontal rail (the ONLY scroll container) -->
+  <main id="rail" class="rail" aria-label="Site sections">
+    <!-- TILE 1: HOME / HERO (keep content within viewport) -->
+    <section class="tile tile--home" data-title="Home" aria-label="Home">
+      <div class="tile__inner">
+        <div class="heroCard">
+          <h1 class="heroTitle">Listening room</h1>
 
-  <!-- Rail Navigation -->
-  <div class="railNav" aria-label="Section navigation">
-    <button class="railNav__btn" type="button" data-step="-1" aria-label="Previous section">←</button>
-    <button class="railNav__btn" type="button" data-step="1" aria-label="Next section">→</button>
-  </div>
+          <!-- Keep this text area SHORT to avoid vertical overflow.
+               Replace with your preferred listening-room copy later. -->
+          <p class="heroSub" id="listeningCopy">
+            <!-- You said: remove cheesy copy. So this is intentionally minimal. -->
+          </p>
 
-  <!-- Horizontal rail -->
-  <main class="rail" id="rail" aria-label="Main content">
-    <!-- Panel 0: HOME -->
-    <section class="panel panel--home" data-panel="0" aria-label="Home">
-      <div class="panel__bg" aria-hidden="true"></div>
-
-      <div class="panel__inner">
-        <div class="homeHero">
-          <h1 class="homeHero__title">
-            <span class="homeHero__name">Andy Forsberg</span>
-            <span class="homeHero__slash" aria-hidden="true">—</span>
-            <span class="homeHero__role">Composer + Producer</span>
-          </h1>
-
-          <!-- IMPORTANT: Paste ONLY your real copy in the blocks below -->
-          <div class="homeHero__copy">
-            <div class="copyBlock" aria-label="Bio">
-              <!-- PASTE your correct bio text here (no vertical scroll exists, so keep it to what fits) -->
-              <p class="copyP" data-copy="bio-1"></p>
-              <p class="copyP" data-copy="bio-2"></p>
-            </div>
-
-            <div class="copyBlock" aria-label="Representation and inquiries">
-              <!-- PASTE your correct rep/inquiry info here -->
-              <p class="copyP" data-copy="rep-1"></p>
-              <p class="copyP" data-copy="rep-2"></p>
-              <p class="copyP" data-copy="rep-3"></p>
-            </div>
-          </div>
-
-          <div class="homeHero__cta">
-            <button class="pillBtn" type="button" data-nav="2">Enter Listening Room</button>
-            <button class="pillBtn" type="button" data-nav="1">View Featured Projects</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Panel 1: FEATURED PROJECTS -->
-    <section class="panel panel--projects" data-panel="1" aria-label="Featured Projects">
-      <div class="panel__inner panel__inner--wide">
-        <div class="projectsGrid" aria-label="Featured projects grid">
-          <!-- Filled by app.js -->
-        </div>
-      </div>
-
-      <!-- Lightbox -->
-      <div class="lb" aria-hidden="true">
-        <div class="lb__bg" aria-hidden="true"></div>
-        <div class="lb__panel" role="dialog" aria-label="Image viewer">
-          <button class="lb__close" type="button" aria-label="Close">✕</button>
-          <img class="lb__img" alt="" />
-        </div>
-      </div>
-    </section>
-
-    <!-- Panel 2: LISTENING ROOM -->
-    <section class="panel panel--listening" data-panel="2" aria-label="Listening Room">
-      <div class="panel__inner panel__inner--wide">
-        <div class="listenWrap">
-          <div class="listenLeft">
-            <div class="listenKicker">Listening Room</div>
-
-            <!-- You said: keep “Listening Room” but don’t add new copy.
-                 So this stays minimal; you can paste later. -->
-            <p class="listenNote" data-copy="listening-note"></p>
-          </div>
-
-          <div class="listenRight">
-            <div class="player" aria-label="Audio player">
-              <div class="np">
-                <div class="np__left">
-                  <button class="playBtn" type="button" aria-label="Play/Pause">▶</button>
-                  <div class="np__meta">
-                    <div class="npTitle">—</div>
-                    <div class="npTime">0:00 / 0:00</div>
-                  </div>
-                </div>
+          <div class="playerShell" aria-label="Music player">
+            <!-- PLAYER UI HOOKS (wired in app.js) -->
+            <div class="np">
+              <button class="playBtn" type="button" aria-label="Play/Pause">▶</button>
+              <div class="np__meta">
+                <div class="npTitle">—</div>
+                <div class="npTime">0:00 / 0:00</div>
               </div>
+            </div>
 
-              <button class="wave" type="button" aria-label="Waveform scrub">
-                <canvas></canvas>
-              </button>
+            <div class="wave" role="button" tabindex="0" aria-label="Seek waveform">
+              <canvas></canvas>
+            </div>
 
-              <div class="tracklist" aria-label="Track list"></div>
+            <div class="tracklist" aria-label="Track list"></div>
+          </div>
+        </div>
+
+        <div class="edgeHint" aria-hidden="true">Scroll →</div>
+      </div>
+    </section>
+
+    <!-- TILE 2: FEATURED PROJECTS -->
+    <section class="tile" data-title="Featured Projects" aria-label="Featured Projects">
+      <div class="tile__inner">
+        <div class="panel">
+          <div class="panel__title">Featured projects</div>
+          <div class="posters" aria-label="Project posters"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TILE 3: BIO + REP (same page, no vertical scroll) -->
+    <section class="tile" data-title="Bio" aria-label="Bio and representation">
+      <div class="tile__inner">
+        <div class="panel panel--split">
+          <div class="bioBlock">
+            <div class="bioPic" id="bioPic" aria-hidden="true"></div>
+
+            <div class="bioCopy">
+              <!-- ✅ Using ONLY the copy you provided earlier -->
+              <p class="bioName"><strong>Andy Forsberg</strong></p>
+              <p class="bioLine">is a composer and producer based in Los Angeles.</p>
+
+              <div class="bioBody">
+                <p>His work blends neoclassical textures, electronic sound design, and orchestral writing across film, television, and interactive media.</p>
+                <p>He has composed music for projects with <strong>Disney</strong>, <strong>National Geographic</strong>, <strong>BBC</strong>, <strong>Apple</strong>, <strong>History Channel</strong>, <strong>Discovery</strong>, <strong>Hulu</strong>, <strong>Lifetime</strong>, and <strong>Hallmark</strong>.</p>
+                <p>A percussionist and conductor, he is closely involved in the performance of his scores and productions, from the writing room to the podium.</p>
+                <p>His approach prioritizes emotional clarity, nuance, and attention to detail.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="repBlock">
+            <div class="repTitle">Representation / Inquiries</div>
+
+            <!-- IMPORTANT: I will NOT invent this copy.
+                 Paste your correct rep/inquiry text here. Keep it short to avoid overflow. -->
+            <div class="repBody" id="repCopy">
+              <!-- PASTE YOUR EXACT REP + INQUIRY COPY HERE -->
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Dock (control surface) -->
-      <div class="dock" aria-hidden="true" aria-label="Playback dock">
-        <div class="dock__inner">
-          <button class="dock__play" type="button" aria-label="Play/Pause">▶</button>
-          <div class="dock__meta">
-            <div class="dock__title">—</div>
-            <div class="dock__time">0:00 / 0:00</div>
-          </div>
-          <button class="dock__wave" type="button" aria-label="Waveform scrub (dock)">
-            <canvas></canvas>
-          </button>
-        </div>
-      </div>
     </section>
 
-    <!-- Panel 3: ABOUT -->
-    <section class="panel panel--about" data-panel="3" aria-label="About">
-      <div class="panel__inner">
-        <div class="aboutGrid">
-          <figure class="aboutImg" aria-label="Portrait">
-            <img class="aboutImg__img" alt="Andy Forsberg" />
-          </figure>
-
-          <div class="aboutCopy">
-            <div class="aboutKicker">About</div>
-
-            <!-- Paste your full copy here. Still: no vertical scrolling.
-                 If your copy is long, we’ll split into multiple panels later. -->
-            <p class="copyP" data-copy="about-1"></p>
-            <p class="copyP" data-copy="about-2"></p>
-            <p class="copyP" data-copy="about-3"></p>
-          </div>
-        </div>
+    <!-- Lightbox -->
+    <div class="lb" aria-hidden="true">
+      <div class="lb__bg" aria-hidden="true"></div>
+      <div class="lb__panel" role="dialog" aria-modal="true" aria-label="Image viewer">
+        <button class="lb__close" type="button" aria-label="Close">✕</button>
+        <img class="lb__img" alt="" />
       </div>
-    </section>
+    </div>
   </main>
 
   <script src="./app.js"></script>
