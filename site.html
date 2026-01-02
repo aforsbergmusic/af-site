@@ -19,7 +19,7 @@ FILE: site.html
   <!-- Top bar -->
   <header class="topbar" role="banner">
     <div class="topbar__inner">
-      <a class="brand" href="#listening" data-jt="brand">
+      <a class="brand" href="#listening" data-brand>
         <span class="brand__name">Andy Forsberg</span>
         <span class="brand__role">Composer + Producer</span>
       </a>
@@ -50,13 +50,12 @@ FILE: site.html
   <!-- Horizontal tiles -->
   <main class="rail" aria-label="Horizontal sections">
     <!-- Tile 1: Listening -->
-    <section class="tile tile--listening" id="listening" data-tile>
+    <section class="tile tile--listening" id="listening" data-tile data-tilecolor>
       <div class="tile__bg">
-        <!-- studio decoration (subtle, no captions) -->
         <img class="decor decor--a" alt="" loading="lazy" decoding="async"
-          src="https://www.dropbox.com/scl/fi/xt5oi8nnc5rnwpjryivh3/Studio-Website-1.jpg?rlkey=23euuj9l2dr6xm14o177gms3u&raw=1">
+          src="https://www.dropbox.com/scl/fi/iwbucovwtxlu76o1hhsim/Studio-Hygge-2023-2.jpeg?rlkey=aftxzs56ajzfrkt9kpxis5f37&raw=1">
         <img class="decor decor--b" alt="" loading="lazy" decoding="async"
-          src="https://www.dropbox.com/scl/fi/rphhjgqjehuwjt4mkj35r/Studio-Website-4.jpg?rlkey=nlux8i541g627rx7e4zbrssge&raw=1">
+          src="https://www.dropbox.com/scl/fi/b408nj79iy4mn49vf0ke8/Studio-Hygge-2023-3.jpeg?rlkey=qth7niz2qqoalje39jqw5c2tz&raw=1">
       </div>
 
       <div class="tile__content">
@@ -64,41 +63,51 @@ FILE: site.html
           <span class="kicker__label">Listening Room</span>
         </div>
 
-        <div class="player" aria-label="Audio player">
-          <div class="player__top">
-            <button class="pbtn playBtn" type="button" aria-label="Play/Pause">▶</button>
+        <!-- FULL WIDTH PLAYER (edge-to-edge inside tile) -->
+        <section class="rcPlayer" aria-label="Audio player">
+          <div class="rcPlayer__frame">
+            <div class="rcTop">
+              <button class="rcBtn rcPlay" type="button" aria-label="Play/Pause">▶</button>
 
-            <div class="pmeta">
-              <div class="npTitle">—</div>
-              <div class="npTime">0:00 / 0:00</div>
-            </div>
+              <div class="rcMeta">
+                <div class="rcTitle">—</div>
+                <div class="rcTime">0:00 / 0:00</div>
+              </div>
 
-            <div class="pcontrols">
-              <button class="pbtn prevBtn" type="button" aria-label="Previous track">⟲</button>
-              <button class="pbtn nextBtn" type="button" aria-label="Next track">⟳</button>
+              <div class="rcTransport">
+                <button class="rcBtn rcPrev" type="button" aria-label="Previous track">⟲</button>
+                <button class="rcBtn rcNext" type="button" aria-label="Next track">⟳</button>
 
-              <button class="pbtn muteBtn" type="button" aria-label="Mute" aria-pressed="false">🔈</button>
+                <button class="rcBtn rcMute" type="button" aria-label="Mute" aria-pressed="false">🔈</button>
 
-              <div class="vol">
-                <input class="vol__range" type="range" min="0" max="1" step="0.01" value="0.9" aria-label="Volume">
+                <label class="rcVol" aria-label="Volume">
+                  <input class="rcVol__range" type="range" min="0" max="1" step="0.01" value="0.9" />
+                </label>
               </div>
             </div>
-          </div>
 
-          <div class="wave waveBtn" role="button" aria-label="Seek">
-            <canvas></canvas>
-          </div>
+            <!-- Big waveform "control surface" -->
+            <div class="rcWave" role="button" aria-label="Seek waveform">
+              <canvas></canvas>
+              <div class="rcWave__scrub" aria-hidden="true"></div>
+            </div>
 
-          <div class="tracklist" aria-label="Tracklist"></div>
-        </div>
+            <div class="rcBottom">
+              <div class="rcHint">Drag to scrub. Space = play/pause. ←/→ = seek.</div>
+              <div class="rcTrackCount" aria-hidden="true"></div>
+            </div>
+
+            <div class="rcList" aria-label="Tracklist"></div>
+          </div>
+        </section>
       </div>
     </section>
 
     <!-- Tile 2: Featured Projects -->
-    <section class="tile tile--projects" id="projects" data-tile>
+    <section class="tile tile--projects" id="projects" data-tile data-tilecolor>
       <div class="tile__bg">
         <img class="decor decor--c" alt="" loading="lazy" decoding="async"
-          src="https://www.dropbox.com/scl/fi/oyqeszrslesy3mzqx39py/Studio-Website-17.jpg?rlkey=cg41dzy78a3i4ztskargig6qo&raw=1">
+          src="https://www.dropbox.com/scl/fi/lyesw0cn533pgmqsnpi3t/Studio-Hygge-2023-5.jpeg?rlkey=6tux32pvkhudod1hcepj1j3jw&raw=1">
       </div>
 
       <div class="tile__content">
@@ -111,10 +120,12 @@ FILE: site.html
     </section>
 
     <!-- Tile 3: Bio -->
-    <section class="tile tile--bio" id="bio" data-tile>
+    <section class="tile tile--bio" id="bio" data-tile data-tilecolor>
       <div class="tile__bg">
         <img class="decor decor--d" alt="" loading="lazy" decoding="async"
-          src="https://www.dropbox.com/scl/fi/2ofmv0l2u6mezzmk3mq3u/Studio-Website-14.jpg?rlkey=km8kcveprykqpantxl5jhf2w0&raw=1">
+          src="https://www.dropbox.com/scl/fi/e6vaij7lfbin7rt9jfoz4/Studio-Hygge-2023-12.jpeg?rlkey=48e148xzkfdjeucqoqqr8il4f&raw=1">
+        <img class="decor decor--e" alt="" loading="lazy" decoding="async"
+          src="https://www.dropbox.com/scl/fi/k4dcv0rqln6ci1l5b6iey/Studio-Hygge-2023-13.jpeg?rlkey=2fmd4owrbiwhm6uyzp0xb2cqk&raw=1">
       </div>
 
       <div class="tile__content">
@@ -124,10 +135,11 @@ FILE: site.html
 
         <article class="mag">
           <div class="mag__col mag__col--hero">
-            <div class="mag__portrait">
-              <img alt="" loading="lazy" decoding="async"
-                src="https://www.dropbox.com/scl/fi/dxyvbz5xbpi8a5js0n6gk/Studio-Website-13.jpg?rlkey=knn294prc63qxhw7xujdkdmox&raw=1">
-            </div>
+            <figure class="mag__portrait" aria-label="Portrait">
+              <img alt="Andy Forsberg"
+                loading="lazy" decoding="async"
+                src="https://www.dropbox.com/scl/fi/3b49pfk6pdgq0lh8851bl/Studio-Hygge-2023-20.jpeg?rlkey=mvh0b6wvlyy734zvw8z5jbuir&raw=1">
+            </figure>
           </div>
 
           <div class="mag__col mag__col--copy">
@@ -143,7 +155,7 @@ FILE: site.html
     </section>
 
     <!-- Tile 4: Representation -->
-    <section class="tile tile--rep" id="rep" data-tile>
+    <section class="tile tile--rep" id="rep" data-tile data-tilecolor>
       <div class="tile__bg"></div>
 
       <div class="tile__content">
@@ -154,11 +166,12 @@ FILE: site.html
         <div class="rep">
           <p class="rep__kicker">For inquiries</p>
           <p class="rep__body">
-            <a href="#" id="rep-email">Email</a>
+            <a href="#" id="rep-email">andy@andyforsbergmusic.com</a>
             <span class="rep__dot">•</span>
             <a href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
+            <span class="rep__dot">•</span>
+            <a href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
           </p>
-          <!-- Replace this with your exact rep copy later, no extra text added. -->
         </div>
       </div>
     </section>
