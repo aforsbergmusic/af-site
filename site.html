@@ -19,10 +19,16 @@ FILE: site.html
   <!-- Top bar -->
   <header class="topbar" role="banner">
     <div class="topbar__inner">
-      <a class="brand" href="#listening" data-brand>
+      <a class="brand" href="#home" data-brand>
         <span class="brand__name">Andy Forsberg</span>
         <span class="brand__role">Composer + Producer</span>
       </a>
+
+      <nav class="topnav" aria-label="Primary">
+        <a class="topnav__link" href="#home" data-target="home">Home</a>
+        <a class="topnav__link" href="#listening" data-target="listening">Listening Room</a>
+        <a class="topnav__link" href="#projects" data-target="projects">Featured Projects</a>
+      </nav>
 
       <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
         <span class="menuBtn__lines" aria-hidden="true"></span>
@@ -33,10 +39,14 @@ FILE: site.html
   <!-- Menu overlay -->
   <aside class="menu" aria-hidden="true">
     <div class="menu__panel" role="dialog" aria-label="Site menu">
+      <a class="menu__link" href="#home" data-target="home">Home</a>
       <a class="menu__link" href="#listening" data-target="listening">Listening Room</a>
       <a class="menu__link" href="#projects" data-target="projects">Featured Projects</a>
-      <a class="menu__link" href="#bio" data-target="bio">Bio</a>
-      <a class="menu__link" href="#rep" data-target="rep">Representation</a>
+
+      <div class="menu__divider" aria-hidden="true"></div>
+
+      <a class="menu__link menu__link--sub" href="#home" data-target="home" data-focus="bio">Bio</a>
+      <a class="menu__link menu__link--sub" href="#home" data-target="home" data-focus="rep">Representation</a>
 
       <div class="menu__social">
         <a class="sbtn imdb" id="social-imdb" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
@@ -49,21 +59,83 @@ FILE: site.html
 
   <!-- Horizontal tiles -->
   <main class="rail" aria-label="Horizontal sections">
-    <!-- Tile 1: Listening -->
-    <section class="tile tile--listening" id="listening" data-tile data-tilecolor>
-      <div class="tile__bg">
-        <img class="decor decor--a" alt="" loading="lazy" decoding="async"
-          src="https://www.dropbox.com/scl/fi/iwbucovwtxlu76o1hhsim/Studio-Hygge-2023-2.jpeg?rlkey=aftxzs56ajzfrkt9kpxis5f37&raw=1">
-        <img class="decor decor--b" alt="" loading="lazy" decoding="async"
-          src="https://www.dropbox.com/scl/fi/b408nj79iy4mn49vf0ke8/Studio-Hygge-2023-3.jpeg?rlkey=qth7niz2qqoalje39jqw5c2tz&raw=1">
-      </div>
+    <!-- Tile 1: HOME HERO (Bio + Rep on same page) -->
+    <section class="tile tile--home" id="home" data-tile data-tilecolor>
+      <div class="tile__content tile__content--scroll">
+        <section class="hero" aria-label="Home hero">
+          <div class="hero__left">
+            <div class="hero__eyebrow">Los Angeles</div>
+            <h1 class="hero__title">
+              <span class="hero__name">Andy Forsberg</span>
+              <span class="hero__role">Composer + Producer</span>
+            </h1>
 
+            <div class="hero__actions" aria-label="Quick links">
+              <a class="pill" href="#listening" data-target="listening">Enter Listening Room</a>
+              <a class="pill pill--ghost" href="#projects" data-target="projects">View Featured Projects</a>
+            </div>
+
+            <!-- Bio copy (your exact text) -->
+            <section class="card" id="bio" aria-label="Bio">
+              <div class="card__label">Bio</div>
+              <div class="copy">
+                <p>His work blends neoclassical textures, electronic sound design, and orchestral writing across film, television, and interactive media.</p>
+                <p>He has composed music for projects with <strong>Disney</strong>, <strong>National Geographic</strong>, <strong>BBC</strong>, <strong>Apple</strong>, <strong>History Channel</strong>, <strong>Discovery</strong>, <strong>Hulu</strong>, <strong>Lifetime</strong>, and <strong>Hallmark</strong>.</p>
+                <p>A percussionist and conductor, he is closely involved in the performance of his scores and productions, from the writing room to the podium.</p>
+                <p>His approach prioritizes emotional clarity, nuance, and attention to detail.</p>
+              </div>
+            </section>
+
+            <!-- Representation (same page) -->
+            <section class="card" id="rep" aria-label="Representation">
+              <div class="card__label">Representation</div>
+              <div class="repLine">
+                <span class="repLine__k">For inquiries</span>
+                <span class="repLine__sep">—</span>
+                <a class="repLine__a" href="mailto:andy@andyforsbergmusic.com" id="rep-email">andy@andyforsbergmusic.com</a>
+              </div>
+              <div class="repLinks">
+                <a class="repLinks__a" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
+                <span class="repLinks__dot">•</span>
+                <a class="repLinks__a" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
+                <span class="repLinks__dot">•</span>
+                <a class="repLinks__a" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+                <span class="repLinks__dot">•</span>
+                <a class="repLinks__a" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
+              </div>
+            </section>
+          </div>
+
+          <div class="hero__right" aria-label="Portrait">
+            <figure class="portrait">
+              <img
+                alt="Andy Forsberg"
+                loading="eager"
+                decoding="async"
+                src="https://www.dropbox.com/scl/fi/3b49pfk6pdgq0lh8851bl/Studio-Hygge-2023-20.jpeg?rlkey=mvh0b6wvlyy734zvw8z5jbuir&raw=1"
+              />
+            </figure>
+
+            <div class="hero__meta">
+              <div class="metaRow">
+                <span class="metaRow__k">Selected links</span>
+                <span class="metaRow__sep">—</span>
+                <a class="metaRow__a" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
+                <a class="metaRow__a" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Tile 2: Listening -->
+    <section class="tile tile--listening" id="listening" data-tile data-tilecolor>
       <div class="tile__content">
-        <div class="kicker">
-          <span class="kicker__label">Listening Room</span>
+        <div class="sectionHead">
+          <div class="sectionHead__label">Listening Room</div>
         </div>
 
-        <!-- FULL WIDTH PLAYER (edge-to-edge inside tile) -->
         <section class="rcPlayer" aria-label="Audio player">
           <div class="rcPlayer__frame">
             <div class="rcTop">
@@ -77,23 +149,20 @@ FILE: site.html
               <div class="rcTransport">
                 <button class="rcBtn rcPrev" type="button" aria-label="Previous track">⟲</button>
                 <button class="rcBtn rcNext" type="button" aria-label="Next track">⟳</button>
-
                 <button class="rcBtn rcMute" type="button" aria-label="Mute" aria-pressed="false">🔈</button>
-
                 <label class="rcVol" aria-label="Volume">
                   <input class="rcVol__range" type="range" min="0" max="1" step="0.01" value="0.9" />
                 </label>
               </div>
             </div>
 
-            <!-- Big waveform "control surface" -->
             <div class="rcWave" role="button" aria-label="Seek waveform">
               <canvas></canvas>
               <div class="rcWave__scrub" aria-hidden="true"></div>
             </div>
 
             <div class="rcBottom">
-              <div class="rcHint">Drag to scrub. Space = play/pause. ←/→ = seek.</div>
+              <div class="rcHint">Drag to scrub. Space = play/pause. Shift + ←/→ = 10s seek.</div>
               <div class="rcTrackCount" aria-hidden="true"></div>
             </div>
 
@@ -103,76 +172,14 @@ FILE: site.html
       </div>
     </section>
 
-    <!-- Tile 2: Featured Projects -->
+    <!-- Tile 3: Featured Projects -->
     <section class="tile tile--projects" id="projects" data-tile data-tilecolor>
-      <div class="tile__bg">
-        <img class="decor decor--c" alt="" loading="lazy" decoding="async"
-          src="https://www.dropbox.com/scl/fi/lyesw0cn533pgmqsnpi3t/Studio-Hygge-2023-5.jpeg?rlkey=6tux32pvkhudod1hcepj1j3jw&raw=1">
-      </div>
-
-      <div class="tile__content">
-        <div class="kicker">
-          <span class="kicker__label">Featured Projects</span>
+      <div class="tile__content tile__content--wide">
+        <div class="sectionHead">
+          <div class="sectionHead__label">Featured Projects</div>
         </div>
 
         <div class="posters" aria-label="Featured projects grid"></div>
-      </div>
-    </section>
-
-    <!-- Tile 3: Bio -->
-    <section class="tile tile--bio" id="bio" data-tile data-tilecolor>
-      <div class="tile__bg">
-        <img class="decor decor--d" alt="" loading="lazy" decoding="async"
-          src="https://www.dropbox.com/scl/fi/e6vaij7lfbin7rt9jfoz4/Studio-Hygge-2023-12.jpeg?rlkey=48e148xzkfdjeucqoqqr8il4f&raw=1">
-        <img class="decor decor--e" alt="" loading="lazy" decoding="async"
-          src="https://www.dropbox.com/scl/fi/k4dcv0rqln6ci1l5b6iey/Studio-Hygge-2023-13.jpeg?rlkey=2fmd4owrbiwhm6uyzp0xb2cqk&raw=1">
-      </div>
-
-      <div class="tile__content">
-        <div class="kicker">
-          <span class="kicker__label">Bio</span>
-        </div>
-
-        <article class="mag">
-          <div class="mag__col mag__col--hero">
-            <figure class="mag__portrait" aria-label="Portrait">
-              <img alt="Andy Forsberg"
-                loading="lazy" decoding="async"
-                src="https://www.dropbox.com/scl/fi/3b49pfk6pdgq0lh8851bl/Studio-Hygge-2023-20.jpeg?rlkey=mvh0b6wvlyy734zvw8z5jbuir&raw=1">
-            </figure>
-          </div>
-
-          <div class="mag__col mag__col--copy">
-            <div class="mag__copy">
-              <p>His work blends neoclassical textures, electronic sound design, and orchestral writing across film, television, and interactive media.</p>
-              <p>He has composed music for projects with <strong>Disney</strong>, <strong>National Geographic</strong>, <strong>BBC</strong>, <strong>Apple</strong>, <strong>History Channel</strong>, <strong>Discovery</strong>, <strong>Hulu</strong>, <strong>Lifetime</strong>, and <strong>Hallmark</strong>.</p>
-              <p>A percussionist and conductor, he is closely involved in the performance of his scores and productions, from the writing room to the podium.</p>
-              <p>His approach prioritizes emotional clarity, nuance, and attention to detail.</p>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- Tile 4: Representation -->
-    <section class="tile tile--rep" id="rep" data-tile data-tilecolor>
-      <div class="tile__bg"></div>
-
-      <div class="tile__content">
-        <div class="kicker">
-          <span class="kicker__label">Representation</span>
-        </div>
-
-        <div class="rep">
-          <p class="rep__kicker">For inquiries</p>
-          <p class="rep__body">
-            <a href="#" id="rep-email">andy@andyforsbergmusic.com</a>
-            <span class="rep__dot">•</span>
-            <a href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
-            <span class="rep__dot">•</span>
-            <a href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
-          </p>
-        </div>
       </div>
     </section>
   </main>
