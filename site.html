@@ -1,7 +1,6 @@
 <!-- ========================
 FILE: site.html
-AF SITE — Version 2.4
-- Fullscreen stage WITHOUT breaking 2.0 JS hooks
+AF SITE — Version 2.5 (Horizontal)
 ======================== -->
 <!doctype html>
 <html lang="en">
@@ -14,7 +13,7 @@ AF SITE — Version 2.4
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=2.4" />
+  <link rel="stylesheet" href="styles.css?v=2.5" />
 </head>
 
 <body>
@@ -50,15 +49,15 @@ AF SITE — Version 2.4
     </div>
   </div>
 
-  <!-- ================= Fullscreen Stage ================= -->
-  <main id="top" class="stage">
-    <!-- Listening stage (fullscreen) -->
-    <section id="listening" class="stage__hero" aria-label="Listening Room">
-      <div class="stage__bg" aria-hidden="true"></div>
+  <!-- ================= Horizontal Scroll Stage ================= -->
+  <main id="top" class="hscroll" aria-label="Horizontal panels">
+    <!-- Panel 1: Listening -->
+    <section id="listening" class="panel panel--listening" aria-label="Listening Room">
+      <div class="panel__bg" aria-hidden="true"></div>
 
-      <div class="stage__inner">
-        <div class="stage__kicker">
-          <span class="stage__label">Listening Room</span>
+      <div class="panel__inner">
+        <div class="panel__kicker">
+          <span class="panel__label">Listening Room</span>
         </div>
 
         <!-- Player (2.0 hooks preserved) -->
@@ -80,34 +79,43 @@ AF SITE — Version 2.4
           <div class="tracklist" aria-label="Track list"></div>
         </div>
 
-        <a class="stage__scroll" href="#works" aria-label="Scroll to works">
-          <span class="stage__dot" aria-hidden="true"></span>
-          <span class="stage__txt">Scroll</span>
+        <!-- “Next panel” -->
+        <a class="panel__next" href="#works" aria-label="Go to Works">
+          <span class="panel__dot" aria-hidden="true"></span>
+          <span class="panel__txt">Next</span>
         </a>
       </div>
     </section>
 
-    <!-- Works section (normal document flow after hero) -->
-    <section id="works" class="page" aria-label="Works">
-      <div class="section" data-reveal>
-        <div class="section__top">
-          <h2 class="section__title">Works</h2>
-        </div>
+    <!-- Panel 2: Works -->
+    <section id="works" class="panel panel--works" aria-label="Works">
+      <div class="panel__bg panel__bg--soft" aria-hidden="true"></div>
 
+      <div class="panel__edge">
         <!-- Posters (2.0 hooks preserved) -->
-        <div class="posters" aria-label="Project posters"></div>
+        <div class="posters posters--edge" aria-label="Project posters"></div>
       </div>
 
-      <!-- About section (NO new copy) -->
-      <div id="about" class="section" data-reveal aria-label="About">
-        <div class="section__top">
-          <h2 class="section__title">About</h2>
-        </div>
+      <div class="panel__footerline" aria-hidden="true"></div>
 
+      <div class="panel__corner">
+        <a class="panel__next" href="#about" aria-label="Go to About">
+          <span class="panel__dot" aria-hidden="true"></span>
+          <span class="panel__txt">Next</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Panel 3: About (no new copy) -->
+    <section id="about" class="panel panel--about" aria-label="About">
+      <div class="panel__bg panel__bg--soft" aria-hidden="true"></div>
+
+      <div class="panel__inner panel__inner--about">
         <div class="bio">
           <div class="bioImg" aria-hidden="true"></div>
+
           <div class="bioText">
-            <!-- leave empty, you’ll paste your final bio when ready -->
+            <!-- Leave empty until you paste final bio -->
             <p></p>
 
             <div class="rep">
@@ -116,16 +124,16 @@ AF SITE — Version 2.4
                 <a href="mailto:andy@andyforsbergmusic.com">andy@andyforsbergmusic.com</a>
               </div>
             </div>
+
+            <footer class="footer footer--panel" aria-label="Footer">
+              <div class="footer__inner">
+                <div>Andy Forsberg</div>
+                <div>Composer + Producer</div>
+              </div>
+            </footer>
           </div>
         </div>
       </div>
-
-      <footer class="footer" aria-label="Footer">
-        <div class="footer__inner">
-          <div>Andy Forsberg</div>
-          <div>Composer + Producer</div>
-        </div>
-      </footer>
     </section>
   </main>
 
@@ -152,6 +160,52 @@ AF SITE — Version 2.4
     </div>
   </div>
 
-  <script src="app.js?v=2.4"></script>
+  <script src="app.js?v=2.5"></script>
+
+  <!-- ================= Horizontal nav helper (safe, standalone) ================= -->
+  <script>
+    (function () {
+      const scroller = document.querySelector(".hscroll");
+      if (!scroller) return;
+
+      const panelById = (id) => document.getElementById(id);
+
+      const goTo = (id) => {
+        const el = panelById(id);
+        if (!el) return;
+        scroller.scrollTo({ left: el.offsetLeft, behavior: "smooth" });
+      };
+
+      // Intercept anchor clicks so #works, #about scroll horizontally
+      document.addEventListener("click", (e) => {
+        const a = e.target.closest('a[href^="#"]');
+        if (!a) return;
+
+        const hash = a.getAttribute("href");
+        const id = hash?.slice(1);
+        if (!id) return;
+
+        const target = panelById(id);
+        if (!target) return;
+
+        e.preventDefault();
+        goTo(id);
+      });
+
+      // Make vertical mousewheel scroll horizontally (feels premium)
+      scroller.addEventListener("wheel", (e) => {
+        const mostlyVertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+        if (!mostlyVertical) return;
+        e.preventDefault();
+        scroller.scrollLeft += e.deltaY;
+      }, { passive: false });
+
+      // If page loads with a hash, land on that panel
+      const initial = location.hash?.slice(1);
+      if (initial && panelById(initial)) {
+        setTimeout(() => goTo(initial), 0);
+      }
+    })();
+  </script>
 </body>
 </html>
