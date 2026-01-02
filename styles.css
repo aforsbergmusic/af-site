@@ -4,7 +4,6 @@ FILE: styles.css
 
 :root{
   --bg:#070707;
-  --bg2:#0b0b0b;
   --text:rgba(255,255,255,.90);
   --muted:rgba(255,255,255,.62);
   --line:rgba(255,255,255,.10);
@@ -75,10 +74,7 @@ button{ font-family:inherit; }
   white-space:nowrap;
   opacity:.95;
 }
-
-.brand:hover{
-  color:var(--jt);
-}
+.brand:hover{ color:var(--jt); }
 
 .menuBtn{
   width:44px; height:44px;
@@ -197,14 +193,12 @@ button{ font-family:inherit; }
   scroll-snap-align:start;
   scroll-snap-stop:always;
   overflow:hidden;
-  background:radial-gradient(1200px 600px at 50% 40%, rgba(255,255,255,.06), rgba(255,255,255,0) 60%),
-             linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0) 45%);
+  background:
+    radial-gradient(1200px 600px at 50% 40%, rgba(255,255,255,.06), rgba(255,255,255,0) 60%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0) 45%);
 }
 
-.tile__bg{
-  position:absolute; inset:0;
-  pointer-events:none;
-}
+.tile__bg{ position:absolute; inset:0; pointer-events:none; }
 
 .decor{
   position:absolute;
@@ -231,12 +225,7 @@ button{ font-family:inherit; }
   gap:18px;
 }
 
-.kicker{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-}
+.kicker{ display:flex; align-items:center; justify-content:space-between; gap:14px; }
 .kicker__label{
   font-size:11px;
   letter-spacing:.28em;
@@ -298,21 +287,10 @@ button{ font-family:inherit; }
   color:rgba(255,255,255,.52);
 }
 
-.pcontrols{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
+.pcontrols{ display:flex; align-items:center; gap:10px; }
 
-.vol{
-  width:140px;
-  display:flex;
-  align-items:center;
-}
-.vol__range{
-  width:100%;
-  accent-color: var(--jt);
-}
+.vol{ width:140px; display:flex; align-items:center; }
+.vol__range{ width:100%; accent-color: var(--jt); }
 
 .wave{
   width:100%;
@@ -376,7 +354,6 @@ button{ font-family:inherit; }
   grid-template-columns:repeat(4, minmax(0,1fr));
   gap:18px;
 }
-
 .poster{
   position:relative;
   border-radius:18px;
@@ -455,9 +432,7 @@ button{ font-family:inherit; }
   font-size:14px;
   color:rgba(255,255,255,.84);
 }
-.rep__body a{
-  border-bottom:1px solid rgba(255,255,255,.18);
-}
+.rep__body a{ border-bottom:1px solid rgba(255,255,255,.18); }
 .rep__dot{ margin:0 10px; opacity:.55; }
 
 /* ===== Nav buttons ===== */
