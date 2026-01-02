@@ -19,12 +19,23 @@ FILE: app.js
   ];
 
   const pickJewel = () => JEWELS[Math.floor(Math.random() * JEWELS.length)];
+
   const setJT = (hex) => {
     const root = document.documentElement;
     root.style.setProperty("--jt", hex);
     root.style.setProperty("--jtFill", `color-mix(in srgb, ${hex} 18%, rgba(255,255,255,.02))`);
-    root.style.setProperty("--jtFillStrong", `color-mix(in srgb, ${hex} 26%, rgba(255,255,255,.02))`);
+    root.style.setProperty("--jtFillStrong", `color-mix(in srgb, ${hex} 28%, rgba(255,255,255,.02))`);
+    root.style.setProperty("--jtLine", `color-mix(in srgb, ${hex} 55%, rgba(255,255,255,.14))`);
   };
+
+  function hashToJewel(str) {
+    let h = 2166136261;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return JEWELS[Math.abs(h) % JEWELS.length];
+  }
 
   /* ========= Data ========= */
   const PROJECTS = [
@@ -69,8 +80,8 @@ FILE: app.js
   }
 
   /* ========= Peaks cache ========= */
-  const PEAKS_VERSION = "v2";
-  const PEAKS_N = 220;
+  const PEAKS_VERSION = "v3";
+  const PEAKS_N = 240;
   const waveCache = new Map();
   let AUDIO_CTX = null;
 
@@ -98,15 +109,11 @@ FILE: app.js
       const obj = JSON.parse(raw);
       if (!obj || !Array.isArray(obj.p) || typeof obj.d !== "number") return null;
       return { peaks: obj.p, duration: obj.d };
-    } catch {
-      return null;
-    }
+    } catch { return null; }
   }
 
   function savePeaksLS(src, peaks, duration) {
-    try {
-      localStorage.setItem(lsKey(src), JSON.stringify({ p: peaks, d: duration }));
-    } catch {}
+    try { localStorage.setItem(lsKey(src), JSON.stringify({ p: peaks, d: duration })); } catch {}
   }
 
   function computePeaks(audioBuffer, n) {
@@ -156,8 +163,8 @@ FILE: app.js
     return out;
   }
 
-  /* ========= Negative-space waveform (fills with jewel tone) ========= */
-  function drawWave(canvas, peaks, progress01) {
+  /* ========= Negative-space waveform that fills with jewel tone ========= */
+  function drawWave(canvas, peaks, progress01, scrubX01) {
     if (!canvas || !peaks || !peaks.length) return;
 
     const ctx = canvas.getContext("2d");
@@ -165,8 +172,8 @@ FILE: app.js
     ctx.clearRect(0, 0, w, h);
 
     const mid = h * 0.5;
-    const stride = 6.0;
-    const barW = 5.2;
+    const stride = 6.2;
+    const barW = 5.1;
     const minAmp = 6;
     const maxAmp = h * 0.46;
 
@@ -177,7 +184,6 @@ FILE: app.js
     const progX = p * w;
 
     const jt = (getComputedStyle(document.documentElement).getPropertyValue("--jt") || "#5c7cff").trim();
-
     const base = "rgba(255,255,255,0.10)";
     const done = jt;
 
@@ -213,29 +219,16 @@ FILE: app.js
         ctx.fillRect(rx, y0, barW, hh);
       }
     }
+
+    // subtle scrub highlight overlay (optional)
+    if (typeof scrubX01 === "number") {
+      const sx = clamp01(scrubX01) * w;
+      ctx.fillStyle = "rgba(255,255,255,0.08)";
+      ctx.fillRect(sx - 24, 0, 48, h);
+    }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    /* ===== set initial jewel tone ===== */
-    setJT(pickJewel());
-
-    /* ===== hover randomizes across key interactive UI ===== */
-    const jtTargets = [
-      ...$$(".brand"),
-      ...$$(".menuBtn"),
-      ...$$(".menu__link"),
-      ...$$(".sbtn"),
-      ...$$(".navBtn"),
-      ...$$(".pbtn"),
-      ...$$(".row"),
-      ...$$(".poster"),
-      ...$$(".wave")
-    ];
-    jtTargets.forEach(el => {
-      el.addEventListener("mouseenter", () => setJT(pickJewel()), { passive: true });
-      el.addEventListener("focus", () => setJT(pickJewel()), { passive: true });
-    });
-
     /* ===== Menu ===== */
     const menu = $(".menu");
     const menuBtn = $(".menuBtn");
@@ -289,6 +282,33 @@ FILE: app.js
       if (idx >= 0) scrollToIndex(idx);
     };
 
+    // set tile colors deterministically (so it feels intentional, not random chaos)
+    tiles.forEach(t => {
+      const col = hashToJewel(t.id || "tile");
+      t.dataset.jewel = col;
+    });
+
+    const applyActiveTileTheme = () => {
+      const idx = getActiveIndex();
+      const t = tiles[idx];
+      const col = t?.dataset?.jewel || pickJewel();
+      setJT(col);
+    };
+
+    if (rail) {
+      rail.addEventListener("scroll", () => {
+        window.requestAnimationFrame(applyActiveTileTheme);
+      }, { passive: true });
+
+      // vertical wheel -> horizontal (trackpads still work)
+      rail.addEventListener("wheel", (e) => {
+        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        e.preventDefault();
+        rail.scrollLeft += e.deltaY;
+      }, { passive: false });
+    }
+
+    // menu + hash navigation
     const interceptLinks = (root) => {
       $$('a[href^="#"]', root).forEach(a => {
         a.addEventListener("click", (e) => {
@@ -315,19 +335,34 @@ FILE: app.js
     window.addEventListener("keydown", (e) => {
       if (!rail) return;
       if (menu && menu.getAttribute("aria-hidden") === "false") return;
-      if (e.key === "ArrowRight") scrollToIndex(Math.min(tiles.length - 1, getActiveIndex() + 1));
-      if (e.key === "ArrowLeft") scrollToIndex(Math.max(0, getActiveIndex() - 1));
+
+      if (e.key === "ArrowRight" && !e.repeat) scrollToIndex(Math.min(tiles.length - 1, getActiveIndex() + 1));
+      if (e.key === "ArrowLeft" && !e.repeat) scrollToIndex(Math.max(0, getActiveIndex() - 1));
     });
 
-    if (rail) {
-      rail.addEventListener("wheel", (e) => {
-        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-        e.preventDefault();
-        rail.scrollLeft += e.deltaY;
-      }, { passive: false });
-    }
+    // initial theme
+    applyActiveTileTheme();
 
-    /* ===== Posters grid + lightbox ===== */
+    /* ===== “Dialed” hover color behavior:
+       - base color = tile color
+       - on hover/focus of interactive elements, temporarily pick a jewel and apply as the global theme
+       - on leave/blur, snap back to active tile theme
+    ===== */
+    const interactive = [
+      ...$$(".brand, .menuBtn, .menu__link, .sbtn, .navBtn, .rcBtn, .rcRow, .poster, .rcWave")
+    ];
+
+    const onAccent = () => setJT(pickJewel());
+    const onAccentEnd = () => applyActiveTileTheme();
+
+    interactive.forEach(el => {
+      el.addEventListener("mouseenter", onAccent, { passive: true });
+      el.addEventListener("mouseleave", onAccentEnd, { passive: true });
+      el.addEventListener("focus", onAccent, { passive: true });
+      el.addEventListener("blur", onAccentEnd, { passive: true });
+    });
+
+    /* ===== Posters + lightbox ===== */
     const postersEl = $(".posters");
     if (postersEl && PROJECTS.length) {
       postersEl.innerHTML = PROJECTS.map((p, i) => {
@@ -374,18 +409,28 @@ FILE: app.js
       });
     }
 
-    /* ===== Player ===== */
-    const playBtn = $(".playBtn");
-    const prevBtn = $(".prevBtn");
-    const nextBtn = $(".nextBtn");
-    const muteBtn = $(".muteBtn");
-    const volRange = $(".vol__range");
+    /* ===== Representation email ===== */
+    const repEmail = $("#rep-email");
+    if (repEmail) repEmail.href = "mailto:andy@andyforsbergmusic.com";
 
-    const npTitle = $(".npTitle");
-    const npTime = $(".npTime");
-    const waveBtn = $(".waveBtn");
-    const waveCanvas = waveBtn ? $("canvas", waveBtn) : null;
-    const tracklist = $(".tracklist");
+    /* =========================================================
+       PLAYER (closer to ReelCrafter: big surface, scrub line, tight UI)
+       - NO loop button (per your request)
+       ========================================================= */
+    const rc = $(".rcPlayer");
+    const playBtn = $(".rcPlay");
+    const prevBtn = $(".rcPrev");
+    const nextBtn = $(".rcNext");
+    const muteBtn = $(".rcMute");
+    const volRange = $(".rcVol__range");
+
+    const titleEl = $(".rcTitle");
+    const timeEl = $(".rcTime");
+    const waveEl = $(".rcWave");
+    const scrubLine = $(".rcWave__scrub");
+    const canvas = waveEl ? $("canvas", waveEl) : null;
+    const listEl = $(".rcList");
+    const countEl = $(".rcTrackCount");
 
     const audio = new Audio();
     audio.preload = "metadata";
@@ -393,39 +438,54 @@ FILE: app.js
 
     let tIdx = 0;
     let peaksObj = null;
-    let dragging = false;
+
+    let isScrubbing = false;
+    let scrubX01 = null;
     let seekTarget = null;
+    let wasPlayingBeforeScrub = false;
+
     let uiRaf = null;
     let lastDrawTs = 0;
     const DRAW_EVERY_MS = 33;
+
+    const currentTrack = () => FEATURED_TRACKS[tIdx] || null;
 
     const setPlayIcon = () => {
       if (!playBtn) return;
       playBtn.textContent = audio.paused ? "▶" : "❚❚";
     };
 
-    const renderTracklist = () => {
-      if (!tracklist) return;
-      tracklist.innerHTML = FEATURED_TRACKS.map((t, i) => {
-        const active = i === tIdx ? " is-active" : "";
-        return `
-          <div class="row${active}" data-i="${i}" role="button" aria-label="Play ${t.title || "Track"}">
-            <div class="row__t">${t.title || "Untitled"}</div>
-          </div>
-        `;
-      }).join("");
-    };
-
-    const currentTrack = () => FEATURED_TRACKS[tIdx] || null;
-
-    const ensureCanvasSized = () => { if (waveCanvas) sizeCanvasToCSS(waveCanvas); };
+    const ensureCanvasSized = () => { if (canvas) sizeCanvasToCSS(canvas); };
     window.addEventListener("resize", ensureCanvasSized, { passive: true });
 
     const getDur = () => (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (peaksObj?.duration || 0);
 
     const getCurForUI = () => {
-      if (dragging && typeof seekTarget === "number") return seekTarget;
+      if (isScrubbing && typeof seekTarget === "number") return seekTarget;
       return isFinite(audio.currentTime) ? audio.currentTime : 0;
+    };
+
+    const renderList = () => {
+      if (!listEl) return;
+      listEl.innerHTML = FEATURED_TRACKS.map((t, i) => {
+        const active = i === tIdx ? " is-active" : "";
+        return `
+          <div class="rcRow${active}" data-i="${i}" role="button" aria-label="Play ${t.title || "Track"}">
+            <div class="rcRow__t">${t.title || "Untitled"}</div>
+          </div>
+        `;
+      }).join("");
+      if (countEl) countEl.textContent = `${FEATURED_TRACKS.length} tracks`;
+    };
+
+    const loadWaveForCurrent = async () => {
+      peaksObj = null;
+      const tr = currentTrack();
+      if (!tr?.src) return;
+      try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
+
+      const next = FEATURED_TRACKS[(tIdx + 1) % FEATURED_TRACKS.length];
+      if (next?.src) getPeaks(next.src).catch(() => {});
     };
 
     const syncUI = (ts) => {
@@ -436,22 +496,25 @@ FILE: app.js
       const cur = getCurForUI();
       const pct = dur ? clamp01(cur / dur) : 0;
 
-      if (npTitle) npTitle.textContent = tr.title || "Untitled";
-      if (npTime) npTime.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
-
+      if (titleEl) titleEl.textContent = tr.title || "Untitled";
+      if (timeEl) timeEl.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
       setPlayIcon();
 
-      if (tracklist) {
-        $$(".row", tracklist).forEach((r) => {
+      if (listEl) {
+        $$(".rcRow", listEl).forEach((r) => {
           const i = Number(r.dataset.i);
           r.classList.toggle("is-active", i === tIdx);
         });
       }
 
-      if (peaksObj?.peaks && waveCanvas && ts - lastDrawTs >= DRAW_EVERY_MS) {
+      if (peaksObj?.peaks && canvas && ts - lastDrawTs >= DRAW_EVERY_MS) {
         lastDrawTs = ts;
         ensureCanvasSized();
-        drawWave(waveCanvas, peaksObj.peaks, pct);
+        drawWave(canvas, peaksObj.peaks, pct, scrubX01);
+      }
+
+      if (scrubLine && typeof scrubX01 === "number") {
+        scrubLine.style.transform = `translateX(${scrubX01 * 100}%)`;
       }
     };
 
@@ -459,20 +522,11 @@ FILE: app.js
       if (uiRaf) cancelAnimationFrame(uiRaf);
       const tick = (ts) => {
         syncUI(ts);
-        const keep = !audio.paused || dragging;
+        const keep = !audio.paused || isScrubbing;
         if (keep) uiRaf = requestAnimationFrame(tick);
         else uiRaf = null;
       };
       uiRaf = requestAnimationFrame(tick);
-    };
-
-    const loadWaveForCurrent = async () => {
-      peaksObj = null;
-      const tr = currentTrack();
-      if (!tr?.src) return;
-      try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
-      const next = FEATURED_TRACKS[(tIdx + 1) % FEATURED_TRACKS.length];
-      if (next?.src) getPeaks(next.src).catch(() => {});
     };
 
     const setTrack = async (nextIdx, autoplay) => {
@@ -482,7 +536,8 @@ FILE: app.js
       const tr = currentTrack();
       if (!tr?.src) return;
 
-      dragging = false;
+      isScrubbing = false;
+      scrubX01 = null;
       seekTarget = null;
 
       audio.src = tr.src;
@@ -505,11 +560,25 @@ FILE: app.js
 
     const stepTrack = (dir) => setTrack(tIdx + dir, true);
 
-    const seekFromEvent = (e) => {
-      if (!waveBtn) return;
-      const rect = waveBtn.getBoundingClientRect();
-      const x = Math.min(Math.max(0, e.clientX - rect.left), rect.width);
+    const seekBy = (sec) => {
+      const dur = getDur();
+      if (!dur) return;
+      const t = Math.max(0, Math.min(dur, (audio.currentTime || 0) + sec));
+      try {
+        if (typeof audio.fastSeek === "function") audio.fastSeek(t);
+        else audio.currentTime = t;
+      } catch {}
+      startUILoop();
+    };
+
+    const seekFromClientX = (clientX) => {
+      if (!waveEl) return;
+      const rect = waveEl.getBoundingClientRect();
+      const x = Math.min(Math.max(0, clientX - rect.left), rect.width);
       const pct = rect.width ? x / rect.width : 0;
+
+      scrubX01 = pct;
+
       const dur = getDur();
       if (!dur) return;
       seekTarget = pct * dur;
@@ -543,9 +612,9 @@ FILE: app.js
       }, { passive: true });
     }
 
-    if (tracklist) {
-      tracklist.addEventListener("click", (e) => {
-        const row = e.target.closest(".row");
+    if (listEl) {
+      listEl.addEventListener("click", (e) => {
+        const row = e.target.closest(".rcRow");
         if (!row) return;
         const i = Number(row.dataset.i);
         if (i === tIdx) togglePlay();
@@ -553,44 +622,78 @@ FILE: app.js
       });
     }
 
-    if (waveBtn) {
-      waveBtn.addEventListener("pointerdown", (e) => {
+    if (waveEl) {
+      waveEl.addEventListener("pointerdown", (e) => {
         if (!peaksObj) return;
-        waveBtn.setPointerCapture(e.pointerId);
-        dragging = true;
+        waveEl.setPointerCapture(e.pointerId);
+
+        wasPlayingBeforeScrub = !audio.paused;
         if (!audio.paused) audio.pause();
-        seekFromEvent(e);
+
+        isScrubbing = true;
+        waveEl.classList.add("is-scrubbing");
+        seekFromClientX(e.clientX);
+
         startUILoop();
       });
-      waveBtn.addEventListener("pointermove", (e) => {
-        if (!dragging) return;
-        seekFromEvent(e);
+
+      waveEl.addEventListener("pointermove", (e) => {
+        if (!isScrubbing) return;
+        seekFromClientX(e.clientX);
         startUILoop();
       });
-      waveBtn.addEventListener("pointerup", () => {
-        if (!dragging) return;
-        dragging = false;
+
+      const endScrub = () => {
+        if (!isScrubbing) return;
+        isScrubbing = false;
+        waveEl.classList.remove("is-scrubbing");
         commitSeek();
-        audio.play().catch(() => {});
+        scrubX01 = null;
+
+        if (wasPlayingBeforeScrub) audio.play().catch(() => {});
+        startUILoop();
+      };
+
+      waveEl.addEventListener("pointerup", endScrub);
+      waveEl.addEventListener("pointercancel", endScrub);
+
+      // hover preview line (desktop)
+      waveEl.addEventListener("mousemove", (e) => {
+        if (isScrubbing) return;
+        const rect = waveEl.getBoundingClientRect();
+        const x = Math.min(Math.max(0, e.clientX - rect.left), rect.width);
+        scrubX01 = rect.width ? x / rect.width : null;
         startUILoop();
       });
-      waveBtn.addEventListener("pointercancel", () => {
-        dragging = false;
-        commitSeek();
+
+      waveEl.addEventListener("mouseleave", () => {
+        if (isScrubbing) return;
+        scrubX01 = null;
         startUILoop();
       });
     }
+
+    // keyboard controls (player-focused but safe)
+    window.addEventListener("keydown", (e) => {
+      if (menu && menu.getAttribute("aria-hidden") === "false") return;
+      const tag = (document.activeElement?.tagName || "").toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        togglePlay();
+      }
+      if (e.key === "ArrowRight" && e.shiftKey) seekBy(10);
+      if (e.key === "ArrowLeft" && e.shiftKey) seekBy(-10);
+    });
 
     audio.addEventListener("play", () => startUILoop());
     audio.addEventListener("pause", () => startUILoop());
     audio.addEventListener("ended", () => stepTrack(1));
 
     if (FEATURED_TRACKS.length) {
-      renderTracklist();
+      renderList();
       setTrack(0, false);
     }
-
-    const repEmail = $("#rep-email");
-    if (repEmail) repEmail.href = "mailto:andy@andyforsbergmusic.com"; // change if needed
   });
-})(); 
+})();
