@@ -1,35 +1,43 @@
-/* ========================
-FILE: app.js
-======================== */
+/* =========================================================
+   AF — Horizontal Rail + Jewel System + Player (no loop)
+   STRICT: no vertical scrolling inside tiles.
+   ========================================================= */
+
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-  /* ========= Jewel palette (subtle usage) ========= */
-  const JEWELS = [
-    "#7a5cff", "#5c7cff", "#22d3ee", "#34d98a",
-    "#a3e635", "#ffd166", "#ff9f1c", "#ff4d6d", "#c13584"
-  ];
-  const pickJewel = () => JEWELS[Math.floor(Math.random() * JEWELS.length)];
+  /* ---------------- Paste YOUR real copy here ----------------
+     You said your bio/rep info is wrong. I will NOT invent it.
+     Put your correct text into these arrays/strings.
+  ------------------------------------------------------------ */
+  const COPY = {
+    "bio-1": "",
+    "bio-2": "",
 
-  const setJT = (hex) => {
-    const root = document.documentElement;
-    root.style.setProperty("--jt", hex);
-    root.style.setProperty("--jtFill", `color-mix(in srgb, ${hex} 14%, rgba(255,255,255,.02))`);
-    root.style.setProperty("--jtFillStrong", `color-mix(in srgb, ${hex} 22%, rgba(255,255,255,.02))`);
-    root.style.setProperty("--jtLine", `color-mix(in srgb, ${hex} 55%, rgba(255,255,255,.14))`);
+    "rep-1": "",
+    "rep-2": "",
+    "rep-3": "",
+
+    "listening-note": "",
+
+    "about-1": "",
+    "about-2": "",
+    "about-3": ""
   };
 
-  function hashToJewel(str) {
-    let h = 2166136261;
-    for (let i = 0; i < str.length; i++) {
-      h ^= str.charCodeAt(i);
-      h = Math.imul(h, 16777619);
-    }
-    return JEWELS[Math.abs(h) % JEWELS.length];
-  }
+  /* ---------------- Links ---------------- */
+  const SOCIALS = {
+    imdb: "https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk",
+    apple: "https://music.apple.com/us/artist/andy-forsberg/987738278",
+    spotify: "https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw",
+    instagram: "https://www.instagram.com/aforsbergmusic"
+  };
 
-  /* ========= Data ========= */
+  /* Bio photo (you can change anytime) */
+  const BIO_IMG_URL = "https://www.dropbox.com/scl/fi/3b49pfk6pdgq0lh8851bl/Studio-Hygge-2023-20.jpeg?rlkey=mvh0b6wvlyy734zvw8z5jbuir&raw=1";
+
+  /* Featured Projects (movie poster aspect 2:3) */
   const PROJECTS = [
     { title: "Hilinski's Hope", img: "https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&raw=1" },
     { title: "The Secret Lives of Animals", img: "https://www.dropbox.com/scl/fi/9g8f8xyggs3dqlg1hmbao/The-Secret-Lives-of-Animals.webp?rlkey=s6yz5mrdz88uc9djbscr48urp&raw=1" },
@@ -41,15 +49,25 @@ FILE: app.js
     { title: "Whistle", img: "https://www.dropbox.com/scl/fi/6sp81uysuvokjyt2j3rac/Whistle.jpg?rlkey=58x5sqlr9u1ic77fb25nkfk3q&raw=1" }
   ];
 
+  /* Listening Room tracks */
   const FEATURED_TRACKS = [
     { title: "Charlie Horse", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/9b1a0c45-e055-4c88-b7b3-5f68e21c868e/Charlie%20Horse.mp3" },
     { title: "Beneath The City", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7a797f68-c4b0-48a2-bd22-2e4d0d42cb3f/Beneath%20The%20City.mp3" },
     { title: "Stars To Guide Us", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e08b2007-7b7a-45b5-9bc2-5e16f7c663f1/Stars%20To%20Guide%20Us.mp3" },
-    { title: "Drive To Isleworth", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e021b12d-70ad-45ad-8372-54e5bad51945/Drive%20To%20Isleworth.mp3" },
-    { title: "The Summit", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/5731e845-e98a-4ae5-b843-cc3280fa8236/The%20Summit.mp3" },
-    { title: "Travelers", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/4c0e765b-129e-4146-ac5e-b09678d0d208/Travelers.mp3" },
-    { title: "Finding The Pride", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/be647ea5-b2d5-4126-b775-c98ebf1c5b17/Finding%20The%20Pride.mp3" },
-    { title: "The Cathedral", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/f8c8b063-f39a-414f-8cf0-f74e7b407779/The%20Cathedral.mp3" }
+    { title: "Drive To Isleworth", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e021b12d-70ad-45ad-8372-54e5bad51945/Drive%20To%20Isleworth.mp3" }
+  ];
+
+  /* Jewel palette (solid, not pastel) */
+  const JEWELS = [
+    "#7a5cff", // amethyst
+    "#00c2ff", // sapphire
+    "#22d3ee", // arctic
+    "#34d98a", // emerald
+    "#a3e635", // peridot
+    "#ffd166", // topaz
+    "#ff9f1c", // amber
+    "#ff4d6d", // ruby
+    "#c13584"  // magenta
   ];
 
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
@@ -71,92 +89,8 @@ FILE: app.js
     }
   }
 
-  /* ========= Peaks cache ========= */
-  const PEAKS_VERSION = "v3";
-  const PEAKS_N = 240;
-  const waveCache = new Map();
-  let AUDIO_CTX = null;
-
-  function getAudioCtx() {
-    if (AUDIO_CTX) return AUDIO_CTX;
-    const AC = window.AudioContext || window.webkitAudioContext;
-    AUDIO_CTX = new AC();
-    return AUDIO_CTX;
-  }
-
-  function hashStr(str) {
-    let h = 5381;
-    for (let i = 0; i < str.length; i++) h = ((h << 5) + h) ^ str.charCodeAt(i);
-    return (h >>> 0).toString(16);
-  }
-
-  function lsKey(src) {
-    return `af_peaks_${PEAKS_VERSION}_${hashStr(src)}`;
-  }
-
-  function loadPeaksLS(src) {
-    try {
-      const raw = localStorage.getItem(lsKey(src));
-      if (!raw) return null;
-      const obj = JSON.parse(raw);
-      if (!obj || !Array.isArray(obj.p) || typeof obj.d !== "number") return null;
-      return { peaks: obj.p, duration: obj.d };
-    } catch { return null; }
-  }
-
-  function savePeaksLS(src, peaks, duration) {
-    try { localStorage.setItem(lsKey(src), JSON.stringify({ p: peaks, d: duration })); } catch {}
-  }
-
-  function computePeaks(audioBuffer, n) {
-    const ch0 = audioBuffer.getChannelData(0);
-    const ch1 = audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1) : null;
-    const len = audioBuffer.length;
-    const step = Math.max(1, Math.floor(len / n));
-    const peaks = new Array(n);
-
-    for (let i = 0; i < n; i++) {
-      const start = i * step;
-      const end = Math.min(len, start + step);
-      let max = 0;
-      for (let j = start; j < end; j++) {
-        const v0 = Math.abs(ch0[j]);
-        const v = ch1 ? Math.max(v0, Math.abs(ch1[j])) : v0;
-        if (v > max) max = v;
-      }
-      peaks[i] = max;
-    }
-
-    let pmax = 0;
-    for (const p of peaks) if (p > pmax) pmax = p;
-    const inv = pmax ? 1 / pmax : 1;
-    for (let i = 0; i < peaks.length; i++) peaks[i] = Math.min(1, peaks[i] * inv);
-    return peaks;
-  }
-
-  async function getPeaks(src) {
-    if (!src) return null;
-    if (waveCache.has(src)) return waveCache.get(src);
-
-    const fromLS = loadPeaksLS(src);
-    if (fromLS) {
-      waveCache.set(src, fromLS);
-      return fromLS;
-    }
-
-    const ctx = getAudioCtx();
-    const res = await fetch(src, { mode: "cors", cache: "force-cache" });
-    const buf = await res.arrayBuffer();
-    const decoded = await ctx.decodeAudioData(buf);
-    const peaks = computePeaks(decoded, PEAKS_N);
-    const out = { peaks, duration: decoded.duration };
-    waveCache.set(src, out);
-    savePeaksLS(src, peaks, decoded.duration);
-    return out;
-  }
-
-  /* ========= Negative-space waveform that fills with jewel ========= */
-  function drawWave(canvas, peaks, progress01, scrubX01) {
+  /* ===== ReelCrafter-ish waveform: negative space base, jewel fill progress ===== */
+  function drawWave(canvas, peaks, progress01, jtHex) {
     if (!canvas || !peaks || !peaks.length) return;
 
     const ctx = canvas.getContext("2d");
@@ -164,20 +98,21 @@ FILE: app.js
     ctx.clearRect(0, 0, w, h);
 
     const mid = h * 0.5;
-    const stride = 6.2;
-    const barW = 5.1;
+    const stride = 6.0;
+    const barW = 5.2;
     const minAmp = 6;
     const maxAmp = h * 0.46;
+    const radius = 999;
 
     const cols = Math.max(1, Math.floor(w / stride));
     const n = peaks.length;
 
+    // base = carved/negative space feel
+    const base = "rgba(255,255,255,0.10)";
+    const fill = jtHex || "#7a5cff";
+
     const p = clamp01(progress01 || 0);
     const progX = p * w;
-
-    const jt = (getComputedStyle(document.documentElement).getPropertyValue("--jt") || "#5c7cff").trim();
-    const base = "rgba(255,255,255,0.10)";
-    const done = jt;
 
     const getPeak = (idx) => peaks[Math.max(0, Math.min(n - 1, idx))];
 
@@ -190,41 +125,112 @@ FILE: app.js
       const frac = f - i0;
 
       const p0 = getPeak(i0) * (1 - frac) + getPeak(i1) * frac;
-      const pPrev = getPeak(i0 - 2) * (1 - frac) + getPeak(i1 - 2) * frac;
-      const pNext = getPeak(i0 + 2) * (1 - frac) + getPeak(i1 + 2) * frac;
-      const smooth = pPrev * 0.20 + p0 * 0.60 + pNext * 0.20;
-
-      const shaped = Math.sqrt(Math.max(0, smooth));
+      const shaped = Math.sqrt(Math.max(0, p0));
       const amp = Math.max(minAmp, shaped * maxAmp);
 
       const y0 = mid - amp;
       const hh = amp * 2;
-
-      ctx.fillStyle = (x <= progX) ? done : base;
       const rx = x + (stride - barW) * 0.5;
+
+      ctx.fillStyle = (x <= progX) ? fill : base;
 
       if (ctx.roundRect) {
         ctx.beginPath();
-        ctx.roundRect(rx, y0, barW, hh, 999);
+        ctx.roundRect(rx, y0, barW, hh, radius);
         ctx.fill();
       } else {
-        ctx.fillRect(rx, y0, barW, hh);
+        const r = Math.min(barW, hh) * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(rx + r, y0);
+        ctx.lineTo(rx + barW - r, y0);
+        ctx.quadraticCurveTo(rx + barW, y0, rx + barW, y0 + r);
+        ctx.lineTo(rx + barW, y0 + hh - r);
+        ctx.quadraticCurveTo(rx + barW, y0 + hh, rx + barW - r, y0 + hh);
+        ctx.lineTo(rx + r, y0 + hh);
+        ctx.quadraticCurveTo(rx, y0 + hh, rx, y0 + hh - r);
+        ctx.lineTo(rx, y0 + r);
+        ctx.quadraticCurveTo(rx, y0, rx + r, y0);
+        ctx.closePath();
+        ctx.fill();
       }
-    }
-
-    if (typeof scrubX01 === "number") {
-      const sx = clamp01(scrubX01) * w;
-      ctx.fillStyle = "rgba(255,255,255,0.06)";
-      ctx.fillRect(sx - 20, 0, 40, h);
     }
   }
 
+  /* ---------------- Peaks cache (fast) ---------------- */
+  const PEAKS_N = 220;
+  const waveCache = new Map();
+  let AUDIO_CTX = null;
+
+  function getAudioCtx() {
+    if (AUDIO_CTX) return AUDIO_CTX;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    AUDIO_CTX = new AC();
+    return AUDIO_CTX;
+  }
+
+  async function getPeaks(src) {
+    if (!src) return null;
+    if (waveCache.has(src)) return waveCache.get(src);
+
+    const ctx = getAudioCtx();
+    const res = await fetch(src, { mode: "cors", cache: "force-cache" });
+    const buf = await res.arrayBuffer();
+    const decoded = await ctx.decodeAudioData(buf);
+
+    const ch0 = decoded.getChannelData(0);
+    const ch1 = decoded.numberOfChannels > 1 ? decoded.getChannelData(1) : null;
+    const len = decoded.length;
+    const step = Math.max(1, Math.floor(len / PEAKS_N));
+    const peaks = new Array(PEAKS_N);
+
+    for (let i = 0; i < PEAKS_N; i++) {
+      const start = i * step;
+      const end = Math.min(len, start + step);
+      let max = 0;
+      for (let j = start; j < end; j++) {
+        const v0 = Math.abs(ch0[j]);
+        const v = ch1 ? Math.max(v0, Math.abs(ch1[j])) : v0;
+        if (v > max) max = v;
+      }
+      peaks[i] = max;
+    }
+
+    // normalize
+    let pmax = 0;
+    for (const p of peaks) if (p > pmax) pmax = p;
+    const inv = pmax ? 1 / pmax : 1;
+    for (let i = 0; i < peaks.length; i++) peaks[i] = Math.min(1, peaks[i] * inv);
+
+    const out = { peaks, duration: decoded.duration };
+    waveCache.set(src, out);
+    return out;
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
-    /* ===== Menu ===== */
+    /* ---------------- Inject COPY ---------------- */
+    $$("[data-copy]").forEach(el => {
+      const k = el.getAttribute("data-copy");
+      if (!k) return;
+      el.textContent = COPY[k] || "";
+    });
+
+    /* ---------------- Social links ---------------- */
+    const sImdb = $("#social-imdb");
+    const sApple = $("#social-apple");
+    const sSpotify = $("#social-spotify");
+    const sIg = $("#social-instagram");
+    if (sImdb) sImdb.href = SOCIALS.imdb;
+    if (sApple) sApple.href = SOCIALS.apple;
+    if (sSpotify) sSpotify.href = SOCIALS.spotify;
+    if (sIg) sIg.href = SOCIALS.instagram;
+
+    /* ---------------- About image ---------------- */
+    const aboutImg = $(".aboutImg__img");
+    if (aboutImg && BIO_IMG_URL) aboutImg.src = BIO_IMG_URL;
+
+    /* ---------------- Menu ---------------- */
     const menu = $(".menu");
     const menuBtn = $(".menuBtn");
-    const rail = $(".rail");
-
     const closeMenu = () => {
       if (!menu || !menuBtn) return;
       menu.setAttribute("aria-hidden", "true");
@@ -235,7 +241,6 @@ FILE: app.js
       menu.setAttribute("aria-hidden", "false");
       menuBtn.setAttribute("aria-expanded", "true");
     };
-
     if (menuBtn && menu) {
       menuBtn.addEventListener("click", () => {
         const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
@@ -243,119 +248,114 @@ FILE: app.js
       });
       menu.addEventListener("click", (e) => {
         if (e.target === menu) closeMenu();
+        if (e.target.closest(".menu__link")) closeMenu();
       });
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeMenu();
-      });
+      window.addEventListener("keydown", (e) => e.key === "Escape" && closeMenu());
     }
 
-    /* ===== Tiles + nav ===== */
-    const tiles = $$("[data-tile]");
-    const byId = (id) => tiles.find(t => t.id === id);
+    /* ---------------- Rail nav + strict horizontal scroll ---------------- */
+    const rail = $("#rail");
+    const panels = $$(".panel");
+    const navBtns = $$(".railNav__btn");
+    const navLinks = $$("[data-nav]");
 
-    // deterministic color per tile (calm, intentional)
-    tiles.forEach(t => { t.dataset.jewel = hashToJewel(t.id || "tile"); });
-
-    const getActiveIndex = () => {
-      if (!rail) return 0;
-      const x = rail.scrollLeft;
-      const w = rail.clientWidth || 1;
-      return Math.round(x / w);
+    const state = {
+      idx: 0,
+      jt: JEWELS[0]
     };
 
-    const scrollToIndex = (idx) => {
-      if (!rail) return;
-      const w = rail.clientWidth || 1;
-      rail.scrollTo({ left: idx * w, behavior: "smooth" });
+    const setJewel = (hex) => {
+      state.jt = hex;
+      const root = document.documentElement;
+      root.style.setProperty("--jt", hex);
+      root.style.setProperty("--jtFill", hexToRgba(hex, 0.18));
+      root.style.setProperty("--jtGlow2", hexToRgba(hex, 0.25));
     };
 
-    const scrollToId = (id) => {
-      const t = byId(id);
-      if (!t || !rail) return;
-      const idx = tiles.indexOf(t);
-      if (idx >= 0) scrollToIndex(idx);
-    };
+    const pickJewel = () => JEWELS[Math.floor(Math.random() * JEWELS.length)];
 
-    const applyActiveTileTheme = () => {
-      const idx = getActiveIndex();
-      const t = tiles[idx];
-      setJT(t?.dataset?.jewel || pickJewel());
-    };
+    function hexToRgba(hex, a){
+      const h = hex.replace("#","").trim();
+      const full = h.length === 3 ? h.split("").map(c => c+c).join("") : h;
+      const n = parseInt(full, 16);
+      const r = (n >> 16) & 255;
+      const g = (n >> 8) & 255;
+      const b = n & 255;
+      return `rgba(${r},${g},${b},${a})`;
+    }
 
-    if (rail) {
-      rail.addEventListener("scroll", () => {
-        window.requestAnimationFrame(applyActiveTileTheme);
-      }, { passive: true });
+    function scrollToPanel(i) {
+      if (!rail || !panels.length) return;
+      const idx = Math.max(0, Math.min(panels.length - 1, i));
+      state.idx = idx;
 
-      // vertical wheel -> horizontal
-      rail.addEventListener("wheel", (e) => {
-        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      // choose jewel per-panel move
+      setJewel(pickJewel());
+
+      const x = idx * rail.clientWidth;
+      rail.scrollTo({ left: x, behavior: "smooth" });
+    }
+
+    // menu links + buttons
+    navLinks.forEach(el => {
+      el.addEventListener("click", (e) => {
         e.preventDefault();
-        rail.scrollLeft += e.deltaY;
-      }, { passive: false });
-    }
-
-    // Link interception for both topnav + menu + buttons
-    const interceptLinks = (root) => {
-      $$('a[href^="#"]', root).forEach(a => {
-        a.addEventListener("click", (e) => {
-          const href = a.getAttribute("href") || "";
-          const id = href.replace("#", "");
-          if (!id) return;
-          e.preventDefault();
-          closeMenu();
-          scrollToId(id);
-          history.replaceState(null, "", `#${id}`);
-        });
+        const i = Number(el.getAttribute("data-nav"));
+        if (Number.isFinite(i)) scrollToPanel(i);
+        closeMenu();
       });
-
-      // data-target links
-      $$("[data-target]", root).forEach(el => {
-        el.addEventListener("click", (e) => {
-          const id = el.getAttribute("data-target");
-          if (!id) return;
-          e.preventDefault();
-          closeMenu();
-          scrollToId(id);
-          history.replaceState(null, "", `#${id}`);
-        });
-      });
-    };
-    interceptLinks(document);
-
-    const initialHash = (location.hash || "").replace("#", "");
-    if (initialHash) scrollToId(initialHash);
-    applyActiveTileTheme();
-
-    // next/back
-    const navPrev = $(".navPrev");
-    const navNext = $(".navNext");
-    if (navPrev) navPrev.addEventListener("click", () => scrollToIndex(Math.max(0, getActiveIndex() - 1)));
-    if (navNext) navNext.addEventListener("click", () => scrollToIndex(Math.min(tiles.length - 1, getActiveIndex() + 1)));
-
-    // arrow keys for tiles (only if not typing)
-    window.addEventListener("keydown", (e) => {
-      const tag = (document.activeElement?.tagName || "").toLowerCase();
-      if (tag === "input" || tag === "textarea") return;
-      if (menu && menu.getAttribute("aria-hidden") === "false") return;
-
-      if (e.key === "ArrowRight" && !e.repeat) scrollToIndex(Math.min(tiles.length - 1, getActiveIndex() + 1));
-      if (e.key === "ArrowLeft" && !e.repeat) scrollToIndex(Math.max(0, getActiveIndex() - 1));
     });
 
-    /* ===== Posters + lightbox ===== */
-    const postersEl = $(".posters");
-    if (postersEl && PROJECTS.length) {
-      postersEl.innerHTML = PROJECTS.map((p, i) => {
-        const img = p.img || "";
-        return `
-          <div class="poster" data-idx="${i}" role="button" aria-label="Open project image">
-            <img class="poster__img" src="${img}" alt="" loading="lazy" decoding="async" />
-          </div>
-        `;
-      }).join("");
+    navBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const step = Number(btn.getAttribute("data-step")) || 0;
+        scrollToPanel(state.idx + step);
+      });
+    });
+
+    // Trackpad wheel => horizontal ONLY (prevents vertical scroll everywhere)
+    if (rail) {
+      rail.addEventListener("wheel", (e) => {
+        // Convert vertical wheel into horizontal movement
+        // Must be passive:false to prevent vertical scrolling.
+        e.preventDefault();
+        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+        rail.scrollLeft += delta;
+      }, { passive: false });
+
+      // Keep idx in sync with snapping
+      let snapTimer = null;
+      rail.addEventListener("scroll", () => {
+        clearTimeout(snapTimer);
+        snapTimer = setTimeout(() => {
+          const w = rail.clientWidth || 1;
+          const idx = Math.round(rail.scrollLeft / w);
+          if (idx !== state.idx) {
+            state.idx = idx;
+            setJewel(pickJewel());
+          }
+        }, 80);
+      }, { passive: true });
     }
 
+    // Keyboard navigation
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") scrollToPanel(state.idx + 1);
+      if (e.key === "ArrowLeft") scrollToPanel(state.idx - 1);
+    });
+
+    // Brand click
+    const brand = $(".brand");
+    if (brand) brand.addEventListener("click", (e) => {
+      e.preventDefault();
+      scrollToPanel(0);
+    });
+
+    // Initial jewel
+    setJewel(pickJewel());
+
+    /* ---------------- Projects grid + lightbox ---------------- */
+    const grid = $(".projectsGrid");
     const lb = $(".lb");
     const lbImg = $(".lb__img");
     const lbBg = $(".lb__bg");
@@ -372,95 +372,121 @@ FILE: app.js
       if (lbImg) lbImg.src = "";
     };
 
+    if (grid) {
+      grid.innerHTML = PROJECTS.map((p, i) => `
+        <div class="poster" data-i="${i}" role="button" aria-label="Open ${escapeHtml(p.title)}">
+          <div class="poster__img" style="background-image:url('${p.img}')"></div>
+        </div>
+      `).join("");
+
+      grid.addEventListener("click", (e) => {
+        const card = e.target.closest(".poster");
+        if (!card) return;
+        const idx = Number(card.getAttribute("data-i"));
+        const item = PROJECTS[idx];
+        if (item?.img) openLB(item.img);
+      });
+    }
+
     if (lbBg) lbBg.addEventListener("click", closeLB);
     if (lbClose) lbClose.addEventListener("click", closeLB);
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && lb && lb.getAttribute("aria-hidden") === "false") closeLB();
     });
 
-    if (postersEl) {
-      postersEl.addEventListener("click", (e) => {
-        const p = e.target.closest(".poster");
-        if (!p) return;
-        const idx = Number(p.dataset.idx);
-        const item = PROJECTS[idx];
-        if (item && item.img) openLB(item.img);
-      });
+    function escapeHtml(s=""){
+      return String(s).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
     }
 
     /* =========================================================
-       PLAYER
+       PLAYER (no loop button)
        ========================================================= */
-    const playBtn = $(".rcPlay");
-    const prevBtn = $(".rcPrev");
-    const nextBtn = $(".rcNext");
-    const muteBtn = $(".rcMute");
-    const volRange = $(".rcVol__range");
+    const playBtn = $(".playBtn");
+    const npTitle = $(".npTitle");
+    const npTime = $(".npTime");
+    const waveBtn = $(".wave");
+    const waveCanvas = waveBtn ? $("canvas", waveBtn) : null;
+    const tracklist = $(".tracklist");
 
-    const titleEl = $(".rcTitle");
-    const timeEl = $(".rcTime");
-    const waveEl = $(".rcWave");
-    const scrubLine = $(".rcWave__scrub");
-    const canvas = waveEl ? $("canvas", waveEl) : null;
-    const listEl = $(".rcList");
-    const countEl = $(".rcTrackCount");
+    const dock = $(".dock");
+    const dockPlay = $(".dock__play");
+    const dockTitle = $(".dock__title");
+    const dockTime = $(".dock__time");
+    const dockWaveBtn = $(".dock__wave");
+    const dockCanvas = dockWaveBtn ? $("canvas", dockWaveBtn) : null;
 
     const audio = new Audio();
     audio.preload = "metadata";
-    audio.volume = 0.9;
+    audio.loop = false; // explicitly off
 
     let tIdx = 0;
     let peaksObj = null;
 
-    let isScrubbing = false;
-    let scrubX01 = null;
+    let draggingMain = false;
+    let draggingDock = false;
     let seekTarget = null;
-    let wasPlayingBeforeScrub = false;
+    let wasPlayingBeforeDrag = false;
 
     let uiRaf = null;
     let lastDrawTs = 0;
     const DRAW_EVERY_MS = 33;
 
-    const currentTrack = () => FEATURED_TRACKS[tIdx] || null;
+    const setText = (el, v) => { if (el && el.textContent !== v) el.textContent = v; };
 
-    const setPlayIcon = () => {
-      if (!playBtn) return;
-      playBtn.textContent = audio.paused ? "▶" : "❚❚";
+    const ensureCanvasSized = () => {
+      if (waveCanvas) sizeCanvasToCSS(waveCanvas);
+      if (dockCanvas) sizeCanvasToCSS(dockCanvas);
     };
-
-    const ensureCanvasSized = () => { if (canvas) sizeCanvasToCSS(canvas); };
     window.addEventListener("resize", ensureCanvasSized, { passive: true });
 
-    const getDur = () => (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (peaksObj?.duration || 0);
-
-    const getCurForUI = () => {
-      if (isScrubbing && typeof seekTarget === "number") return seekTarget;
-      return isFinite(audio.currentTime) ? audio.currentTime : 0;
+    const setPlayIcon = (paused) => {
+      if (playBtn) playBtn.textContent = paused ? "▶" : "❚❚";
+      if (dockPlay) dockPlay.textContent = paused ? "▶" : "❚❚";
     };
 
-    const renderList = () => {
-      if (!listEl) return;
-      listEl.innerHTML = FEATURED_TRACKS.map((t, i) => {
+    const showDock = (show) => {
+      if (!dock) return;
+      dock.setAttribute("aria-hidden", show ? "false" : "true");
+    };
+
+    const currentTrack = () => FEATURED_TRACKS[tIdx] || null;
+
+    function renderTracklist() {
+      if (!tracklist) return;
+      tracklist.innerHTML = FEATURED_TRACKS.map((t, i) => {
         const active = i === tIdx ? " is-active" : "";
         return `
-          <div class="rcRow${active}" data-i="${i}" role="button" aria-label="Play ${t.title || "Track"}">
-            <div class="rcRow__t">${t.title || "Untitled"}</div>
+          <div class="row${active}" data-i="${i}" role="button" aria-label="Play ${escapeHtml(t.title)}">
+            <div class="row__t">${escapeHtml(t.title)}</div>
           </div>
         `;
       }).join("");
-      if (countEl) countEl.textContent = `${FEATURED_TRACKS.length} tracks`;
-    };
 
-    const loadWaveForCurrent = async () => {
+      // jewel fill on hover for player rows also
+      $$(".row", tracklist).forEach(row => {
+        row.addEventListener("mouseenter", () => setJewel(pickJewel()));
+      });
+    }
+
+    async function loadWaveForCurrent() {
       peaksObj = null;
       const tr = currentTrack();
-      if (!tr?.src) return;
+      if (!tr || !tr.src) return;
       try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
-      const next = FEATURED_TRACKS[(tIdx + 1) % FEATURED_TRACKS.length];
-      if (next?.src) getPeaks(next.src).catch(() => {});
-    };
+    }
 
-    const syncUI = (ts) => {
+    function getDur() {
+      return (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (peaksObj?.duration || 0);
+    }
+
+    function getCurForUI() {
+      if ((draggingMain || draggingDock) && typeof seekTarget === "number") return seekTarget;
+      return isFinite(audio.currentTime) ? audio.currentTime : 0;
+    }
+
+    function syncUI(ts) {
       const tr = currentTrack();
       if (!tr) return;
 
@@ -468,49 +494,51 @@ FILE: app.js
       const cur = getCurForUI();
       const pct = dur ? clamp01(cur / dur) : 0;
 
-      if (titleEl) titleEl.textContent = tr.title || "Untitled";
-      if (timeEl) timeEl.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
-      setPlayIcon();
+      setText(npTitle, tr.title || "—");
+      setText(dockTitle, tr.title || "—");
+      setText(npTime, `${fmtTime(cur)} / ${fmtTime(dur)}`);
+      setText(dockTime, `${fmtTime(cur)} / ${fmtTime(dur)}`);
 
-      if (listEl) {
-        $$(".rcRow", listEl).forEach((r) => {
-          const i = Number(r.dataset.i);
+      setPlayIcon(audio.paused);
+
+      // active row
+      if (tracklist) {
+        $$(".row", tracklist).forEach((r) => {
+          const i = Number(r.getAttribute("data-i"));
           r.classList.toggle("is-active", i === tIdx);
         });
       }
 
-      if (peaksObj?.peaks && canvas && ts - lastDrawTs >= DRAW_EVERY_MS) {
+      if (peaksObj?.peaks && ts - lastDrawTs >= DRAW_EVERY_MS) {
         lastDrawTs = ts;
         ensureCanvasSized();
-        drawWave(canvas, peaksObj.peaks, pct, scrubX01);
+        const jt = getComputedStyle(document.documentElement).getPropertyValue("--jt").trim() || "#7a5cff";
+        if (waveCanvas) drawWave(waveCanvas, peaksObj.peaks, pct, jt);
+        if (dockCanvas) drawWave(dockCanvas, peaksObj.peaks, pct, jt);
       }
+    }
 
-      if (scrubLine && typeof scrubX01 === "number") {
-        scrubLine.style.transform = `translateX(${scrubX01 * 100}%)`;
-      }
-    };
-
-    const startUILoop = () => {
+    function startUILoop() {
       if (uiRaf) cancelAnimationFrame(uiRaf);
       const tick = (ts) => {
         syncUI(ts);
-        const keep = !audio.paused || isScrubbing;
-        if (keep) uiRaf = requestAnimationFrame(tick);
+        const keepAlive = (!audio.paused) || draggingMain || draggingDock || (dock && dock.getAttribute("aria-hidden") === "false");
+        if (keepAlive) uiRaf = requestAnimationFrame(tick);
         else uiRaf = null;
       };
       uiRaf = requestAnimationFrame(tick);
-    };
+    }
 
-    const setTrack = async (nextIdx, autoplay) => {
+    async function setTrack(nextIdx, autoplay) {
       if (!FEATURED_TRACKS.length) return;
       tIdx = (nextIdx + FEATURED_TRACKS.length) % FEATURED_TRACKS.length;
 
+      draggingMain = false;
+      draggingDock = false;
+      seekTarget = null;
+
       const tr = currentTrack();
       if (!tr?.src) return;
-
-      isScrubbing = false;
-      scrubX01 = null;
-      seekTarget = null;
 
       audio.src = tr.src;
       audio.currentTime = 0;
@@ -521,150 +549,107 @@ FILE: app.js
       if (autoplay) {
         try { await audio.play(); } catch {}
       }
-    };
+    }
 
-    const togglePlay = () => {
+    function togglePlay() {
       if (!audio.src) { setTrack(0, true); return; }
       if (audio.paused) audio.play().catch(() => {});
       else audio.pause();
       startUILoop();
-    };
+    }
 
-    const stepTrack = (dir) => setTrack(tIdx + dir, true);
+    function seekTargetFromEvent(e, which) {
+      const btn = which === "dock" ? dockWaveBtn : waveBtn;
+      if (!btn || !peaksObj) return;
 
-    const seekBy = (sec) => {
-      const dur = getDur();
-      if (!dur) return;
-      const t = Math.max(0, Math.min(dur, (audio.currentTime || 0) + sec));
-      try {
-        if (typeof audio.fastSeek === "function") audio.fastSeek(t);
-        else audio.currentTime = t;
-      } catch {}
-      startUILoop();
-    };
-
-    const seekFromClientX = (clientX) => {
-      if (!waveEl) return;
-      const rect = waveEl.getBoundingClientRect();
-      const x = Math.min(Math.max(0, clientX - rect.left), rect.width);
+      const rect = btn.getBoundingClientRect();
+      const x = Math.min(Math.max(0, e.clientX - rect.left), rect.width);
       const pct = rect.width ? x / rect.width : 0;
-
-      scrubX01 = pct;
 
       const dur = getDur();
       if (!dur) return;
       seekTarget = pct * dur;
-    };
 
-    const commitSeek = () => {
-      if (typeof seekTarget !== "number") return;
-      const dur = getDur();
-      const t = Math.max(0, Math.min(dur || 0, seekTarget));
+      // apply immediately (feels more reelcrafter-like)
+      const t = Math.max(0, Math.min(dur, seekTarget));
       try {
         if (typeof audio.fastSeek === "function") audio.fastSeek(t);
         else audio.currentTime = t;
       } catch {}
-    };
-
-    if (playBtn) playBtn.addEventListener("click", togglePlay);
-    if (prevBtn) prevBtn.addEventListener("click", () => stepTrack(-1));
-    if (nextBtn) nextBtn.addEventListener("click", () => stepTrack(1));
-
-    if (muteBtn) {
-      muteBtn.addEventListener("click", () => {
-        audio.muted = !audio.muted;
-        muteBtn.setAttribute("aria-pressed", audio.muted ? "true" : "false");
-        muteBtn.textContent = audio.muted ? "🔇" : "🔈";
-      });
     }
 
-    if (volRange) {
-      volRange.addEventListener("input", () => {
-        audio.volume = Number(volRange.value);
-      }, { passive: true });
+    function onPointerDown(which, e) {
+      if (!peaksObj) return;
+      wasPlayingBeforeDrag = !audio.paused;
+      if (which === "main") draggingMain = true;
+      else draggingDock = true;
+
+      if (!audio.paused) audio.pause(); // control-surface feel
+      seekTargetFromEvent(e, which);
+      startUILoop();
     }
 
-    if (listEl) {
-      listEl.addEventListener("click", (e) => {
-        const row = e.target.closest(".rcRow");
-        if (!row) return;
-        const i = Number(row.dataset.i);
-        if (i === tIdx) togglePlay();
-        else setTrack(i, true);
-      });
+    function onPointerMove(which, e) {
+      if ((which === "main" && !draggingMain) || (which === "dock" && !draggingDock)) return;
+      seekTargetFromEvent(e, which);
+      startUILoop();
     }
 
-    if (waveEl) {
-      waveEl.addEventListener("pointerdown", (e) => {
-        if (!peaksObj) return;
-        waveEl.setPointerCapture(e.pointerId);
+    function onPointerUp(which) {
+      if (which === "main") draggingMain = false;
+      else draggingDock = false;
 
-        wasPlayingBeforeScrub = !audio.paused;
-        if (!audio.paused) audio.pause();
-
-        isScrubbing = true;
-        waveEl.classList.add("is-scrubbing");
-        seekFromClientX(e.clientX);
-
-        startUILoop();
-      });
-
-      waveEl.addEventListener("pointermove", (e) => {
-        if (!isScrubbing) return;
-        seekFromClientX(e.clientX);
-        startUILoop();
-      });
-
-      const endScrub = () => {
-        if (!isScrubbing) return;
-        isScrubbing = false;
-        waveEl.classList.remove("is-scrubbing");
-        commitSeek();
-        scrubX01 = null;
-
-        if (wasPlayingBeforeScrub) audio.play().catch(() => {});
-        startUILoop();
-      };
-
-      waveEl.addEventListener("pointerup", endScrub);
-      waveEl.addEventListener("pointercancel", endScrub);
-
-      waveEl.addEventListener("mousemove", (e) => {
-        if (isScrubbing) return;
-        const rect = waveEl.getBoundingClientRect();
-        const x = Math.min(Math.max(0, e.clientX - rect.left), rect.width);
-        scrubX01 = rect.width ? x / rect.width : null;
-        startUILoop();
-      });
-
-      waveEl.addEventListener("mouseleave", () => {
-        if (isScrubbing) return;
-        scrubX01 = null;
-        startUILoop();
-      });
+      if (wasPlayingBeforeDrag) audio.play().catch(() => {});
+      startUILoop();
     }
-
-    // keyboard controls
-    window.addEventListener("keydown", (e) => {
-      const tag = (document.activeElement?.tagName || "").toLowerCase();
-      if (tag === "input" || tag === "textarea") return;
-      if (menu && menu.getAttribute("aria-hidden") === "false") return;
-
-      if (e.code === "Space") {
-        e.preventDefault();
-        togglePlay();
-      }
-      if (e.key === "ArrowRight" && e.shiftKey) seekBy(10);
-      if (e.key === "ArrowLeft" && e.shiftKey) seekBy(-10);
-    });
-
-    audio.addEventListener("play", () => startUILoop());
-    audio.addEventListener("pause", () => startUILoop());
-    audio.addEventListener("ended", () => stepTrack(1));
 
     if (FEATURED_TRACKS.length) {
-      renderList();
+      renderTracklist();
       setTrack(0, false);
+
+      if (playBtn) playBtn.addEventListener("click", () => { setJewel(pickJewel()); togglePlay(); });
+      if (dockPlay) dockPlay.addEventListener("click", () => { setJewel(pickJewel()); togglePlay(); });
+
+      if (tracklist) {
+        tracklist.addEventListener("click", (e) => {
+          const row = e.target.closest(".row");
+          if (!row) return;
+          const i = Number(row.getAttribute("data-i"));
+          setJewel(pickJewel());
+          if (i === tIdx) togglePlay();
+          else setTrack(i, true);
+        });
+      }
+
+      if (waveBtn) {
+        waveBtn.addEventListener("pointerdown", (e) => {
+          waveBtn.setPointerCapture(e.pointerId);
+          onPointerDown("main", e);
+        });
+        waveBtn.addEventListener("pointermove", (e) => onPointerMove("main", e));
+        waveBtn.addEventListener("pointerup", () => onPointerUp("main"));
+        waveBtn.addEventListener("pointercancel", () => onPointerUp("main"));
+      }
+
+      if (dockWaveBtn) {
+        dockWaveBtn.addEventListener("pointerdown", (e) => {
+          dockWaveBtn.setPointerCapture(e.pointerId);
+          onPointerDown("dock", e);
+        });
+        dockWaveBtn.addEventListener("pointermove", (e) => onPointerMove("dock", e));
+        dockWaveBtn.addEventListener("pointerup", () => onPointerUp("dock"));
+        dockWaveBtn.addEventListener("pointercancel", () => onPointerUp("dock"));
+      }
+
+      audio.addEventListener("play", () => { showDock(true); startUILoop(); });
+      audio.addEventListener("pause", () => { showDock(true); startUILoop(); });
+      audio.addEventListener("ended", () => { setTrack(tIdx + 1, true); });
+      audio.addEventListener("loadedmetadata", () => startUILoop());
+      audio.addEventListener("timeupdate", () => startUILoop());
+    } else {
+      showDock(false);
     }
+
+    showDock(false);
   });
 })();
