@@ -1,203 +1,183 @@
-<!-- ========================
-FILE: site.html
-======================== -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Andy Forsberg — Composer + Producer</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
-  <!-- Top bar -->
-  <header class="topbar" role="banner">
-    <div class="topbar__inner">
-      <a class="brand" href="#home" data-brand>
+  <!-- Header -->
+  <header class="hdr" role="banner">
+    <div class="hdr__inner">
+      <a class="brand" href="#" data-nav="0" aria-label="Go to Home">
         <span class="brand__name">Andy Forsberg</span>
         <span class="brand__role">Composer + Producer</span>
       </a>
 
-      <nav class="topnav" aria-label="Primary">
-        <a class="topnav__link" href="#home" data-target="home">Home</a>
-        <a class="topnav__link" href="#listening" data-target="listening">Listening Room</a>
-        <a class="topnav__link" href="#projects" data-target="projects">Featured Projects</a>
-      </nav>
+      <div class="hdr__right">
+        <nav class="hdr__social" aria-label="Social links">
+          <a class="sbtn imdb" id="social-imdb" href="#" target="_blank" rel="noreferrer">IMDb</a>
+          <a class="sbtn spotify" id="social-spotify" href="#" target="_blank" rel="noreferrer">Spotify</a>
+          <a class="sbtn apple" id="social-apple" href="#" target="_blank" rel="noreferrer">Apple Music</a>
+          <a class="sbtn instagram" id="social-instagram" href="#" target="_blank" rel="noreferrer">Instagram</a>
+        </nav>
 
-      <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
-        <span class="menuBtn__lines" aria-hidden="true"></span>
-      </button>
+        <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+          <span class="menuBtn__lines" aria-hidden="true"></span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- Menu overlay -->
-  <aside class="menu" aria-hidden="true">
-    <div class="menu__panel" role="dialog" aria-label="Site menu">
-      <a class="menu__link" href="#home" data-target="home">Home</a>
-      <a class="menu__link" href="#listening" data-target="listening">Listening Room</a>
-      <a class="menu__link" href="#projects" data-target="projects">Featured Projects</a>
-
-      <div class="menu__divider" aria-hidden="true"></div>
-
-      <a class="menu__link menu__link--sub" href="#home" data-target="home" data-focus="bio">Bio</a>
-      <a class="menu__link menu__link--sub" href="#home" data-target="home" data-focus="rep">Representation</a>
-
-      <div class="menu__social">
-        <a class="sbtn imdb" id="social-imdb" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
-        <a class="sbtn spotify" id="social-spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
-        <a class="sbtn apple" id="social-apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-        <a class="sbtn instagram" id="social-instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
-      </div>
+  <!-- Menu Overlay -->
+  <div class="menu" aria-hidden="true">
+    <div class="menu__panel" role="dialog" aria-label="Site Menu">
+      <a class="menu__link" href="#" data-nav="0">Home</a>
+      <a class="menu__link" href="#" data-nav="1">Featured Projects</a>
+      <a class="menu__link" href="#" data-nav="2">Listening Room</a>
+      <a class="menu__link" href="#" data-nav="3">About</a>
     </div>
-  </aside>
+  </div>
 
-  <!-- Horizontal tiles -->
-  <main class="rail" aria-label="Horizontal sections">
-    <!-- Tile 1: HOME HERO (Bio + Rep on same page) -->
-    <section class="tile tile--home" id="home" data-tile data-tilecolor>
-      <div class="tile__content tile__content--scroll">
-        <section class="hero" aria-label="Home hero">
-          <div class="hero__left">
-            <div class="hero__eyebrow">Los Angeles</div>
-            <h1 class="hero__title">
-              <span class="hero__name">Andy Forsberg</span>
-              <span class="hero__role">Composer + Producer</span>
-            </h1>
+  <!-- Rail Navigation -->
+  <div class="railNav" aria-label="Section navigation">
+    <button class="railNav__btn" type="button" data-step="-1" aria-label="Previous section">←</button>
+    <button class="railNav__btn" type="button" data-step="1" aria-label="Next section">→</button>
+  </div>
 
-            <div class="hero__actions" aria-label="Quick links">
-              <a class="pill" href="#listening" data-target="listening">Enter Listening Room</a>
-              <a class="pill pill--ghost" href="#projects" data-target="projects">View Featured Projects</a>
+  <!-- Horizontal rail -->
+  <main class="rail" id="rail" aria-label="Main content">
+    <!-- Panel 0: HOME -->
+    <section class="panel panel--home" data-panel="0" aria-label="Home">
+      <div class="panel__bg" aria-hidden="true"></div>
+
+      <div class="panel__inner">
+        <div class="homeHero">
+          <h1 class="homeHero__title">
+            <span class="homeHero__name">Andy Forsberg</span>
+            <span class="homeHero__slash" aria-hidden="true">—</span>
+            <span class="homeHero__role">Composer + Producer</span>
+          </h1>
+
+          <!-- IMPORTANT: Paste ONLY your real copy in the blocks below -->
+          <div class="homeHero__copy">
+            <div class="copyBlock" aria-label="Bio">
+              <!-- PASTE your correct bio text here (no vertical scroll exists, so keep it to what fits) -->
+              <p class="copyP" data-copy="bio-1"></p>
+              <p class="copyP" data-copy="bio-2"></p>
             </div>
 
-            <!-- Bio copy (your exact text) -->
-            <section class="card" id="bio" aria-label="Bio">
-              <div class="card__label">Bio</div>
-              <div class="copy">
-                <p>His work blends neoclassical textures, electronic sound design, and orchestral writing across film, television, and interactive media.</p>
-                <p>He has composed music for projects with <strong>Disney</strong>, <strong>National Geographic</strong>, <strong>BBC</strong>, <strong>Apple</strong>, <strong>History Channel</strong>, <strong>Discovery</strong>, <strong>Hulu</strong>, <strong>Lifetime</strong>, and <strong>Hallmark</strong>.</p>
-                <p>A percussionist and conductor, he is closely involved in the performance of his scores and productions, from the writing room to the podium.</p>
-                <p>His approach prioritizes emotional clarity, nuance, and attention to detail.</p>
-              </div>
-            </section>
-
-            <!-- Representation (same page) -->
-            <section class="card" id="rep" aria-label="Representation">
-              <div class="card__label">Representation</div>
-              <div class="repLine">
-                <span class="repLine__k">For inquiries</span>
-                <span class="repLine__sep">—</span>
-                <a class="repLine__a" href="mailto:andy@andyforsbergmusic.com" id="rep-email">andy@andyforsbergmusic.com</a>
-              </div>
-              <div class="repLinks">
-                <a class="repLinks__a" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
-                <span class="repLinks__dot">•</span>
-                <a class="repLinks__a" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
-                <span class="repLinks__dot">•</span>
-                <a class="repLinks__a" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-                <span class="repLinks__dot">•</span>
-                <a class="repLinks__a" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
-              </div>
-            </section>
-          </div>
-
-          <div class="hero__right" aria-label="Portrait">
-            <figure class="portrait">
-              <img
-                alt="Andy Forsberg"
-                loading="eager"
-                decoding="async"
-                src="https://www.dropbox.com/scl/fi/3b49pfk6pdgq0lh8851bl/Studio-Hygge-2023-20.jpeg?rlkey=mvh0b6wvlyy734zvw8z5jbuir&raw=1"
-              />
-            </figure>
-
-            <div class="hero__meta">
-              <div class="metaRow">
-                <span class="metaRow__k">Selected links</span>
-                <span class="metaRow__sep">—</span>
-                <a class="metaRow__a" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
-                <a class="metaRow__a" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
-              </div>
+            <div class="copyBlock" aria-label="Representation and inquiries">
+              <!-- PASTE your correct rep/inquiry info here -->
+              <p class="copyP" data-copy="rep-1"></p>
+              <p class="copyP" data-copy="rep-2"></p>
+              <p class="copyP" data-copy="rep-3"></p>
             </div>
           </div>
-        </section>
+
+          <div class="homeHero__cta">
+            <button class="pillBtn" type="button" data-nav="2">Enter Listening Room</button>
+            <button class="pillBtn" type="button" data-nav="1">View Featured Projects</button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Tile 2: Listening -->
-    <section class="tile tile--listening" id="listening" data-tile data-tilecolor>
-      <div class="tile__content">
-        <div class="sectionHead">
-          <div class="sectionHead__label">Listening Room</div>
+    <!-- Panel 1: FEATURED PROJECTS -->
+    <section class="panel panel--projects" data-panel="1" aria-label="Featured Projects">
+      <div class="panel__inner panel__inner--wide">
+        <div class="projectsGrid" aria-label="Featured projects grid">
+          <!-- Filled by app.js -->
         </div>
+      </div>
 
-        <section class="rcPlayer" aria-label="Audio player">
-          <div class="rcPlayer__frame">
-            <div class="rcTop">
-              <button class="rcBtn rcPlay" type="button" aria-label="Play/Pause">▶</button>
-
-              <div class="rcMeta">
-                <div class="rcTitle">—</div>
-                <div class="rcTime">0:00 / 0:00</div>
-              </div>
-
-              <div class="rcTransport">
-                <button class="rcBtn rcPrev" type="button" aria-label="Previous track">⟲</button>
-                <button class="rcBtn rcNext" type="button" aria-label="Next track">⟳</button>
-                <button class="rcBtn rcMute" type="button" aria-label="Mute" aria-pressed="false">🔈</button>
-                <label class="rcVol" aria-label="Volume">
-                  <input class="rcVol__range" type="range" min="0" max="1" step="0.01" value="0.9" />
-                </label>
-              </div>
-            </div>
-
-            <div class="rcWave" role="button" aria-label="Seek waveform">
-              <canvas></canvas>
-              <div class="rcWave__scrub" aria-hidden="true"></div>
-            </div>
-
-            <div class="rcBottom">
-              <div class="rcHint">Drag to scrub. Space = play/pause. Shift + ←/→ = 10s seek.</div>
-              <div class="rcTrackCount" aria-hidden="true"></div>
-            </div>
-
-            <div class="rcList" aria-label="Tracklist"></div>
-          </div>
-        </section>
+      <!-- Lightbox -->
+      <div class="lb" aria-hidden="true">
+        <div class="lb__bg" aria-hidden="true"></div>
+        <div class="lb__panel" role="dialog" aria-label="Image viewer">
+          <button class="lb__close" type="button" aria-label="Close">✕</button>
+          <img class="lb__img" alt="" />
+        </div>
       </div>
     </section>
 
-    <!-- Tile 3: Featured Projects -->
-    <section class="tile tile--projects" id="projects" data-tile data-tilecolor>
-      <div class="tile__content tile__content--wide">
-        <div class="sectionHead">
-          <div class="sectionHead__label">Featured Projects</div>
-        </div>
+    <!-- Panel 2: LISTENING ROOM -->
+    <section class="panel panel--listening" data-panel="2" aria-label="Listening Room">
+      <div class="panel__inner panel__inner--wide">
+        <div class="listenWrap">
+          <div class="listenLeft">
+            <div class="listenKicker">Listening Room</div>
 
-        <div class="posters" aria-label="Featured projects grid"></div>
+            <!-- You said: keep “Listening Room” but don’t add new copy.
+                 So this stays minimal; you can paste later. -->
+            <p class="listenNote" data-copy="listening-note"></p>
+          </div>
+
+          <div class="listenRight">
+            <div class="player" aria-label="Audio player">
+              <div class="np">
+                <div class="np__left">
+                  <button class="playBtn" type="button" aria-label="Play/Pause">▶</button>
+                  <div class="np__meta">
+                    <div class="npTitle">—</div>
+                    <div class="npTime">0:00 / 0:00</div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="wave" type="button" aria-label="Waveform scrub">
+                <canvas></canvas>
+              </button>
+
+              <div class="tracklist" aria-label="Track list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dock (control surface) -->
+      <div class="dock" aria-hidden="true" aria-label="Playback dock">
+        <div class="dock__inner">
+          <button class="dock__play" type="button" aria-label="Play/Pause">▶</button>
+          <div class="dock__meta">
+            <div class="dock__title">—</div>
+            <div class="dock__time">0:00 / 0:00</div>
+          </div>
+          <button class="dock__wave" type="button" aria-label="Waveform scrub (dock)">
+            <canvas></canvas>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 3: ABOUT -->
+    <section class="panel panel--about" data-panel="3" aria-label="About">
+      <div class="panel__inner">
+        <div class="aboutGrid">
+          <figure class="aboutImg" aria-label="Portrait">
+            <img class="aboutImg__img" alt="Andy Forsberg" />
+          </figure>
+
+          <div class="aboutCopy">
+            <div class="aboutKicker">About</div>
+
+            <!-- Paste your full copy here. Still: no vertical scrolling.
+                 If your copy is long, we’ll split into multiple panels later. -->
+            <p class="copyP" data-copy="about-1"></p>
+            <p class="copyP" data-copy="about-2"></p>
+            <p class="copyP" data-copy="about-3"></p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
-
-  <!-- Next / Back -->
-  <nav class="railNav" aria-label="Tile navigation">
-    <button class="navBtn navPrev" type="button" aria-label="Previous section">Back</button>
-    <button class="navBtn navNext" type="button" aria-label="Next section">Next</button>
-  </nav>
-
-  <!-- Lightbox for posters -->
-  <div class="lb" aria-hidden="true">
-    <div class="lb__bg" aria-hidden="true"></div>
-    <div class="lb__panel" role="dialog" aria-label="Project image">
-      <button class="lb__close" type="button" aria-label="Close">✕</button>
-      <img class="lb__img" alt="" />
-    </div>
-  </div>
 
   <script src="./app.js"></script>
 </body>
