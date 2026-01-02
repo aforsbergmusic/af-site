@@ -1,10 +1,9 @@
 /* =========================================================
    AF — Cinematic Minimal (B)
-   Full styles.css replacement
+   styles.css — Version 2.5 (Horizontal Panels)
    ========================================================= */
 
 :root{
-  /* Palette */
   --bg:#0b0b0b;
   --bg2:#0f0f0f;
   --card:rgba(255,255,255,.03);
@@ -16,23 +15,18 @@
   --line:rgba(255,255,255,.10);
   --line2:rgba(255,255,255,.14);
 
-  /* Type */
   --sans:"Space Grotesk", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
 
-  /* Sizing */
   --pad:clamp(18px,3vw,44px);
   --h1:clamp(44px,5.1vw,82px);
   --h2:clamp(22px,2.35vw,34px);
 
-  /* Rhythm */
   --radius:18px;
   --lh-body:1.72;
   --lh-tight:1.06;
 
-  /* Measure */
   --measure:72ch;
 
-  /* Jewel tone outline vars (set by JS per-hover) */
   --jt:#7a5cff;
   --jtFill:rgba(122,92,255,.18);
   --jtGlow:rgba(122,92,255,.55);
@@ -49,21 +43,14 @@ html,body{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
-body{ overflow-x:hidden; }
 
 a{ color:var(--text); text-decoration:none; }
 a:hover{ opacity:.92; }
 
-/* ================= Layout ================= */
-.page{
-  max-width:1200px;
-  margin:0 auto;
-  padding:calc(var(--pad) + 56px) var(--pad) 120px;
-}
-
 /* ================= Header ================= */
 .hdr{
-  position:sticky; top:0; z-index:50;
+  position:fixed; top:0; left:0; right:0;
+  z-index:50;
   background:rgba(11,11,11,.62);
   backdrop-filter:blur(18px);
   border-bottom:1px solid rgba(255,255,255,.06);
@@ -96,7 +83,7 @@ a:hover{ opacity:.92; }
 
 .hdr__right{ display:flex; align-items:center; gap:14px; }
 
-/* ================= Socials (splash-style) ================= */
+/* ================= Socials ================= */
 .hdr__social{ display:flex; align-items:center; gap:10px; }
 
 .sbtn{
@@ -108,12 +95,7 @@ a:hover{ opacity:.92; }
   border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.02);
-  transition:
-    color .16s ease,
-    border-color .16s ease,
-    background .16s ease,
-    box-shadow .16s ease,
-    transform .16s ease;
+  transition:color .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease,transform .16s ease;
 }
 .sbtn:hover{ transform:translateY(-1px); }
 
@@ -206,41 +188,174 @@ a:hover{ opacity:.92; }
 }
 .menu__link:hover{ background:rgba(255,255,255,.06); }
 
-/* ================= Sections ================= */
-.section{ margin-top:94px; }
-.section__top{ margin-bottom:22px; }
+/* =========================================================
+   ✅ 2.5: HORIZONTAL PANEL SYSTEM (FULLSCREEN / EDGE-TO-EDGE)
+   ========================================================= */
 
-.section__title{
-  font-weight:500;
-  letter-spacing:.14em;
+/* Lock vertical scrolling. Everything becomes a horizontal “film strip”. */
+body{ overflow:hidden; }
+
+.hscroll{
+  position:relative;
+  height:100vh;
+  display:flex;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+  scroll-padding-left:0;
+  background:var(--bg);
+}
+
+/* Hide scrollbars (still scrollable) */
+.hscroll::-webkit-scrollbar{ height:0; }
+.hscroll{ scrollbar-width:none; }
+
+.panel{
+  flex:0 0 100vw;
+  height:100vh;
+  position:relative;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  isolation:isolate;
+  padding-top:86px; /* space for fixed header */
+}
+
+/* Full-bleed panel background */
+.panel__bg{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(120% 90% at 40% 20%, rgba(255,255,255,.06), rgba(0,0,0,0) 62%),
+    radial-gradient(90% 80% at 70% 75%, rgba(255,255,255,.04), rgba(0,0,0,0) 62%),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.74));
+  pointer-events:none;
+  z-index:0;
+}
+
+.panel__bg--soft{
+  background:
+    radial-gradient(120% 90% at 30% 30%, rgba(255,255,255,.05), rgba(0,0,0,0) 62%),
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.78));
+}
+
+.panel__inner{
+  position:relative;
+  z-index:1;
+  height:calc(100vh - 86px);
+  padding:var(--pad);
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  gap:16px;
+  width:100%;
+}
+
+.panel__kicker{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.panel__label{
+  font-size:11px;
+  letter-spacing:.22em;
   text-transform:uppercase;
-  font-size:13px;
-  margin:0;
-  color:rgba(255,255,255,.72);
+  color:rgba(255,255,255,.56);
 }
 
-/* ================= Hero ================= */
-.hero{ margin-top:26px; }
-.hero__title{
-  font-weight:500;
-  letter-spacing:-.02em;
-  font-size:var(--h1);
-  line-height:var(--lh-tight);
-  margin:0 0 14px 0;
-  color:rgba(255,255,255,.94);
+.panel__next{
+  justify-self:center;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(12,12,12,.45);
+  backdrop-filter: blur(14px);
+  color:rgba(255,255,255,.72);
+  transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease;
 }
-.hero__sub{
-  margin:0;
-  color:rgba(255,255,255,.66);
-  max-width:var(--measure);
-  font-size:16px;
-  line-height:1.7;
-  letter-spacing:.01em;
+.panel__next:hover{
+  transform:translateY(-1px);
+  border-color:rgba(255,255,255,.16);
+  box-shadow:0 0 0 1px var(--jt), 0 0 22px var(--jtGlow2);
 }
+.panel__dot{
+  width:8px; height:8px;
+  border-radius:999px;
+  background:var(--jt);
+  box-shadow:0 0 0 1px rgba(255,255,255,.10), 0 0 18px var(--jtGlow2);
+}
+.panel__txt{
+  font-size:11px;
+  letter-spacing:.20em;
+  text-transform:uppercase;
+}
+
+/* Works panel: true edge-to-edge grid */
+.panel__edge{
+  position:relative;
+  z-index:1;
+  height:calc(100vh - 86px);
+  padding:0;           /* edge-to-edge */
+  display:flex;
+  align-items:stretch;
+}
+
+/* posters grid now fills the panel; keep a tiny safe inset */
+.posters--edge{
+  width:100%;
+  height:100%;
+  padding:clamp(12px,2vw,18px); /* minimal inset so it “touches” edges visually */
+  display:grid;
+  grid-template-columns:repeat(6, minmax(0, 1fr));
+  gap:clamp(10px,1.5vw,16px);
+  align-content:start;
+  overflow:hidden;
+}
+
+/* keep movie poster aspect ratio and show full image */
+.poster__img{
+  aspect-ratio:2/3;
+  background-size:contain;     /* full poster visible */
+  background-repeat:no-repeat;
+  background-position:center;
+}
+
+/* works panel lower-right “next” */
+.panel__corner{
+  position:absolute;
+  right:var(--pad);
+  bottom:var(--pad);
+  z-index:2;
+}
+
+.panel__footerline{
+  position:absolute;
+  left:0; right:0;
+  bottom:0;
+  height:1px;
+  background:rgba(255,255,255,.06);
+  z-index:1;
+}
+
+/* About panel inner tweaks */
+.panel__inner--about{
+  place-items:center;
+}
+.panel--about .bio{
+  width:min(1100px, 100%);
+}
+
+/* =========================================================
+   Existing player/poster/bio styles (kept, minimal edits)
+   ========================================================= */
 
 /* ================= Player ================= */
 .player{
-  margin-top:18px;
+  width:min(980px, 100%);
+  justify-self:center;
+
   border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.03);
@@ -326,20 +441,16 @@ a:hover{ opacity:.92; }
   cursor:pointer;
   transition:background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
 }
-
-/* ✅ Solid jewel fill + jewel outline on hover */
 .row:hover{
   transform:translateY(-1px);
   border-color:color-mix(in srgb, var(--jt) 70%, rgba(255,255,255,.16));
   background:var(--jtFill);
   box-shadow:0 0 0 1px var(--jt), 0 0 22px var(--jtGlow2);
 }
-
 .row.is-active{
   border-color:rgba(255,255,255,.20);
   background:rgba(255,255,255,.05);
 }
-
 .row__t{
   font-size:13px;
   font-weight:500;
@@ -350,13 +461,7 @@ a:hover{ opacity:.92; }
   text-overflow:ellipsis;
 }
 
-/* ================= Posters ================= */
-.posters{
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0, 1fr));
-  gap:18px;
-}
-
+/* ================= Posters (base hover/label kept) ================= */
 .poster{
   position:relative;
   border-radius:18px;
@@ -372,18 +477,7 @@ a:hover{ opacity:.92; }
   background:rgba(255,255,255,.03);
   box-shadow:0 0 0 1px var(--jt), 0 0 28px var(--jtGlow2);
 }
-
-.poster__img{
-  aspect-ratio:2/3;
-  background-size:cover;
-  background-position:center;
-  transform:scale(1);
-  transition:transform .22s ease, filter .22s ease;
-}
-.poster:hover .poster__img{
-  transform:scale(1.02);
-  filter:brightness(1.03);
-}
+.poster:hover .poster__img{ filter:brightness(1.03); }
 
 .poster::after{
   content:attr(data-title);
@@ -406,7 +500,6 @@ a:hover{ opacity:.92; }
   opacity:0;
   transform:translateY(6px);
   transition:opacity .18s ease, transform .18s ease, border-color .18s ease, box-shadow .18s ease;
-
   pointer-events:none;
   white-space:nowrap;
   overflow:hidden;
@@ -418,7 +511,6 @@ a:hover{ opacity:.92; }
   border-color:color-mix(in srgb, var(--jt) 55%, rgba(255,255,255,.12));
   box-shadow:0 0 0 1px rgba(255,255,255,.05), 0 0 18px var(--jtGlow2);
 }
-
 .poster__name{ display:none !important; }
 
 /* ================= Bio ================= */
@@ -428,7 +520,6 @@ a:hover{ opacity:.92; }
   gap:36px;
   align-items:start;
 }
-
 .bioImg{
   width:100%;
   aspect-ratio:3/4;
@@ -440,9 +531,7 @@ a:hover{ opacity:.92; }
   background-size:cover;
   background-position:center;
 }
-
 .bioText{ max-width:var(--measure); }
-
 .bioText p{
   margin:0 0 18px 0;
   color:rgba(255,255,255,.82);
@@ -472,11 +561,8 @@ a:hover{ opacity:.92; }
 .rep__body a{ border-bottom:1px solid rgba(255,255,255,.18); }
 
 /* ================= Footer ================= */
-.footer{
-  margin-top:110px;
-  padding:26px 0 0;
-  border-top:1px solid rgba(255,255,255,.08);
-}
+.footer{ margin-top:34px; padding-top:18px; border-top:1px solid rgba(255,255,255,.08); }
+.footer--panel{ border-top:1px solid rgba(255,255,255,.08); }
 .footer__inner{
   display:flex;
   justify-content:space-between;
@@ -554,7 +640,6 @@ a:hover{ opacity:.92; }
   border-color:rgba(255,255,255,.16);
   box-shadow:0 0 0 1px var(--jt), 0 0 22px var(--jtGlow2);
 }
-
 .dock__play{
   width:44px; height:44px;
   border-radius:999px;
@@ -597,80 +682,13 @@ a:hover{ opacity:.92; }
 /* ================= Mobile ================= */
 @media (max-width: 900px){
   .hdr__social{ display:none; }
-  .posters{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .posters--edge{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
   .bio{ grid-template-columns:1fr; }
   .bioText{ max-width:100%; }
   .dock__wave{ width:52%; }
+  .panel__corner{ right:12px; bottom:12px; }
 }
 
 @media (max-width: 520px){
-  .page{ padding:calc(var(--pad) + 44px) var(--pad) 132px; }
-  .hero__sub{ font-size:15.5px; }
   .dock__title{ max-width:24ch; }
-}
-
-/* =========================================================
-   ✅ 2.4 ADD-ONS: Fullscreen stage without changing hooks
-   ========================================================= */
-
-.stage{ min-height:100vh; }
-.stage__hero{
-  min-height:calc(100vh - 86px); /* header height + breathing room */
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-  padding:var(--pad);
-}
-.stage__bg{
-  position:absolute; inset:0;
-  background:
-    radial-gradient(120% 90% at 40% 20%, rgba(255,255,255,.06), rgba(0,0,0,0) 62%),
-    radial-gradient(90% 80% at 70% 75%, rgba(255,255,255,.04), rgba(0,0,0,0) 62%),
-    linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.70));
-  pointer-events:none;
-}
-
-.stage__inner{
-  position:relative;
-  width:min(1100px, 100%);
-  display:grid;
-  grid-template-rows:auto auto auto;
-  gap:16px;
-}
-
-.stage__kicker{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.stage__label{
-  font-size:11px;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.56);
-}
-
-.stage__scroll{
-  justify-self:center;
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(12,12,12,.45);
-  backdrop-filter: blur(14px);
-  color:rgba(255,255,255,.72);
-}
-.stage__dot{
-  width:8px; height:8px;
-  border-radius:999px;
-  background:var(--jt);
-  box-shadow:0 0 0 1px rgba(255,255,255,.10), 0 0 18px var(--jtGlow2);
-}
-.stage__txt{
-  font-size:11px;
-  letter-spacing:.20em;
-  text-transform:uppercase;
 }
