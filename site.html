@@ -1,6 +1,7 @@
 <!-- ========================
 FILE: site.html
-Version: 2.3 (Full-bleed, fixes layout + restores working hooks)
+AF SITE — Version 2.4
+- Fullscreen stage WITHOUT breaking 2.0 JS hooks
 ======================== -->
 <!doctype html>
 <html lang="en">
@@ -13,99 +14,131 @@ Version: 2.3 (Full-bleed, fixes layout + restores working hooks)
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=2.3" />
+  <link rel="stylesheet" href="styles.css?v=2.4" />
 </head>
 
 <body>
-  <!-- Sticky header -->
+  <!-- ================= Header (2.0 hooks preserved) ================= -->
   <header class="hdr" role="banner">
     <div class="hdr__inner">
       <a class="brand" href="#top" aria-label="Go to top">
-        <span class="brand__name" id="brandName">Andy Forsberg</span>
-        <span class="brand__role">Composer + Producer</span>
+        <span class="brand__name">Andy Forsberg</span>
       </a>
 
-      <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
-        <span class="menuBtn__lines" aria-hidden="true"></span>
-      </button>
+      <div class="hdr__right">
+        <!-- Socials (2.0 hook IDs preserved) -->
+        <nav class="hdr__social" aria-label="Social links">
+          <a class="sbtn imdb" id="social-imdb" href="#" target="_blank" rel="noreferrer">IMDb</a>
+          <a class="sbtn spotify" id="social-spotify" href="#" target="_blank" rel="noreferrer">Spotify</a>
+          <a class="sbtn apple" id="social-apple" href="#" target="_blank" rel="noreferrer">Apple</a>
+          <a class="sbtn instagram" id="social-instagram" href="#" target="_blank" rel="noreferrer">IG</a>
+        </nav>
+
+        <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+          <span class="menuBtn__lines" aria-hidden="true"></span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- Menu overlay -->
+  <!-- ================= Menu overlay (2.0 hooks preserved) ================= -->
   <div class="menu" aria-hidden="true">
-    <div class="menu__panel" role="dialog" aria-label="Site menu">
-      <a class="menu__link" href="#listening">Listening Room</a>
+    <div class="menu__panel" role="dialog" aria-label="Menu">
+      <a class="menu__link" href="#listening">Listening</a>
       <a class="menu__link" href="#works">Works</a>
       <a class="menu__link" href="#about">About</a>
-
-      <div class="menu__social" aria-label="Social links">
-        <a class="sbtn imdb" href="https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk" target="_blank" rel="noreferrer">IMDb</a>
-        <a class="sbtn spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw" target="_blank" rel="noreferrer">Spotify</a>
-        <a class="sbtn apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
-        <a class="sbtn instagram" href="https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a>
-      </div>
     </div>
   </div>
 
-  <main id="top" class="page">
-    <!-- FULLSCREEN HERO -->
-    <section id="listening" class="hero" aria-label="Listening Room">
-      <div class="hero__bg" aria-hidden="true"></div>
-      <div class="hero__grain" aria-hidden="true"></div>
+  <!-- ================= Fullscreen Stage ================= -->
+  <main id="top" class="stage">
+    <!-- Listening stage (fullscreen) -->
+    <section id="listening" class="stage__hero" aria-label="Listening Room">
+      <div class="stage__bg" aria-hidden="true"></div>
 
-      <div class="hero__inner">
-        <div class="hero__rail">
-          <div class="kicker">Listening Room</div>
-          <div class="subhint">Scroll</div>
+      <div class="stage__inner">
+        <div class="stage__kicker">
+          <span class="stage__label">Listening Room</span>
         </div>
 
-        <!-- Player bay (FULL, not tiny centered) -->
-        <div class="playerBay">
-          <div class="player" aria-label="Audio player">
-            <div class="np">
+        <!-- Player (2.0 hooks preserved) -->
+        <div class="player" aria-label="Audio player">
+          <div class="np">
+            <div class="np__left">
               <button class="playBtn" type="button" aria-label="Play">▶</button>
               <div class="np__meta">
                 <div class="npTitle">—</div>
                 <div class="npTime">0:00 / 0:00</div>
               </div>
             </div>
-
-            <div class="wave" role="button" aria-label="Waveform seek">
-              <canvas></canvas>
-            </div>
-
-            <div class="tracklist" aria-label="Track list"></div>
           </div>
+
+          <div class="wave" role="button" aria-label="Waveform seek">
+            <canvas></canvas>
+          </div>
+
+          <div class="tracklist" aria-label="Track list"></div>
         </div>
 
-        <a class="scrollCue" href="#works" aria-label="Scroll to Works">
-          <span class="scrollCue__dot" aria-hidden="true"></span>
-          <span class="scrollCue__txt">Scroll</span>
+        <a class="stage__scroll" href="#works" aria-label="Scroll to works">
+          <span class="stage__dot" aria-hidden="true"></span>
+          <span class="stage__txt">Scroll</span>
         </a>
       </div>
     </section>
 
-    <!-- WORKS -->
-    <section id="works" class="works" aria-label="Works">
-      <div class="works__inner">
+    <!-- Works section (normal document flow after hero) -->
+    <section id="works" class="page" aria-label="Works">
+      <div class="section" data-reveal>
+        <div class="section__top">
+          <h2 class="section__title">Works</h2>
+        </div>
+
+        <!-- Posters (2.0 hooks preserved) -->
         <div class="posters" aria-label="Project posters"></div>
       </div>
-    </section>
 
-    <!-- ABOUT (NO COPY ADDED) -->
-    <section id="about" class="about" aria-label="About">
-      <div class="about__inner">
-        <div class="about__card">
-          <!-- Paste YOUR bio only if you want. Leaving empty by default -->
-          <div class="about__body">
+      <!-- About section (NO new copy) -->
+      <div id="about" class="section" data-reveal aria-label="About">
+        <div class="section__top">
+          <h2 class="section__title">About</h2>
+        </div>
+
+        <div class="bio">
+          <div class="bioImg" aria-hidden="true"></div>
+          <div class="bioText">
+            <!-- leave empty, you’ll paste your final bio when ready -->
             <p></p>
+
+            <div class="rep">
+              <div class="rep__kicker">Contact</div>
+              <div class="rep__body">
+                <a href="mailto:andy@andyforsbergmusic.com">andy@andyforsbergmusic.com</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <footer class="footer" aria-label="Footer">
+        <div class="footer__inner">
+          <div>Andy Forsberg</div>
+          <div>Composer + Producer</div>
+        </div>
+      </footer>
     </section>
   </main>
 
-  <!-- Dock mini player -->
+  <!-- ================= Lightbox (2.0 hooks preserved) ================= -->
+  <div class="lb" aria-hidden="true">
+    <div class="lb__bg" aria-hidden="true"></div>
+    <div class="lb__panel" role="dialog" aria-label="Image viewer">
+      <button class="lb__close" type="button" aria-label="Close">✕</button>
+      <img class="lb__img" alt="" />
+    </div>
+  </div>
+
+  <!-- ================= Dock (2.0 hooks preserved) ================= -->
   <div class="dock" aria-hidden="true">
     <div class="dock__inner" aria-label="Mini player dock">
       <button class="dock__play" type="button" aria-label="Play">▶</button>
@@ -119,6 +152,6 @@ Version: 2.3 (Full-bleed, fixes layout + restores working hooks)
     </div>
   </div>
 
-  <script src="app.js?v=2.3"></script>
+  <script src="app.js?v=2.4"></script>
 </body>
 </html>
