@@ -1,6 +1,5 @@
 <!-- ========================
 FILE: site.html
-AF SITE — Version 2.5 (Horizontal)
 ======================== -->
 <!doctype html>
 <html lang="en">
@@ -13,199 +12,174 @@ AF SITE — Version 2.5 (Horizontal)
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=2.5" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
-  <!-- ================= Header (2.0 hooks preserved) ================= -->
-  <header class="hdr" role="banner">
-    <div class="hdr__inner">
-      <a class="brand" href="#top" aria-label="Go to top">
+  <!-- Top bar -->
+  <header class="topbar" role="banner">
+    <div class="topbar__inner">
+      <a class="brand" href="#listening" data-jt="brand">
         <span class="brand__name">Andy Forsberg</span>
+        <span class="brand__role">Composer + Producer</span>
       </a>
 
-      <div class="hdr__right">
-        <!-- Socials (2.0 hook IDs preserved) -->
-        <nav class="hdr__social" aria-label="Social links">
-          <a class="sbtn imdb" id="social-imdb" href="#" target="_blank" rel="noreferrer">IMDb</a>
-          <a class="sbtn spotify" id="social-spotify" href="#" target="_blank" rel="noreferrer">Spotify</a>
-          <a class="sbtn apple" id="social-apple" href="#" target="_blank" rel="noreferrer">Apple</a>
-          <a class="sbtn instagram" id="social-instagram" href="#" target="_blank" rel="noreferrer">IG</a>
-        </nav>
-
-        <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
-          <span class="menuBtn__lines" aria-hidden="true"></span>
-        </button>
-      </div>
+      <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+        <span class="menuBtn__lines" aria-hidden="true"></span>
+      </button>
     </div>
   </header>
 
-  <!-- ================= Menu overlay (2.0 hooks preserved) ================= -->
-  <div class="menu" aria-hidden="true">
-    <div class="menu__panel" role="dialog" aria-label="Menu">
-      <a class="menu__link" href="#listening">Listening</a>
-      <a class="menu__link" href="#works">Works</a>
-      <a class="menu__link" href="#about">About</a>
+  <!-- Menu overlay -->
+  <aside class="menu" aria-hidden="true">
+    <div class="menu__panel" role="dialog" aria-label="Site menu">
+      <a class="menu__link" href="#listening" data-target="listening">Listening Room</a>
+      <a class="menu__link" href="#projects" data-target="projects">Featured Projects</a>
+      <a class="menu__link" href="#bio" data-target="bio">Bio</a>
+      <a class="menu__link" href="#rep" data-target="rep">Representation</a>
+
+      <div class="menu__social">
+        <a class="sbtn imdb" id="social-imdb" href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
+        <a class="sbtn spotify" id="social-spotify" href="https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3" target="_blank" rel="noreferrer">Spotify</a>
+        <a class="sbtn apple" id="social-apple" href="https://music.apple.com/us/artist/andy-forsberg/987738278" target="_blank" rel="noreferrer">Apple Music</a>
+        <a class="sbtn instagram" id="social-instagram" href="https://www.instagram.com/aforsbergmusic" target="_blank" rel="noreferrer">Instagram</a>
+      </div>
     </div>
-  </div>
+  </aside>
 
-  <!-- ================= Horizontal Scroll Stage ================= -->
-  <main id="top" class="hscroll" aria-label="Horizontal panels">
-    <!-- Panel 1: Listening -->
-    <section id="listening" class="panel panel--listening" aria-label="Listening Room">
-      <div class="panel__bg" aria-hidden="true"></div>
+  <!-- Horizontal tiles -->
+  <main class="rail" aria-label="Horizontal sections">
+    <!-- Tile 1: Listening -->
+    <section class="tile tile--listening" id="listening" data-tile>
+      <div class="tile__bg">
+        <!-- studio decoration (subtle, no captions) -->
+        <img class="decor decor--a" alt="" loading="lazy" decoding="async"
+          src="https://www.dropbox.com/scl/fi/xt5oi8nnc5rnwpjryivh3/Studio-Website-1.jpg?rlkey=23euuj9l2dr6xm14o177gms3u&raw=1">
+        <img class="decor decor--b" alt="" loading="lazy" decoding="async"
+          src="https://www.dropbox.com/scl/fi/rphhjgqjehuwjt4mkj35r/Studio-Website-4.jpg?rlkey=nlux8i541g627rx7e4zbrssge&raw=1">
+      </div>
 
-      <div class="panel__inner">
-        <div class="panel__kicker">
-          <span class="panel__label">Listening Room</span>
+      <div class="tile__content">
+        <div class="kicker">
+          <span class="kicker__label">Listening Room</span>
         </div>
 
-        <!-- Player (2.0 hooks preserved) -->
         <div class="player" aria-label="Audio player">
-          <div class="np">
-            <div class="np__left">
-              <button class="playBtn" type="button" aria-label="Play">▶</button>
-              <div class="np__meta">
-                <div class="npTitle">—</div>
-                <div class="npTime">0:00 / 0:00</div>
+          <div class="player__top">
+            <button class="pbtn playBtn" type="button" aria-label="Play/Pause">▶</button>
+
+            <div class="pmeta">
+              <div class="npTitle">—</div>
+              <div class="npTime">0:00 / 0:00</div>
+            </div>
+
+            <div class="pcontrols">
+              <button class="pbtn prevBtn" type="button" aria-label="Previous track">⟲</button>
+              <button class="pbtn nextBtn" type="button" aria-label="Next track">⟳</button>
+              <button class="pbtn loopBtn" type="button" aria-label="Loop off" aria-pressed="false">∞</button>
+
+              <button class="pbtn muteBtn" type="button" aria-label="Mute" aria-pressed="false">🔈</button>
+
+              <div class="vol">
+                <input class="vol__range" type="range" min="0" max="1" step="0.01" value="0.9" aria-label="Volume">
               </div>
             </div>
           </div>
 
-          <div class="wave" role="button" aria-label="Waveform seek">
+          <div class="wave waveBtn" role="button" aria-label="Seek">
             <canvas></canvas>
           </div>
 
-          <div class="tracklist" aria-label="Track list"></div>
+          <div class="tracklist" aria-label="Tracklist"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tile 2: Featured Projects -->
+    <section class="tile tile--projects" id="projects" data-tile>
+      <div class="tile__bg">
+        <img class="decor decor--c" alt="" loading="lazy" decoding="async"
+          src="https://www.dropbox.com/scl/fi/oyqeszrslesy3mzqx39py/Studio-Website-17.jpg?rlkey=cg41dzy78a3i4ztskargig6qo&raw=1">
+      </div>
+
+      <div class="tile__content">
+        <div class="kicker">
+          <span class="kicker__label">Featured Projects</span>
         </div>
 
-        <!-- “Next panel” -->
-        <a class="panel__next" href="#works" aria-label="Go to Works">
-          <span class="panel__dot" aria-hidden="true"></span>
-          <span class="panel__txt">Next</span>
-        </a>
+        <div class="posters" aria-label="Featured projects grid"></div>
       </div>
     </section>
 
-    <!-- Panel 2: Works -->
-    <section id="works" class="panel panel--works" aria-label="Works">
-      <div class="panel__bg panel__bg--soft" aria-hidden="true"></div>
-
-      <div class="panel__edge">
-        <!-- Posters (2.0 hooks preserved) -->
-        <div class="posters posters--edge" aria-label="Project posters"></div>
+    <!-- Tile 3: Bio -->
+    <section class="tile tile--bio" id="bio" data-tile>
+      <div class="tile__bg">
+        <img class="decor decor--d" alt="" loading="lazy" decoding="async"
+          src="https://www.dropbox.com/scl/fi/2ofmv0l2u6mezzmk3mq3u/Studio-Website-14.jpg?rlkey=km8kcveprykqpantxl5jhf2w0&raw=1">
       </div>
 
-      <div class="panel__footerline" aria-hidden="true"></div>
+      <div class="tile__content">
+        <div class="kicker">
+          <span class="kicker__label">Bio</span>
+        </div>
 
-      <div class="panel__corner">
-        <a class="panel__next" href="#about" aria-label="Go to About">
-          <span class="panel__dot" aria-hidden="true"></span>
-          <span class="panel__txt">Next</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- Panel 3: About (no new copy) -->
-    <section id="about" class="panel panel--about" aria-label="About">
-      <div class="panel__bg panel__bg--soft" aria-hidden="true"></div>
-
-      <div class="panel__inner panel__inner--about">
-        <div class="bio">
-          <div class="bioImg" aria-hidden="true"></div>
-
-          <div class="bioText">
-            <!-- Leave empty until you paste final bio -->
-            <p></p>
-
-            <div class="rep">
-              <div class="rep__kicker">Contact</div>
-              <div class="rep__body">
-                <a href="mailto:andy@andyforsbergmusic.com">andy@andyforsbergmusic.com</a>
-              </div>
+        <article class="mag">
+          <div class="mag__col mag__col--hero">
+            <div class="mag__portrait">
+              <img alt="" loading="lazy" decoding="async"
+                src="https://www.dropbox.com/scl/fi/dxyvbz5xbpi8a5js0n6gk/Studio-Website-13.jpg?rlkey=knn294prc63qxhw7xujdkdmox&raw=1">
             </div>
-
-            <footer class="footer footer--panel" aria-label="Footer">
-              <div class="footer__inner">
-                <div>Andy Forsberg</div>
-                <div>Composer + Producer</div>
-              </div>
-            </footer>
           </div>
+
+          <div class="mag__col mag__col--copy">
+            <div class="mag__copy">
+              <p>His work blends neoclassical textures, electronic sound design, and orchestral writing across film, television, and interactive media.</p>
+              <p>He has composed music for projects with <strong>Disney</strong>, <strong>National Geographic</strong>, <strong>BBC</strong>, <strong>Apple</strong>, <strong>History Channel</strong>, <strong>Discovery</strong>, <strong>Hulu</strong>, <strong>Lifetime</strong>, and <strong>Hallmark</strong>.</p>
+              <p>A percussionist and conductor, he is closely involved in the performance of his scores and productions, from the writing room to the podium.</p>
+              <p>His approach prioritizes emotional clarity, nuance, and attention to detail.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Tile 4: Representation -->
+    <section class="tile tile--rep" id="rep" data-tile>
+      <div class="tile__bg"></div>
+
+      <div class="tile__content">
+        <div class="kicker">
+          <span class="kicker__label">Representation</span>
+        </div>
+
+        <div class="rep">
+          <p class="rep__kicker">For inquiries</p>
+          <p class="rep__body">
+            <a href="#" id="rep-email">Email</a>
+            <span class="rep__dot">•</span>
+            <a href="https://www.imdb.com/name/nm4586039/" target="_blank" rel="noreferrer">IMDb</a>
+          </p>
+          <!-- Replace this with your exact rep copy later, no extra text added. -->
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ================= Lightbox (2.0 hooks preserved) ================= -->
+  <!-- Next / Back -->
+  <nav class="railNav" aria-label="Tile navigation">
+    <button class="navBtn navPrev" type="button" aria-label="Previous section">Back</button>
+    <button class="navBtn navNext" type="button" aria-label="Next section">Next</button>
+  </nav>
+
+  <!-- Lightbox for posters -->
   <div class="lb" aria-hidden="true">
     <div class="lb__bg" aria-hidden="true"></div>
-    <div class="lb__panel" role="dialog" aria-label="Image viewer">
+    <div class="lb__panel" role="dialog" aria-label="Project image">
       <button class="lb__close" type="button" aria-label="Close">✕</button>
       <img class="lb__img" alt="" />
     </div>
   </div>
 
-  <!-- ================= Dock (2.0 hooks preserved) ================= -->
-  <div class="dock" aria-hidden="true">
-    <div class="dock__inner" aria-label="Mini player dock">
-      <button class="dock__play" type="button" aria-label="Play">▶</button>
-      <div class="dock__meta">
-        <div class="dock__title">—</div>
-        <div class="dock__time">0:00 / 0:00</div>
-      </div>
-      <div class="dock__wave" role="button" aria-label="Dock waveform seek">
-        <canvas></canvas>
-      </div>
-    </div>
-  </div>
-
-  <script src="app.js?v=2.5"></script>
-
-  <!-- ================= Horizontal nav helper (safe, standalone) ================= -->
-  <script>
-    (function () {
-      const scroller = document.querySelector(".hscroll");
-      if (!scroller) return;
-
-      const panelById = (id) => document.getElementById(id);
-
-      const goTo = (id) => {
-        const el = panelById(id);
-        if (!el) return;
-        scroller.scrollTo({ left: el.offsetLeft, behavior: "smooth" });
-      };
-
-      // Intercept anchor clicks so #works, #about scroll horizontally
-      document.addEventListener("click", (e) => {
-        const a = e.target.closest('a[href^="#"]');
-        if (!a) return;
-
-        const hash = a.getAttribute("href");
-        const id = hash?.slice(1);
-        if (!id) return;
-
-        const target = panelById(id);
-        if (!target) return;
-
-        e.preventDefault();
-        goTo(id);
-      });
-
-      // Make vertical mousewheel scroll horizontally (feels premium)
-      scroller.addEventListener("wheel", (e) => {
-        const mostlyVertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
-        if (!mostlyVertical) return;
-        e.preventDefault();
-        scroller.scrollLeft += e.deltaY;
-      }, { passive: false });
-
-      // If page loads with a hash, land on that panel
-      const initial = location.hash?.slice(1);
-      if (initial && panelById(initial)) {
-        setTimeout(() => goTo(initial), 0);
-      }
-    })();
-  </script>
+  <script src="./app.js"></script>
 </body>
 </html>
