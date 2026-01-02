@@ -5,26 +5,18 @@ FILE: app.js
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-  /* ========= Jewel palette (solid, not pastel) ========= */
+  /* ========= Jewel palette (subtle usage) ========= */
   const JEWELS = [
-    "#7a5cff", // amethyst
-    "#5c7cff", // sapphire
-    "#22d3ee", // cyan
-    "#34d98a", // emerald
-    "#a3e635", // peridot
-    "#ffd166", // gold
-    "#ff9f1c", // amber
-    "#ff4d6d", // ruby
-    "#c13584"  // magenta
+    "#7a5cff", "#5c7cff", "#22d3ee", "#34d98a",
+    "#a3e635", "#ffd166", "#ff9f1c", "#ff4d6d", "#c13584"
   ];
-
   const pickJewel = () => JEWELS[Math.floor(Math.random() * JEWELS.length)];
 
   const setJT = (hex) => {
     const root = document.documentElement;
     root.style.setProperty("--jt", hex);
-    root.style.setProperty("--jtFill", `color-mix(in srgb, ${hex} 18%, rgba(255,255,255,.02))`);
-    root.style.setProperty("--jtFillStrong", `color-mix(in srgb, ${hex} 28%, rgba(255,255,255,.02))`);
+    root.style.setProperty("--jtFill", `color-mix(in srgb, ${hex} 14%, rgba(255,255,255,.02))`);
+    root.style.setProperty("--jtFillStrong", `color-mix(in srgb, ${hex} 22%, rgba(255,255,255,.02))`);
     root.style.setProperty("--jtLine", `color-mix(in srgb, ${hex} 55%, rgba(255,255,255,.14))`);
   };
 
@@ -163,7 +155,7 @@ FILE: app.js
     return out;
   }
 
-  /* ========= Negative-space waveform that fills with jewel tone ========= */
+  /* ========= Negative-space waveform that fills with jewel ========= */
   function drawWave(canvas, peaks, progress01, scrubX01) {
     if (!canvas || !peaks || !peaks.length) return;
 
@@ -220,11 +212,10 @@ FILE: app.js
       }
     }
 
-    // subtle scrub highlight overlay (optional)
     if (typeof scrubX01 === "number") {
       const sx = clamp01(scrubX01) * w;
-      ctx.fillStyle = "rgba(255,255,255,0.08)";
-      ctx.fillRect(sx - 24, 0, 48, h);
+      ctx.fillStyle = "rgba(255,255,255,0.06)";
+      ctx.fillRect(sx - 20, 0, 40, h);
     }
   }
 
@@ -262,6 +253,9 @@ FILE: app.js
     const tiles = $$("[data-tile]");
     const byId = (id) => tiles.find(t => t.id === id);
 
+    // deterministic color per tile (calm, intentional)
+    tiles.forEach(t => { t.dataset.jewel = hashToJewel(t.id || "tile"); });
+
     const getActiveIndex = () => {
       if (!rail) return 0;
       const x = rail.scrollLeft;
@@ -282,17 +276,10 @@ FILE: app.js
       if (idx >= 0) scrollToIndex(idx);
     };
 
-    // set tile colors deterministically (so it feels intentional, not random chaos)
-    tiles.forEach(t => {
-      const col = hashToJewel(t.id || "tile");
-      t.dataset.jewel = col;
-    });
-
     const applyActiveTileTheme = () => {
       const idx = getActiveIndex();
       const t = tiles[idx];
-      const col = t?.dataset?.jewel || pickJewel();
-      setJT(col);
+      setJT(t?.dataset?.jewel || pickJewel());
     };
 
     if (rail) {
@@ -300,7 +287,7 @@ FILE: app.js
         window.requestAnimationFrame(applyActiveTileTheme);
       }, { passive: true });
 
-      // vertical wheel -> horizontal (trackpads still work)
+      // vertical wheel -> horizontal
       rail.addEventListener("wheel", (e) => {
         if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
         e.preventDefault();
@@ -308,7 +295,7 @@ FILE: app.js
       }, { passive: false });
     }
 
-    // menu + hash navigation
+    // Link interception for both topnav + menu + buttons
     const interceptLinks = (root) => {
       $$('a[href^="#"]', root).forEach(a => {
         a.addEventListener("click", (e) => {
@@ -321,57 +308,49 @@ FILE: app.js
           history.replaceState(null, "", `#${id}`);
         });
       });
+
+      // data-target links
+      $$("[data-target]", root).forEach(el => {
+        el.addEventListener("click", (e) => {
+          const id = el.getAttribute("data-target");
+          if (!id) return;
+          e.preventDefault();
+          closeMenu();
+          scrollToId(id);
+          history.replaceState(null, "", `#${id}`);
+        });
+      });
     };
     interceptLinks(document);
 
     const initialHash = (location.hash || "").replace("#", "");
     if (initialHash) scrollToId(initialHash);
+    applyActiveTileTheme();
 
+    // next/back
     const navPrev = $(".navPrev");
     const navNext = $(".navNext");
     if (navPrev) navPrev.addEventListener("click", () => scrollToIndex(Math.max(0, getActiveIndex() - 1)));
     if (navNext) navNext.addEventListener("click", () => scrollToIndex(Math.min(tiles.length - 1, getActiveIndex() + 1)));
 
+    // arrow keys for tiles (only if not typing)
     window.addEventListener("keydown", (e) => {
-      if (!rail) return;
+      const tag = (document.activeElement?.tagName || "").toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
       if (menu && menu.getAttribute("aria-hidden") === "false") return;
 
       if (e.key === "ArrowRight" && !e.repeat) scrollToIndex(Math.min(tiles.length - 1, getActiveIndex() + 1));
       if (e.key === "ArrowLeft" && !e.repeat) scrollToIndex(Math.max(0, getActiveIndex() - 1));
     });
 
-    // initial theme
-    applyActiveTileTheme();
-
-    /* ===== “Dialed” hover color behavior:
-       - base color = tile color
-       - on hover/focus of interactive elements, temporarily pick a jewel and apply as the global theme
-       - on leave/blur, snap back to active tile theme
-    ===== */
-    const interactive = [
-      ...$$(".brand, .menuBtn, .menu__link, .sbtn, .navBtn, .rcBtn, .rcRow, .poster, .rcWave")
-    ];
-
-    const onAccent = () => setJT(pickJewel());
-    const onAccentEnd = () => applyActiveTileTheme();
-
-    interactive.forEach(el => {
-      el.addEventListener("mouseenter", onAccent, { passive: true });
-      el.addEventListener("mouseleave", onAccentEnd, { passive: true });
-      el.addEventListener("focus", onAccent, { passive: true });
-      el.addEventListener("blur", onAccentEnd, { passive: true });
-    });
-
     /* ===== Posters + lightbox ===== */
     const postersEl = $(".posters");
     if (postersEl && PROJECTS.length) {
       postersEl.innerHTML = PROJECTS.map((p, i) => {
-        const safeTitle = (p.title || "Project").replace(/"/g, "&quot;");
         const img = p.img || "";
         return `
-          <div class="poster" data-idx="${i}" role="button" aria-label="Open ${safeTitle}">
+          <div class="poster" data-idx="${i}" role="button" aria-label="Open project image">
             <img class="poster__img" src="${img}" alt="" loading="lazy" decoding="async" />
-            <div class="poster__name">${safeTitle}</div>
           </div>
         `;
       }).join("");
@@ -409,15 +388,9 @@ FILE: app.js
       });
     }
 
-    /* ===== Representation email ===== */
-    const repEmail = $("#rep-email");
-    if (repEmail) repEmail.href = "mailto:andy@andyforsbergmusic.com";
-
     /* =========================================================
-       PLAYER (closer to ReelCrafter: big surface, scrub line, tight UI)
-       - NO loop button (per your request)
+       PLAYER
        ========================================================= */
-    const rc = $(".rcPlayer");
     const playBtn = $(".rcPlay");
     const prevBtn = $(".rcPrev");
     const nextBtn = $(".rcNext");
@@ -483,7 +456,6 @@ FILE: app.js
       const tr = currentTrack();
       if (!tr?.src) return;
       try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
-
       const next = FEATURED_TRACKS[(tIdx + 1) % FEATURED_TRACKS.length];
       if (next?.src) getPeaks(next.src).catch(() => {});
     };
@@ -657,7 +629,6 @@ FILE: app.js
       waveEl.addEventListener("pointerup", endScrub);
       waveEl.addEventListener("pointercancel", endScrub);
 
-      // hover preview line (desktop)
       waveEl.addEventListener("mousemove", (e) => {
         if (isScrubbing) return;
         const rect = waveEl.getBoundingClientRect();
@@ -673,11 +644,11 @@ FILE: app.js
       });
     }
 
-    // keyboard controls (player-focused but safe)
+    // keyboard controls
     window.addEventListener("keydown", (e) => {
-      if (menu && menu.getAttribute("aria-hidden") === "false") return;
       const tag = (document.activeElement?.tagName || "").toLowerCase();
       if (tag === "input" || tag === "textarea") return;
+      if (menu && menu.getAttribute("aria-hidden") === "false") return;
 
       if (e.code === "Space") {
         e.preventDefault();
