@@ -1,23 +1,32 @@
-/* =========================================================
-   AF SITE — app.js (Full, smoother player)
-   - Smoother seek (RAF + target, uses fastSeek when available)
-   - Less jumpy UI (diffed text updates, throttled waveform draw)
-   - Dock behaves like control surface (ReelCrafter-ish)
-   ========================================================= */
-
+/* ========================
+FILE: app.js
+======================== */
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-  const PROFILE_IMG_URL = ""; // optional headshot url
+  /* ========= Jewel palette (solid, not pastel) ========= */
+  const JEWELS = [
+    "#7a5cff", // amethyst
+    "#5c7cff", // sapphire
+    "#22d3ee", // cyan
+    "#34d98a", // emerald
+    "#a3e635", // peridot
+    "#ffd166", // gold
+    "#ff9f1c", // amber
+    "#ff4d6d", // ruby
+    "#c13584"  // magenta
+  ];
 
-  const SOCIALS = {
-    imdb: "https://www.imdb.com/name/nm4586039/?ref_=ext_shr_lnk",
-    apple: "https://music.apple.com/us/artist/andy-forsberg/987738278",
-    spotify: "https://open.spotify.com/artist/5qd9swGpjTt9VJj0x053B3?si=qWOOqFV1SK-41NCzUKCciw",
-    instagram: "https://www.instagram.com/aforsbergmusic?igsh=NTc4MTIwNjQ2YQ%3D%3D&utm_source=qr"
+  const pickJewel = () => JEWELS[Math.floor(Math.random() * JEWELS.length)];
+  const setJT = (hex) => {
+    const root = document.documentElement;
+    root.style.setProperty("--jt", hex);
+    root.style.setProperty("--jtFill", `color-mix(in srgb, ${hex} 18%, rgba(255,255,255,.02))`);
+    root.style.setProperty("--jtFillStrong", `color-mix(in srgb, ${hex} 26%, rgba(255,255,255,.02))`);
   };
 
+  /* ========= Data ========= */
   const PROJECTS = [
     { title: "Hilinski's Hope", img: "https://www.dropbox.com/scl/fi/jj5d38zq6k5ze1j6x8rfb/Hilinski-s-Hope.webp?rlkey=okcz7ji4e77001w20zdbu5up6&raw=1" },
     { title: "The Secret Lives of Animals", img: "https://www.dropbox.com/scl/fi/9g8f8xyggs3dqlg1hmbao/The-Secret-Lives-of-Animals.webp?rlkey=s6yz5mrdz88uc9djbscr48urp&raw=1" },
@@ -32,16 +41,12 @@
   const FEATURED_TRACKS = [
     { title: "Charlie Horse", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/9b1a0c45-e055-4c88-b7b3-5f68e21c868e/Charlie%20Horse.mp3" },
     { title: "Beneath The City", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7a797f68-c4b0-48a2-bd22-2e4d0d42cb3f/Beneath%20The%20City.mp3" },
-    { title: "Stars To Guide Us", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e08b2007-7b7a-45b5-9bc2-5e16f7c663f1/Stars%20To%20Guide%20Us.mp3"},
+    { title: "Stars To Guide Us", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e08b2007-7b7a-45b5-9bc2-5e16f7c663f1/Stars%20To%20Guide%20Us.mp3" },
     { title: "Drive To Isleworth", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/e021b12d-70ad-45ad-8372-54e5bad51945/Drive%20To%20Isleworth.mp3" },
     { title: "The Summit", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/5731e845-e98a-4ae5-b843-cc3280fa8236/The%20Summit.mp3" },
     { title: "Travelers", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/4c0e765b-129e-4146-ac5e-b09678d0d208/Travelers.mp3" },
     { title: "Finding The Pride", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/be647ea5-b2d5-4126-b775-c98ebf1c5b17/Finding%20The%20Pride.mp3" },
-    { title: "The Cathedral", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/f8c8b063-f39a-414f-8cf0-f74e7b407779/The%20Cathedral.mp3" },
-    { title: "Magic", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/7406101c-2eae-4121-9739-64efdac180a5/Magic.mp3" },
-    { title: "Emma's Drive", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/de7bab66-ddb1-4f58-a73c-38a842a07a59/Emma's%20Drive.mp3" },
-    { title: "It's Everywhere", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/4b46f910-babb-4bd0-a74d-16a99ca01c4e/It's%20Everywhere.mp3" },
-    { title: "Bonded For Life", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/fbfcad1d-0ad1-45e5-b266-058e629d5468/Bonded%20For%20Life.mp3" }
+    { title: "The Cathedral", src: "https://audio.squarespace-cdn.com/content/v2/namespaces/website/libraries/693fe31c2851f35786f384ab/assets/f8c8b063-f39a-414f-8cf0-f74e7b407779/The%20Cathedral.mp3" }
   ];
 
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
@@ -63,8 +68,8 @@
     }
   }
 
-  /* ---------------- Peaks cache ---------------- */
-  const PEAKS_VERSION = "v1";
+  /* ========= Peaks cache ========= */
+  const PEAKS_VERSION = "v2";
   const PEAKS_N = 220;
   const waveCache = new Map();
   let AUDIO_CTX = null;
@@ -151,7 +156,7 @@
     return out;
   }
 
-  /* ---------------- Waveform draw (solid pill bars) ---------------- */
+  /* ========= Negative-space waveform (fills with jewel tone) ========= */
   function drawWave(canvas, peaks, progress01) {
     if (!canvas || !peaks || !peaks.length) return;
 
@@ -164,22 +169,23 @@
     const barW = 5.2;
     const minAmp = 6;
     const maxAmp = h * 0.46;
-    const radius = 999;
 
     const cols = Math.max(1, Math.floor(w / stride));
     const n = peaks.length;
 
-    const base = "rgba(255,255,255,0.12)";
-    const done = "rgba(255,255,255,0.92)";
-
     const p = clamp01(progress01 || 0);
     const progX = p * w;
+
+    const rootStyle = getComputedStyle(document.documentElement);
+    const jt = (rootStyle.getPropertyValue("--jt") || "#5c7cff").trim();
+
+    const base = "rgba(255,255,255,0.10)";
+    const done = jt;
 
     const getPeak = (idx) => peaks[Math.max(0, Math.min(n - 1, idx))];
 
     for (let col = 0; col < cols; col++) {
       const x = col * stride;
-
       const t = cols <= 1 ? 0 : col / (cols - 1);
       const f = t * (n - 1);
       const i0 = Math.floor(f);
@@ -187,7 +193,6 @@
       const frac = f - i0;
 
       const p0 = getPeak(i0) * (1 - frac) + getPeak(i1) * frac;
-
       const pPrev = getPeak(i0 - 2) * (1 - frac) + getPeak(i1 - 2) * frac;
       const pNext = getPeak(i0 + 2) * (1 - frac) + getPeak(i1 + 2) * frac;
       const smooth = pPrev * 0.20 + p0 * 0.60 + pNext * 0.20;
@@ -201,38 +206,43 @@
       ctx.fillStyle = (x <= progX) ? done : base;
       const rx = x + (stride - barW) * 0.5;
 
+      // pill bars
       if (ctx.roundRect) {
         ctx.beginPath();
-        ctx.roundRect(rx, y0, barW, hh, radius);
+        ctx.roundRect(rx, y0, barW, hh, 999);
         ctx.fill();
       } else {
-        const r = Math.min(barW, hh) * 0.5;
-        ctx.beginPath();
-        ctx.moveTo(rx + r, y0);
-        ctx.lineTo(rx + barW - r, y0);
-        ctx.quadraticCurveTo(rx + barW, y0, rx + barW, y0 + r);
-        ctx.lineTo(rx + barW, y0 + hh - r);
-        ctx.quadraticCurveTo(rx + barW, y0 + hh, rx + barW - r, y0 + hh);
-        ctx.lineTo(rx + r, y0 + hh);
-        ctx.quadraticCurveTo(rx, y0 + hh, rx, y0 + hh - r);
-        ctx.lineTo(rx, y0 + r);
-        ctx.quadraticCurveTo(rx, y0, rx + r, y0);
-        ctx.closePath();
-        ctx.fill();
+        ctx.fillRect(rx, y0, barW, hh);
       }
     }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    /* ---------------- Header scroll state ---------------- */
-    const hdr = $(".hdr");
-    const onScroll = () => hdr && hdr.classList.toggle("is-scrolled", (window.scrollY || 0) > 6);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    /* ===== set initial jewel tone ===== */
+    setJT(pickJewel());
 
-    /* ---------------- Hamburger menu ---------------- */
+    /* ===== hover randomizes across key interactive UI ===== */
+    const jtTargets = [
+      ...$$(".brand"),
+      ...$$(".menuBtn"),
+      ...$$(".menu__link"),
+      ...$$(".sbtn"),
+      ...$$(".navBtn"),
+      ...$$(".pbtn"),
+      ...$$(".row"),
+      ...$$(".poster"),
+      ...$$(".wave")
+    ];
+    jtTargets.forEach(el => {
+      el.addEventListener("mouseenter", () => setJT(pickJewel()), { passive: true });
+      el.addEventListener("focus", () => setJT(pickJewel()), { passive: true });
+    });
+
+    /* ===== Menu ===== */
     const menu = $(".menu");
     const menuBtn = $(".menuBtn");
+    const rail = $(".rail");
+
     const closeMenu = () => {
       if (!menu || !menuBtn) return;
       menu.setAttribute("aria-hidden", "true");
@@ -249,59 +259,96 @@
         const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
         isOpen ? closeMenu() : openMenu();
       });
-
       menu.addEventListener("click", (e) => {
         if (e.target === menu) closeMenu();
-        if (e.target.closest(".menu__link")) closeMenu();
       });
-
-      window.addEventListener("keydown", (e) => e.key === "Escape" && closeMenu());
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMenu();
+      });
     }
 
-    /* ---------------- Social links ---------------- */
-    const sImdb = $("#social-imdb");
-    const sApple = $("#social-apple");
-    const sSpotify = $("#social-spotify");
-    const sIg = $("#social-instagram");
-    if (sImdb) sImdb.href = SOCIALS.imdb;
-    if (sApple) sApple.href = SOCIALS.apple;
-    if (sSpotify) sSpotify.href = SOCIALS.spotify;
-    if (sIg) sIg.href = SOCIALS.instagram;
+    /* ===== Tiles + nav ===== */
+    const tiles = $$("[data-tile]");
+    const byId = (id) => tiles.find(t => t.id === id);
 
-    /* ---------------- Bio image ---------------- */
-    const bioImg = $(".bioImg");
-    if (bioImg && PROFILE_IMG_URL) bioImg.style.backgroundImage = `url('${PROFILE_IMG_URL}')`;
+    const getActiveIndex = () => {
+      if (!rail) return 0;
+      const x = rail.scrollLeft;
+      const w = rail.clientWidth || 1;
+      return Math.round(x / w);
+    };
 
-    /* ---------------- Reveal ---------------- */
-    const revealEls = $$("[data-reveal]");
-    if (revealEls.length) {
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-in");
-            io.unobserve(e.target);
-          }
-        }
-      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-      revealEls.forEach(el => io.observe(el));
+    const scrollToIndex = (idx) => {
+      if (!rail) return;
+      const w = rail.clientWidth || 1;
+      rail.scrollTo({ left: idx * w, behavior: "smooth" });
+    };
+
+    const scrollToId = (id) => {
+      const t = byId(id);
+      if (!t || !rail) return;
+      const idx = tiles.indexOf(t);
+      if (idx >= 0) scrollToIndex(idx);
+    };
+
+    // intercept hash links for horizontal scroll
+    const interceptLinks = (root) => {
+      $$('a[href^="#"]', root).forEach(a => {
+        a.addEventListener("click", (e) => {
+          const href = a.getAttribute("href") || "";
+          const id = href.replace("#", "");
+          if (!id) return;
+          e.preventDefault();
+          closeMenu();
+          scrollToId(id);
+          history.replaceState(null, "", `#${id}`);
+        });
+      });
+    };
+    interceptLinks(document);
+
+    // on load hash
+    const initialHash = (location.hash || "").replace("#", "");
+    if (initialHash) scrollToId(initialHash);
+
+    // next/back buttons
+    const navPrev = $(".navPrev");
+    const navNext = $(".navNext");
+    if (navPrev) navPrev.addEventListener("click", () => scrollToIndex(Math.max(0, getActiveIndex() - 1)));
+    if (navNext) navNext.addEventListener("click", () => scrollToIndex(Math.min(tiles.length - 1, getActiveIndex() + 1)));
+
+    // keyboard arrows
+    window.addEventListener("keydown", (e) => {
+      if (!rail) return;
+      if (menu && menu.getAttribute("aria-hidden") === "false") return;
+      if (e.key === "ArrowRight") scrollToIndex(Math.min(tiles.length - 1, getActiveIndex() + 1));
+      if (e.key === "ArrowLeft") scrollToIndex(Math.max(0, getActiveIndex() - 1));
+    });
+
+    // wheel -> horizontal (makes it feel intentional)
+    if (rail) {
+      rail.addEventListener("wheel", (e) => {
+        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        e.preventDefault();
+        rail.scrollLeft += e.deltaY;
+      }, { passive: false });
     }
 
-    /* ---------------- Posters ---------------- */
+    /* ===== Posters grid + lightbox ===== */
     const postersEl = $(".posters");
     if (postersEl && PROJECTS.length) {
       postersEl.innerHTML = PROJECTS.map((p, i) => {
         const safeTitle = (p.title || "Project").replace(/"/g, "&quot;");
         const img = p.img || "";
         return `
-          <div class="poster" data-idx="${i}" data-title="${safeTitle}" role="button" aria-label="Open ${safeTitle}">
-            <div class="poster__img" style="background-image:url('${img}')"></div>
+          <div class="poster" data-idx="${i}" role="button" aria-label="Open ${safeTitle}">
+            <img class="poster__img" src="${img}" alt="" loading="lazy" decoding="async" />
             <div class="poster__name">${safeTitle}</div>
           </div>
         `;
       }).join("");
     }
 
-    /* ---------------- Lightbox ---------------- */
     const lb = $(".lb");
     const lbImg = $(".lb__img");
     const lbBg = $(".lb__bg");
@@ -334,104 +381,62 @@
       });
     }
 
-    /* =========================================================
-       PLAYER (ReelCrafter-ish smoothness)
-       ========================================================= */
-    const player = $(".player");
+    /* ===== Player ===== */
     const playBtn = $(".playBtn");
+    const prevBtn = $(".prevBtn");
+    const nextBtn = $(".nextBtn");
+    const loopBtn = $(".loopBtn");
+    const muteBtn = $(".muteBtn");
+    const volRange = $(".vol__range");
+
     const npTitle = $(".npTitle");
     const npTime = $(".npTime");
-    const waveBtn = $(".wave");
+    const waveBtn = $(".waveBtn");
     const waveCanvas = waveBtn ? $("canvas", waveBtn) : null;
     const tracklist = $(".tracklist");
 
-    // Dock
-    const dock = $(".dock");
-    const dockPlay = $(".dock__play");
-    const dockTitle = $(".dock__title");
-    const dockTime = $(".dock__time");
-    const dockWaveBtn = $(".dock__wave");
-    const dockCanvas = dockWaveBtn ? $("canvas", dockWaveBtn) : null;
-
     const audio = new Audio();
     audio.preload = "metadata";
+    audio.volume = 0.9;
 
     let tIdx = 0;
     let peaksObj = null;
-
-    // Seek smoothing
-    let draggingMain = false;
-    let draggingDock = false;
-    let seekTarget = null;          // seconds
-    let wasPlayingBeforeDrag = false;
-
-    // UI loop
+    let dragging = false;
+    let seekTarget = null;
     let uiRaf = null;
     let lastDrawTs = 0;
-    const DRAW_EVERY_MS = 33;       // ~30fps waveform draw
-    const SEEK_APPLY_EVERY_MS = 33; // ~30fps seek apply
-    let lastSeekApplyTs = 0;
+    const DRAW_EVERY_MS = 33;
 
-    // Diffed DOM writes
-    const lastText = new Map();
-    const setText = (el, v) => {
-      if (!el) return;
-      const prev = lastText.get(el);
-      if (prev === v) return;
-      lastText.set(el, v);
-      el.textContent = v;
+    const setPlayIcon = () => {
+      if (!playBtn) return;
+      playBtn.textContent = audio.paused ? "▶" : "❚❚";
     };
 
-    const ensureCanvasSized = () => {
-      if (waveCanvas) sizeCanvasToCSS(waveCanvas);
-      if (dockCanvas) sizeCanvasToCSS(dockCanvas);
-    };
-    window.addEventListener("resize", ensureCanvasSized, { passive: true });
-
-    const setPlayIcon = (paused) => {
-      if (playBtn) playBtn.textContent = paused ? "▶" : "❚❚";
-      if (dockPlay) dockPlay.textContent = paused ? "▶" : "❚❚";
-    };
-
-    const showDock = (show) => {
-      if (!dock) return;
-      dock.setAttribute("aria-hidden", show ? "false" : "true");
-    };
-
-    const currentTrack = () => FEATURED_TRACKS[tIdx] || null;
-
-    function renderTracklist() {
+    const renderTracklist = () => {
       if (!tracklist) return;
       tracklist.innerHTML = FEATURED_TRACKS.map((t, i) => {
         const active = i === tIdx ? " is-active" : "";
         return `
           <div class="row${active}" data-i="${i}" role="button" aria-label="Play ${t.title || "Track"}">
             <div class="row__t">${t.title || "Untitled"}</div>
-            <div class="row__d"></div>
           </div>
         `;
       }).join("");
-    }
+    };
 
-    async function loadWaveForCurrent() {
-      peaksObj = null;
-      const tr = currentTrack();
-      if (!tr || !tr.src) return;
-      try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
-      const next = FEATURED_TRACKS[(tIdx + 1) % FEATURED_TRACKS.length];
-      if (next?.src) getPeaks(next.src).catch(() => {});
-    }
+    const currentTrack = () => FEATURED_TRACKS[tIdx] || null;
 
-    function getDur() {
-      return (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (peaksObj?.duration || 0);
-    }
+    const ensureCanvasSized = () => { if (waveCanvas) sizeCanvasToCSS(waveCanvas); };
+    window.addEventListener("resize", ensureCanvasSized, { passive: true });
 
-    function getCurForUI() {
-      if ((draggingMain || draggingDock) && typeof seekTarget === "number") return seekTarget;
+    const getDur = () => (isFinite(audio.duration) && audio.duration > 0) ? audio.duration : (peaksObj?.duration || 0);
+
+    const getCurForUI = () => {
+      if (dragging && typeof seekTarget === "number") return seekTarget;
       return isFinite(audio.currentTime) ? audio.currentTime : 0;
-    }
+    };
 
-    function syncUI(nowTs) {
+    const syncUI = (ts) => {
       const tr = currentTrack();
       if (!tr) return;
 
@@ -439,189 +444,172 @@
       const cur = getCurForUI();
       const pct = dur ? clamp01(cur / dur) : 0;
 
-      setText(npTitle, tr.title || "Untitled");
-      setText(dockTitle, tr.title || "Untitled");
-      setText(npTime, `${fmtTime(cur)} / ${fmtTime(dur)}`);
-      setText(dockTime, `${fmtTime(cur)} / ${fmtTime(dur)}`);
+      if (npTitle) npTitle.textContent = tr.title || "Untitled";
+      if (npTime) npTime.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
 
-      setPlayIcon(audio.paused);
+      setPlayIcon();
 
       if (tracklist) {
         $$(".row", tracklist).forEach((r) => {
           const i = Number(r.dataset.i);
-          const on = i === tIdx;
-          if (on !== r.classList.contains("is-active")) r.classList.toggle("is-active", on);
+          r.classList.toggle("is-active", i === tIdx);
         });
       }
 
-      if (peaksObj?.peaks && nowTs - lastDrawTs >= DRAW_EVERY_MS) {
-        lastDrawTs = nowTs;
-        if (waveCanvas) { ensureCanvasSized(); drawWave(waveCanvas, peaksObj.peaks, pct); }
-        if (dockCanvas) { ensureCanvasSized(); drawWave(dockCanvas, peaksObj.peaks, pct); }
+      if (peaksObj?.peaks && waveCanvas && ts - lastDrawTs >= DRAW_EVERY_MS) {
+        lastDrawTs = ts;
+        ensureCanvasSized();
+        drawWave(waveCanvas, peaksObj.peaks, pct);
       }
-    }
+    };
 
-    function applySeekTarget(nowTs) {
-      if (typeof seekTarget !== "number") return;
-      if (nowTs - lastSeekApplyTs < SEEK_APPLY_EVERY_MS) return;
-      lastSeekApplyTs = nowTs;
-
-      const dur = getDur();
-      if (!dur) return;
-
-      const t = Math.max(0, Math.min(dur, seekTarget));
-      try {
-        if (typeof audio.fastSeek === "function") audio.fastSeek(t);
-        else audio.currentTime = t;
-      } catch {}
-    }
-
-    function startUILoop() {
+    const startUILoop = () => {
       if (uiRaf) cancelAnimationFrame(uiRaf);
       const tick = (ts) => {
-        if (draggingMain || draggingDock) applySeekTarget(ts);
         syncUI(ts);
-
-        const keepAlive = (!audio.paused) || draggingMain || draggingDock || (dock && dock.getAttribute("aria-hidden") === "false");
-        if (keepAlive) uiRaf = requestAnimationFrame(tick);
+        const keep = !audio.paused || dragging;
+        if (keep) uiRaf = requestAnimationFrame(tick);
         else uiRaf = null;
       };
       uiRaf = requestAnimationFrame(tick);
-    }
+    };
 
-    async function setTrack(nextIdx, autoplay) {
+    const loadWaveForCurrent = async () => {
+      peaksObj = null;
+      const tr = currentTrack();
+      if (!tr?.src) return;
+      try { peaksObj = await getPeaks(tr.src); } catch { peaksObj = null; }
+      const next = FEATURED_TRACKS[(tIdx + 1) % FEATURED_TRACKS.length];
+      if (next?.src) getPeaks(next.src).catch(() => {});
+    };
+
+    const setTrack = async (nextIdx, autoplay) => {
       if (!FEATURED_TRACKS.length) return;
       tIdx = (nextIdx + FEATURED_TRACKS.length) % FEATURED_TRACKS.length;
 
       const tr = currentTrack();
-      if (!tr || !tr.src) return;
+      if (!tr?.src) return;
 
-      draggingMain = false;
-      draggingDock = false;
+      dragging = false;
       seekTarget = null;
 
       audio.src = tr.src;
       audio.currentTime = 0;
 
       await loadWaveForCurrent();
-
-      showDock(false);
       startUILoop();
 
       if (autoplay) {
         try { await audio.play(); } catch {}
       }
-    }
+    };
 
-    function togglePlay() {
+    const togglePlay = () => {
       if (!audio.src) { setTrack(0, true); return; }
       if (audio.paused) audio.play().catch(() => {});
       else audio.pause();
       startUILoop();
-    }
+    };
 
-    function seekTargetFromEvent(e, which) {
-      const btn = which === "dock" ? dockWaveBtn : waveBtn;
-      if (!btn || !peaksObj) return;
+    const stepTrack = (dir) => setTrack(tIdx + dir, true);
 
-      const rect = btn.getBoundingClientRect();
+    const seekFromEvent = (e) => {
+      if (!waveBtn) return;
+      const rect = waveBtn.getBoundingClientRect();
       const x = Math.min(Math.max(0, e.clientX - rect.left), rect.width);
       const pct = rect.width ? x / rect.width : 0;
-
       const dur = getDur();
       if (!dur) return;
-
       seekTarget = pct * dur;
+    };
+
+    const commitSeek = () => {
+      if (typeof seekTarget !== "number") return;
+      const dur = getDur();
+      const t = Math.max(0, Math.min(dur || 0, seekTarget));
+      try {
+        if (typeof audio.fastSeek === "function") audio.fastSeek(t);
+        else audio.currentTime = t;
+      } catch {}
+    };
+
+    /* bind controls */
+    if (playBtn) playBtn.addEventListener("click", togglePlay);
+    if (prevBtn) prevBtn.addEventListener("click", () => stepTrack(-1));
+    if (nextBtn) nextBtn.addEventListener("click", () => stepTrack(1));
+
+    if (loopBtn) {
+      loopBtn.addEventListener("click", () => {
+        audio.loop = !audio.loop;
+        loopBtn.setAttribute("aria-pressed", audio.loop ? "true" : "false");
+        loopBtn.setAttribute("aria-label", audio.loop ? "Loop on" : "Loop off");
+      });
     }
 
-    function onPointerDown(which, e) {
-      if (!peaksObj) return;
-      wasPlayingBeforeDrag = !audio.paused;
-
-      if (which === "main") draggingMain = true;
-      else draggingDock = true;
-
-      if (!audio.paused) audio.pause();
-
-      seekTargetFromEvent(e, which);
-      startUILoop();
+    if (muteBtn) {
+      muteBtn.addEventListener("click", () => {
+        audio.muted = !audio.muted;
+        muteBtn.setAttribute("aria-pressed", audio.muted ? "true" : "false");
+        muteBtn.textContent = audio.muted ? "🔇" : "🔈";
+      });
     }
 
-    function onPointerMove(which, e) {
-      if ((which === "main" && !draggingMain) || (which === "dock" && !draggingDock)) return;
-      seekTargetFromEvent(e, which);
-      startUILoop();
+    if (volRange) {
+      volRange.addEventListener("input", () => {
+        audio.volume = Number(volRange.value);
+      }, { passive: true });
     }
 
-    function onPointerUp(which) {
-      if (which === "main") draggingMain = false;
-      else draggingDock = false;
-
-      if (typeof seekTarget === "number") {
-        const dur = getDur();
-        const t = Math.max(0, Math.min(dur || 0, seekTarget));
-        try {
-          if (typeof audio.fastSeek === "function") audio.fastSeek(t);
-          else audio.currentTime = t;
-        } catch {}
-      }
-
-      if (wasPlayingBeforeDrag) audio.play().catch(() => {});
-      startUILoop();
+    if (tracklist) {
+      tracklist.addEventListener("click", (e) => {
+        const row = e.target.closest(".row");
+        if (!row) return;
+        const i = Number(row.dataset.i);
+        if (i === tIdx) togglePlay();
+        else setTrack(i, true);
+      });
     }
 
-    if (player && FEATURED_TRACKS.length) {
+    if (waveBtn) {
+      waveBtn.addEventListener("pointerdown", (e) => {
+        if (!peaksObj) return;
+        waveBtn.setPointerCapture(e.pointerId);
+        dragging = true;
+        if (!audio.paused) audio.pause(); // control-surface feel
+        seekFromEvent(e);
+        startUILoop();
+      });
+      waveBtn.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        seekFromEvent(e);
+        startUILoop();
+      });
+      waveBtn.addEventListener("pointerup", () => {
+        if (!dragging) return;
+        dragging = false;
+        commitSeek();
+        audio.play().catch(() => {});
+        startUILoop();
+      });
+      waveBtn.addEventListener("pointercancel", () => {
+        dragging = false;
+        commitSeek();
+        startUILoop();
+      });
+    }
+
+    audio.addEventListener("play", () => startUILoop());
+    audio.addEventListener("pause", () => startUILoop());
+    audio.addEventListener("ended", () => { if (!audio.loop) stepTrack(1); });
+
+    /* init */
+    if (FEATURED_TRACKS.length) {
       renderTracklist();
       setTrack(0, false);
-
-      if (playBtn) playBtn.addEventListener("click", togglePlay);
-      if (dockPlay) dockPlay.addEventListener("click", togglePlay);
-
-      if (tracklist) {
-        tracklist.addEventListener("click", (e) => {
-          const row = e.target.closest(".row");
-          if (!row) return;
-          const i = Number(row.dataset.i);
-          if (i === tIdx) togglePlay();
-          else setTrack(i, true);
-        });
-      }
-
-      if (waveBtn) {
-        waveBtn.addEventListener("pointerdown", (e) => {
-          waveBtn.setPointerCapture(e.pointerId);
-          onPointerDown("main", e);
-        });
-        waveBtn.addEventListener("pointermove", (e) => onPointerMove("main", e));
-        waveBtn.addEventListener("pointerup", () => onPointerUp("main"));
-        waveBtn.addEventListener("pointercancel", () => onPointerUp("main"));
-      }
-
-      if (dockWaveBtn) {
-        dockWaveBtn.addEventListener("pointerdown", (e) => {
-          dockWaveBtn.setPointerCapture(e.pointerId);
-          onPointerDown("dock", e);
-        });
-        dockWaveBtn.addEventListener("pointermove", (e) => onPointerMove("dock", e));
-        dockWaveBtn.addEventListener("pointerup", () => onPointerUp("dock"));
-        dockWaveBtn.addEventListener("pointercancel", () => onPointerUp("dock"));
-      }
-
-      audio.addEventListener("play", () => {
-        showDock(true);
-        startUILoop();
-      });
-      audio.addEventListener("pause", () => {
-        showDock(true);
-        startUILoop();
-      });
-      audio.addEventListener("ended", () => { setTrack(tIdx + 1, true); });
-      audio.addEventListener("loadedmetadata", () => startUILoop());
-      audio.addEventListener("timeupdate", () => startUILoop());
-    } else {
-      showDock(false);
     }
 
-    showDock(false);
+    /* ===== rep email placeholder ===== */
+    const repEmail = $("#rep-email");
+    if (repEmail) repEmail.href = "mailto:andy@andyforsbergmusic.com"; // change if needed
   });
-})();
+})(); 
